@@ -29,21 +29,29 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
 
     private AboutUsInput aboutUsInput;
     private int status;
-    private String message,PACKAGE_NAME, about, responseStr;
+    private String message;
+    private String PACKAGE_NAME;
+    private String about;
+    private String responseStr;
     private AboutUsListner listener;
     private Context context;
 
 
     /**
-     * Interface for handling about us responses.
+     * Interface used to allow the caller of a AboutUsAsync to run some code when get
+     * responses.
      */
     public interface AboutUsListner {
         /**
-         * Method to listen the pre-execution call for about us listener.
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
          */
         void onAboutUsPreExecuteStarted();
+
         /**
-         * Method to listen the post-execution call for about us listener.
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         * @param about
          */
         void onAboutUsPostExecuteCompleted(String about);
     }
