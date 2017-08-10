@@ -53,18 +53,18 @@ public class APIUrlConstant {
     public static  String fbUserExistsUrl = "getFbUserStatus";
     public static  String AboutUs = "getStaticPagedetails";
 
-    public static  String ViewFavorite = "ViewFavouriteListener";
+    public static  String ViewFavorite = "ViewFavourite";
     public static  String AddtoFavlist = "AddtoFavlist";
     public static  String DeleteFavList = "DeleteFavList";
     public static  String GetMenusUrl = "GetMenus";
     public static  String UpdateGoogleid = "UpdateGoogleid";
     public static  String GetCastDetails = "getCastDetail";
-    public static  String ViewContentRating = "ViewContentRating";
-    public static  String AddContentRating = "AddContentRating";
-    public static  String addSubscriptionUrl = "ppvpayment";
-    public static  String ManageDevices = "ManageDevices";
+    public static final String ViewContentRating = "ViewContentRating";
+    public static final String AddContentRating = "AddContentRating";
+    public static final String addSubscriptionUrl = "ppvpayment";
+    public static final String ManageDevices = "ManageDevices";
     public static  String VALIDATE_COUPON_CODE_URL = "validateCouponCode";
-    public static  String updateBufferLogUrl = "updateBufferLogs";
+    public static final String updateBufferLogUrl = "updateBufferLogs";
     public static  String VIDEO_BUFFER_LOGS_URL = "bufferLogs";
     public static  String VALIDATE_USER_FOR_CONTENT_URL = "isContentAuthorized";
     public static  String IP_ADDRESS_URL = "https://api.ipify.org/?format=json";
@@ -73,10 +73,10 @@ public class APIUrlConstant {
 
 
 
-    public static  String RemoveDevice = "RemoveDevice";
+    public static final String RemoveDevice = "RemoveDevice";
 
 
-    public static  String CheckIfUserLoggedIn = "CheckIfUserLoggedIn";
+    public static final String CheckIfUserLoggedIn = "CheckIfUserLoggedIn";
 
 
 
