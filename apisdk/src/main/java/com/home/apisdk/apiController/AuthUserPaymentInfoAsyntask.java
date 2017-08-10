@@ -23,25 +23,59 @@ import java.net.CookieHandler;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to Get Payment Information details
  */
 
 public class AuthUserPaymentInfoAsyntask extends AsyncTask<AuthUserPaymentInfoInputModel, Void, Void> {
 
-    public AuthUserPaymentInfoInputModel authUserPaymentInfoInputModel;
-    String PACKAGE_NAME, message, responseStr,responseMessageStr;
-    int code,status;
+    private AuthUserPaymentInfoInputModel authUserPaymentInfoInputModel;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private String responseMessageStr;
+    private int code;
+    private int status;
+    private AuthUserPaymentInfoListener listener;
+    private Context context;
 
-    public interface AuthUserPaymentInfo {
+    /**
+     * Interface used to allow the caller of a AuthUserPaymentInfoAsyntask to run some code when get
+     * responses.
+     */
+
+    public interface AuthUserPaymentInfoListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onAuthUserPaymentInfoPreExecuteStarted();
 
-        void onAuthUserPaymentInfoPostExecuteCompleted(AuthUserPaymentInfoOutputModel authUserPaymentInfoOutputModel, int status,String message);
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param authUserPaymentInfoOutputModel
+         * @param status
+         * @param message
+         */
+
+        void onAuthUserPaymentInfoPostExecuteCompleted(AuthUserPaymentInfoOutputModel authUserPaymentInfoOutputModel, int status, String message);
     }
 
-    private AuthUserPaymentInfo listener;
-    private Context context;
+
     AuthUserPaymentInfoOutputModel authUserPaymentInfoOutputModel = new AuthUserPaymentInfoOutputModel();
 
-    public AuthUserPaymentInfoAsyntask(AuthUserPaymentInfoInputModel authUserPaymentInfoInputModel, AuthUserPaymentInfo listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param authUserPaymentInfoInputModel
+     * @param listener
+     * @param context
+     */
+
+    public AuthUserPaymentInfoAsyntask(AuthUserPaymentInfoInputModel authUserPaymentInfoInputModel, AuthUserPaymentInfoListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -127,22 +161,22 @@ public class AuthUserPaymentInfoAsyntask extends AsyncTask<AuthUserPaymentInfoIn
                     responseMessageStr = myJson.optString("Message");
                 }
                 if (((responseMessageStr.equalsIgnoreCase("null")) || (responseMessageStr.length() <= 0))) {
-                    responseMessageStr="No Details found";
+                    responseMessageStr = "No Details found";
 
+                }
             }
+
+
+        } catch (
+                Exception e)
+
+        {
+            code = 0;
+            message = "";
+
         }
-
-
-    } catch(
-    Exception e)
-
-    {
-        code = 0;
-        message = "";
-
-    }
         return null;
-}
+    }
 
 
     @Override
@@ -150,22 +184,20 @@ public class AuthUserPaymentInfoAsyntask extends AsyncTask<AuthUserPaymentInfoIn
         super.onPreExecute();
         listener.onAuthUserPaymentInfoPreExecuteStarted();
         code = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
-            listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutputModel,code,message);
+            listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutputModel, code, message);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (CommonConstants.hashKey.equals("")) {
             this.cancel(true);
-            listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutputModel,code,message);
+            listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutputModel, code, message);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutputModel, code,responseMessageStr);
+        listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutputModel, code, responseMessageStr);
     }
 }

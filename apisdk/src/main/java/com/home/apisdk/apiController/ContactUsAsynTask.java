@@ -22,31 +22,65 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to Get Contact Us details
  */
 
-public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel,Void ,Void > {
+public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void> {
 
-    public ContactUsInputModel contactUsInputModel;
-    String PACKAGE_NAME,message,responseStr,status;
-    int code;
-    ContactUsOutputModel contactUsOutputModel;
+    private ContactUsInputModel contactUsInputModel;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private String status;
+    private int code;
+    private ContactUsOutputModel contactUsOutputModel;
+    private ContactUsListener listener;
+    private Context context;
 
-    public interface ContactUs{
+    /**
+     * Interface used to allow the caller of a ContactUsAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface ContactUsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
+
         void onContactUsPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param contactUsOutputModel
+         * @param code
+         * @param message
+         * @param status
+         */
+
         void onContactUsPostExecuteCompleted(ContactUsOutputModel contactUsOutputModel, int code, String message, String status);
     }
 
-    private ContactUs listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param contactUsInputModel
+     * @param listener
+     * @param context
+     */
 
-    public ContactUsAsynTask(ContactUsInputModel contactUsInputModel,ContactUs listener, Context context) {
+    public ContactUsAsynTask(ContactUsInputModel contactUsInputModel, ContactUsListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
         this.contactUsInputModel = contactUsInputModel;
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
-        Log.v("MUVISDK","GetUserProfileAsynctask");
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
+        Log.v("MUVISDK", "GetUserProfileAsynctask");
 
     }
 
@@ -62,7 +96,7 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel,Void ,Void 
             httppost.addHeader(CommonConstants.EMAIL, this.contactUsInputModel.getEmail());
             httppost.addHeader(CommonConstants.NAME, this.contactUsInputModel.getName());
             httppost.addHeader(CommonConstants.MESSAGE, this.contactUsInputModel.getMessage());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.contactUsInputModel.getLang_code());
+            httppost.addHeader(CommonConstants.LANG_CODE, this.contactUsInputModel.getLang_code());
 
             // Execute HTTP Post Request
             try {
@@ -88,13 +122,13 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel,Void ,Void 
                 message = myJson.optString("status");
             }
 
-                if (code == 200) {
+            if (code == 200) {
 
-                            contactUsOutputModel = new ContactUsOutputModel();
-                            contactUsOutputModel.setSuccess_msg(myJson.optString("success_msg"));
-                            contactUsOutputModel.setError_msg(myJson.optString("error_msg"));
+                contactUsOutputModel = new ContactUsOutputModel();
+                contactUsOutputModel.setSuccess_msg(myJson.optString("success_msg"));
+                contactUsOutputModel.setError_msg(myJson.optString("error_msg"));
 
-                }
+            }
         } catch (Exception e) {
             code = 0;
             message = "";
@@ -102,23 +136,22 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel,Void ,Void 
         }
         return null;
     }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onContactUsPreExecuteStarted();
-        code= 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        code = 0;
+        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onContactUsPostExecuteCompleted(contactUsOutputModel,code,message,status);
+            listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (CommonConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onContactUsPostExecuteCompleted(contactUsOutputModel,code,message,status);
+            listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);
         }
 
 
@@ -126,6 +159,6 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel,Void ,Void 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onContactUsPostExecuteCompleted(contactUsOutputModel,code,message,status);
+        listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);
     }
 }

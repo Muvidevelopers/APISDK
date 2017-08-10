@@ -26,28 +26,57 @@ import java.util.ArrayList;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Cast details.
  */
 public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void, Void> {
 
-    GetCastDetailsInput getCastDetailsInput;
-    String responseStr;
-    int status;
-    int totalItems;
-    String message, PACKAGE_NAME;
-
-    public interface GetCastDetailsListener {
-        void onGetCastDetailsPreExecuteStarted();
-
-        void onGetCastDetailsPostExecuteCompleted(GetCastDetailsOutputModel getCastDetailsOutputModelArray, int status, int totalItems,String message);
-    }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
-
+    private GetCastDetailsInput getCastDetailsInput;
+    private String responseStr;
+    private int status;
+    private int totalItems;
+    private String message;
+    private String PACKAGE_NAME;
     private GetCastDetailsListener listener;
     private Context context;
 
+    /**
+     * Interface used to allow the caller of a GetCastDetailsAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface GetCastDetailsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
+        void onGetCastDetailsPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param getCastDetailsOutputModelArray
+         * @param status
+         * @param totalItems
+         * @param message
+         */
+
+        void onGetCastDetailsPostExecuteCompleted(GetCastDetailsOutputModel getCastDetailsOutputModelArray, int status, int totalItems, String message);
+    }
+
     GetCastDetailsOutputModel getCastDetailsOutputModel;
-    GetCastDetailsOutputModel.CastDetails castDetails ;
+    GetCastDetailsOutputModel.CastDetails castDetails;
     ArrayList<GetCastDetailsOutputModel.CastDetails> castDetailsArrayList;
+
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param getCastDetailsInput
+     * @param listener
+     * @param context
+     */
 
     public GetCastDetailsAsynTask(GetCastDetailsInput getCastDetailsInput, GetCastDetailsListener listener, Context context) {
         this.listener = listener;
@@ -74,7 +103,7 @@ public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void,
             httppost.addHeader(CommonConstants.LIMIT, this.getCastDetailsInput.getLimit());
             httppost.addHeader(CommonConstants.OFFSET, this.getCastDetailsInput.getOffset());
             httppost.addHeader(CommonConstants.COUNTRY, this.getCastDetailsInput.getCountry());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.getCastDetailsInput.getLanguage());
+            httppost.addHeader(CommonConstants.LANG_CODE, this.getCastDetailsInput.getLanguage());
 
             // Execute HTTP Post Request
             try {
@@ -201,7 +230,7 @@ public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void,
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetCastDetailsPostExecuteCompleted(getCastDetailsOutputModel, status,totalItems,  message);
+        listener.onGetCastDetailsPostExecuteCompleted(getCastDetailsOutputModel, status, totalItems, message);
 
     }
 

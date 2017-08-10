@@ -22,27 +22,54 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 7/4/2017.
+ * Class to Get Facebook User details
  */
 
-public class CheckFbUserDetailsAsyn extends AsyncTask<CheckFbUserDetailsInput,Void ,Void > {
+public class CheckFbUserDetailsAsyn extends AsyncTask<CheckFbUserDetailsInput, Void, Void> {
 
-    public CheckFbUserDetailsInput checkFbUserDetailsInput;
-    String PACKAGE_NAME, responseStr,message;
-    int isNewUserStr = 1;
-    int code;
-    JSONObject myJson = null;
+    private CheckFbUserDetailsInput checkFbUserDetailsInput;
+    private String PACKAGE_NAME;
+    private String responseStr;
+    private String message;
+    private int isNewUserStr = 1;
+    private int code;
+    private JSONObject myJson = null;
+    private CheckFbUserDetailsListener listener;
+    private Context context;
 
-    public interface CheckFbUserDetails {
+    /**
+     * Interface used to allow the caller of a CheckFbUserDetailsAsyn to run some code when get
+     * responses.
+     */
+
+    public interface CheckFbUserDetailsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onCheckFbUserDetailsAsynPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param code
+         */
 
         void onCheckFbUserDetailsAsynPostExecuteCompleted(int code);
     }
 
-    private CheckFbUserDetails listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param checkFbUserDetailsInput
+     * @param listener
+     * @param context
+     */
 
-
-    public CheckFbUserDetailsAsyn(CheckFbUserDetailsInput checkFbUserDetailsInput, CheckFbUserDetails listener, Context context) {
+    public CheckFbUserDetailsAsyn(CheckFbUserDetailsInput checkFbUserDetailsInput, CheckFbUserDetailsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -85,7 +112,7 @@ public class CheckFbUserDetailsAsyn extends AsyncTask<CheckFbUserDetailsInput,Vo
             }
 
         } catch (JSONException e) {
-            code=0;
+            code = 0;
             e.printStackTrace();
         }
         return null;

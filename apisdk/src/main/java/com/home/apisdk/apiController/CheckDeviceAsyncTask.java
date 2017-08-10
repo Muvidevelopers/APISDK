@@ -23,25 +23,57 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 7/4/2017.
+ * Class to Get Device details
  */
 
 public class CheckDeviceAsyncTask extends AsyncTask<Void, Void, Void> {
 
-    public CheckDeviceInput checkDeviceInput;
-    String PACKAGE_NAME, message="", responseStr;
-    int code;
-    JSONObject myJson = null;
-    CheckDeviceOutput checkDeviceOutput;
+    private CheckDeviceInput checkDeviceInput;
+    private String PACKAGE_NAME;
+    private String message = "";
+    private String responseStr;
+    private int code;
+    private JSONObject myJson = null;
+    private CheckDeviceOutput checkDeviceOutput;
+    private CheckDeviceListener listener;
+    private Context context;
 
-    public interface CheckDevice {
+
+    /**
+     * Interface used to allow the caller of a CheckDeviceAsyncTask to run some code when get
+     * responses.
+     */
+
+    public interface CheckDeviceListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onCheckDevicePreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param checkDeviceOutput
+         * @param code
+         * @param message
+         */
+
         void onCheckDevicePostExecuteCompleted(CheckDeviceOutput checkDeviceOutput, int code, String message);
     }
 
-    private CheckDevice listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param checkDeviceInput
+     * @param listener
+     * @param context
+     */
 
-    public CheckDeviceAsyncTask(CheckDeviceInput checkDeviceInput, CheckDevice listener, Context context) {
+    public CheckDeviceAsyncTask(CheckDeviceInput checkDeviceInput, CheckDeviceListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -113,6 +145,6 @@ public class CheckDeviceAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onCheckDevicePostExecuteCompleted(checkDeviceOutput,code,message);
+        listener.onCheckDevicePostExecuteCompleted(checkDeviceOutput, code, message);
     }
 }

@@ -26,30 +26,63 @@ import java.util.ArrayList;
  * Created by MUVI on 1/20/2017.
  */
 
-public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel,Void ,Void > {
+public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, Void> {
 
-    public CelibrityInputModel celibrityInputModel;
-    String PACKAGE_NAME,message,responseStr,msg;
-    int code;
+    private CelibrityInputModel celibrityInputModel;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private String msg;
+    private int code;
+    private GetCelibrityListener listener;
+    private Context context;
 
-    public interface GetCelibrity{
+    /**
+     * Interface used to allow the caller of a GetCelibrityAsyntask to run some code when get
+     * responses.
+     */
+
+    public interface GetCelibrityListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetCelibrityPreExecuteStarted();
-        void onGetCelibrityPostExecuteCompleted(ArrayList<CelibrityOutputModel> celibrityOutputModel, int code,String msg);
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param celibrityOutputModel
+         * @param code
+         * @param msg
+         */
+
+        void onGetCelibrityPostExecuteCompleted(ArrayList<CelibrityOutputModel> celibrityOutputModel, int code, String msg);
     }
 
-    private GetCelibrity listener;
-    private Context context;
+
     ArrayList<CelibrityOutputModel> celibrityOutputModel = new ArrayList<CelibrityOutputModel>();
 
-    public GetCelibrityAsyntask(CelibrityInputModel celibrityInputModel,GetCelibrity listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param celibrityInputModel
+     * @param listener
+     * @param context
+     */
+
+    public GetCelibrityAsyntask(CelibrityInputModel celibrityInputModel, GetCelibrityListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
 
         this.celibrityInputModel = celibrityInputModel;
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
-        Log.v("MUVISDK","getPlanListAsynctask");
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
+        Log.v("MUVISDK", "getPlanListAsynctask");
 
     }
 
@@ -64,11 +97,11 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel,Void ,Vo
 
             httppost.addHeader(CommonConstants.AUTH_TOKEN, this.celibrityInputModel.getAuthToken());
             httppost.addHeader(CommonConstants.MOVIE_ID, this.celibrityInputModel.getMovie_id());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.celibrityInputModel.getLang_code());
+            httppost.addHeader(CommonConstants.LANG_CODE, this.celibrityInputModel.getLang_code());
 
-            Log.v("MUVISDK","lang_code = "+ this.celibrityInputModel.getLang_code());
-            Log.v("MUVISDK","authToken = "+ this.celibrityInputModel.getAuthToken());
-            Log.v("MUVISDK","movie id = "+ this.celibrityInputModel.getMovie_id());
+            Log.v("MUVISDK", "lang_code = " + this.celibrityInputModel.getLang_code());
+            Log.v("MUVISDK", "authToken = " + this.celibrityInputModel.getAuthToken());
+            Log.v("MUVISDK", "movie id = " + this.celibrityInputModel.getMovie_id());
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 responseStr = EntityUtils.toString(response.getEntity());
@@ -89,53 +122,49 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel,Void ,Vo
                 myJson = new JSONObject(responseStr);
                 code = Integer.parseInt(myJson.optString("code"));
                 message = myJson.optString("status");
-                msg=myJson.optString("msg");
+                msg = myJson.optString("msg");
 
             }
 
-                if (code == 200) {
+            if (code == 200) {
 
-                    JSONArray jsonMainNode = myJson.getJSONArray("celibrity");
+                JSONArray jsonMainNode = myJson.getJSONArray("celibrity");
 
-                    int lengthJsonArr = jsonMainNode.length();
-                    for (int i = 0; i < lengthJsonArr; i++) {
-                        JSONObject jsonChildNode;
-                        try {
-                            jsonChildNode = jsonMainNode.getJSONObject(i);
-                            CelibrityOutputModel content = new CelibrityOutputModel();
-                            String celebrityName = jsonChildNode.optString("name");
-                            String celebrityImage = jsonChildNode.optString("celebrity_image");
-                            String celebrityCastType = jsonChildNode.optString("cast_type");
+                int lengthJsonArr = jsonMainNode.length();
+                for (int i = 0; i < lengthJsonArr; i++) {
+                    JSONObject jsonChildNode;
+                    try {
+                        jsonChildNode = jsonMainNode.getJSONObject(i);
+                        CelibrityOutputModel content = new CelibrityOutputModel();
+                        String celebrityName = jsonChildNode.optString("name");
+                        String celebrityImage = jsonChildNode.optString("celebrity_image");
+                        String celebrityCastType = jsonChildNode.optString("cast_type");
 
-                            celebrityCastType = celebrityCastType.replaceAll("\\[", "");
-                            celebrityCastType = celebrityCastType.replaceAll("\\]","");
-                            celebrityCastType = celebrityCastType.replaceAll(","," , ");
-                            celebrityCastType = celebrityCastType.replaceAll("\"", "");
+                        celebrityCastType = celebrityCastType.replaceAll("\\[", "");
+                        celebrityCastType = celebrityCastType.replaceAll("\\]", "");
+                        celebrityCastType = celebrityCastType.replaceAll(",", " , ");
+                        celebrityCastType = celebrityCastType.replaceAll("\"", "");
 
 
-                            if(celebrityImage.equals("") || celebrityImage==null)
-                            {
+                        if (celebrityImage.equals("") || celebrityImage == null) {
+                            celebrityImage = "";
+                        } else {
+                            if (!celebrityImage.contains("http")) {
                                 celebrityImage = "";
                             }
-                            else
-                            {
-                                if(!celebrityImage.contains("http"))
-                                {
-                                    celebrityImage ="";
-                                }
-                            }
-
-                            content.setName(celebrityName);
-                            content.setCast_type(celebrityCastType);
-                            content.setCelebrity_image(celebrityImage);
-
-                            celibrityOutputModel.add(content);
-                        } catch (Exception e) {
-                            code = 0;
-                            message = "";
                         }
+
+                        content.setName(celebrityName);
+                        content.setCast_type(celebrityCastType);
+                        content.setCelebrity_image(celebrityImage);
+
+                        celibrityOutputModel.add(content);
+                    } catch (Exception e) {
+                        code = 0;
+                        message = "";
                     }
                 }
+            }
         } catch (Exception e) {
             code = 0;
             message = "";
@@ -149,23 +178,21 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel,Void ,Vo
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onGetCelibrityPreExecuteStarted();
-        code= 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        code = 0;
+        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
-            listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel,code,msg);
+            listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (CommonConstants.hashKey.equals("")) {
             this.cancel(true);
-            listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel,code,msg);
+            listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel,code,msg);
+        listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
     }
 }

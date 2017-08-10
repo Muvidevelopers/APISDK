@@ -23,34 +23,63 @@ import java.io.IOException;
 
 /**
  * Created by Muvi on 12/19/2016.
+ * Class to get Forgot Password details.
  */
 public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Void> {
-    Forgotpassword_input forgotpassword_input;
-    String responseStr;
-    int status;
 
-    String message,PACKAGE_NAME;
+    private Forgotpassword_input forgotpassword_input;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private ForgotpassDetailsListener listener;
+    private Context context;
 
+    /**
+     * Interface used to allow the caller of a ForgotpassAsynTask to run some code when get
+     * responses.
+     */
 
-    public interface ForgotpassDetails {
-       //String PACKAGE_NAME = getPackageName();
+    public interface ForgotpassDetailsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onForgotpassDetailsPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param forgotpassword_output
+         * @param status
+         * @param message
+         */
+
         void onForgotpassDetailsPostExecuteCompleted(Forgotpassword_output forgotpassword_output, int status, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private ForgotpassDetails listener;
-    private Context context;
-    Forgotpassword_output forgotpassword_output=new Forgotpassword_output();
 
-    public ForgotpassAsynTask(Forgotpassword_input forgotpassword_input,ForgotpassDetails listener, Context context) {
+    Forgotpassword_output forgotpassword_output = new Forgotpassword_output();
+
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param forgotpassword_input
+     * @param listener
+     * @param context
+     */
+
+    public ForgotpassAsynTask(Forgotpassword_input forgotpassword_input, ForgotpassDetailsListener listener, Context context) {
         this.forgotpassword_input = forgotpassword_input;
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
         Log.v("MUVISDK", "ForgotpassAsynTask");
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
     }
 
     @Override
@@ -58,37 +87,36 @@ public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Vo
 
 
         try {
-            HttpClient httpclient=new DefaultHttpClient();
+            HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getForgotPasswordUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
             httppost.addHeader(CommonConstants.AUTH_TOKEN, this.forgotpassword_input.getAuthToken());
             httppost.addHeader(CommonConstants.EMAIL, this.forgotpassword_input.getEmail());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.forgotpassword_input.getLang_code());
+            httppost.addHeader(CommonConstants.LANG_CODE, this.forgotpassword_input.getLang_code());
 
-            Log.v("MUVISDK", "responseStr"+this.forgotpassword_input.getAuthToken());
-            Log.v("MUVISDK", "responseStr"+this.forgotpassword_input.getEmail());
-            Log.v("MUVISDK", "responseStr"+this.forgotpassword_input.getLang_code());
-
+            Log.v("MUVISDK", "responseStr" + this.forgotpassword_input.getAuthToken());
+            Log.v("MUVISDK", "responseStr" + this.forgotpassword_input.getEmail());
+            Log.v("MUVISDK", "responseStr" + this.forgotpassword_input.getLang_code());
 
 
             // Execute HTTP Post Request
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 responseStr = EntityUtils.toString(response.getEntity());
-                Log.v("MUVISDK", "responseStr"+responseStr);
+                Log.v("MUVISDK", "responseStr" + responseStr);
 
 
-            } catch (org.apache.http.conn.ConnectTimeoutException e){
+            } catch (org.apache.http.conn.ConnectTimeoutException e) {
 
                 status = 0;
                 message = "Error";
 
-            }catch (IOException e) {
+            } catch (IOException e) {
                 status = 0;
                 message = "Error";
             }
-            JSONObject mainJson =null;
-            if(responseStr!=null) {
+            JSONObject mainJson = null;
+            if (responseStr != null) {
                 mainJson = new JSONObject(responseStr);
 
                 status = Integer.parseInt(mainJson.optString("code"));
@@ -99,8 +127,7 @@ public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Vo
                     forgotpassword_output.setMsg("");
                 }
 
-            }
-            else{
+            } else {
                 responseStr = "0";
                 status = 0;
                 message = "Error";
@@ -109,10 +136,8 @@ public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Vo
 
             responseStr = "0";
             status = 0;
-            message = "Error";            }
-
-        catch (Exception e)
-        {
+            message = "Error";
+        } catch (Exception e) {
 
             responseStr = "0";
             status = 0;
@@ -122,26 +147,25 @@ public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Vo
 
 
     }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         //String pkg=context.getPackageName();
-       // String s=forgotpassword_input.getPakagename();
+        // String s=forgotpassword_input.getPakagename();
         listener.onForgotpassDetailsPreExecuteStarted();
         status = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-       {
-           this.cancel(true);
-           message = "Packge Name Not Matched";
-           listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message);
-           return;
-       }
-       if(CommonConstants.hashKey.equals(""))
-       {
-           this.cancel(true);
-           message = "Hash Key Is Not Available. Please Initialize The SDK";
-           listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message);
-       }
+        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+            this.cancel(true);
+            message = "Packge Name Not Matched";
+            listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message);
+            return;
+        }
+        if (CommonConstants.hashKey.equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message);
+        }
     }
 
     @Override

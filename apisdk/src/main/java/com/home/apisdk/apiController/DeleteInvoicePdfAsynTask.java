@@ -22,31 +22,64 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to Delete Invoice Pdf details
  */
 
-public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputModel,Void ,Void > {
+public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputModel, Void, Void> {
 
-    public DeleteInvoicePdfInputModel deleteInvoicePdfInputModel;
-    String PACKAGE_NAME,message,responseStr,status;
-    int code;
-    DeleteInvoicePdfOutputModel deleteInvoicePdfOutputModel;
+    private DeleteInvoicePdfInputModel deleteInvoicePdfInputModel;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private String status;
+    private int code;
+    private DeleteInvoicePdfOutputModel deleteInvoicePdfOutputModel;
+    private DeleteInvoicePdfListener listener;
+    private Context context;
 
-    public interface DeleteInvoicePdf{
+    /**
+     * Interface used to allow the caller of a DeleteInvoicePdfAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface DeleteInvoicePdfListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onDeleteInvoicePdfPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param deleteInvoicePdfOutputModel
+         * @param code
+         * @param message
+         * @param status
+         */
+
         void onDeleteInvoicePdfPostExecuteCompleted(DeleteInvoicePdfOutputModel deleteInvoicePdfOutputModel, int code, String message, String status);
     }
 
-    private DeleteInvoicePdf listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param deleteInvoicePdfInputModel
+     * @param listener
+     * @param context
+     */
 
-    public DeleteInvoicePdfAsynTask(DeleteInvoicePdfInputModel deleteInvoicePdfInputModel,DeleteInvoicePdf listener, Context context) {
+    public DeleteInvoicePdfAsynTask(DeleteInvoicePdfInputModel deleteInvoicePdfInputModel, DeleteInvoicePdfListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
         this.deleteInvoicePdfInputModel = deleteInvoicePdfInputModel;
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
-        Log.v("MUVISDK","deleteinvoicepdf");
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
+        Log.v("MUVISDK", "deleteinvoicepdf");
 
     }
 
@@ -60,7 +93,7 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
 
             httppost.addHeader(CommonConstants.AUTH_TOKEN, this.deleteInvoicePdfInputModel.getAuthToken());
             httppost.addHeader(CommonConstants.FILE_PATH, this.deleteInvoicePdfInputModel.getFilepath());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.deleteInvoicePdfInputModel.getLanguage_code());
+            httppost.addHeader(CommonConstants.LANG_CODE, this.deleteInvoicePdfInputModel.getLanguage_code());
 
 
             // Execute HTTP Post Request
@@ -87,12 +120,12 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
                 message = myJson.optString("status");
             }
 
-                if (code == 200) {
+            if (code == 200) {
 
-                            deleteInvoicePdfOutputModel = new DeleteInvoicePdfOutputModel();
-                            deleteInvoicePdfOutputModel.setMsg(myJson.optString("msg"));
+                deleteInvoicePdfOutputModel = new DeleteInvoicePdfOutputModel();
+                deleteInvoicePdfOutputModel.setMsg(myJson.optString("msg"));
 
-                }
+            }
         } catch (Exception e) {
             code = 0;
             message = "";
@@ -100,23 +133,22 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
         }
         return null;
     }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onDeleteInvoicePdfPreExecuteStarted();
-        code= 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        code = 0;
+        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel,code,message,status);
+            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (CommonConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel,code,message,status);
+            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status);
         }
 
 
@@ -124,6 +156,6 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel,code,message,status);
+        listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status);
     }
 }

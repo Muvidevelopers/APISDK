@@ -22,27 +22,58 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 7/20/2017.
+ * Class to Add Favorite details
  */
 
-public class AddToFavAsync extends AsyncTask<AddToFavInputModel,Void,Void> {
-    public  AddToFavInputModel addToFavInputModel;
-    String PACKAGE_NAME,  responseStr,sucessMsg;
-    int status;
-
-    public interface AddToFavListener {
-        void onAddToFavPreExecuteStarted();
-
-        void onAddToFavPostExecuteCompleted(AddToFavOutputModel addToFavOutputModel, int status, String sucessMsg);
-    }
-    AddToFavOutputModel AddToFavOutputModel = new AddToFavOutputModel();
-
+public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {
+    private AddToFavInputModel addToFavInputModel;
+    private String PACKAGE_NAME;
+    private String responseStr;
+    private String sucessMsg;
+    private int status;
     private AddToFavListener listener;
     private Context context;
 
-    public AddToFavAsync (AddToFavInputModel addToFavInputModel, AddToFavListener listener, Context context){
+    /**
+     * Interface used to allow the caller of a AddToFavAsync to run some code when get
+     * responses.
+     */
+
+    public interface AddToFavListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
+        void onAddToFavPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param addToFavOutputModel
+         * @param status
+         * @param sucessMsg
+         */
+
+        void onAddToFavPostExecuteCompleted(AddToFavOutputModel addToFavOutputModel, int status, String sucessMsg);
+    }
+
+    AddToFavOutputModel AddToFavOutputModel = new AddToFavOutputModel();
+
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param addToFavInputModel
+     * @param listener
+     * @param context
+     */
+
+    public AddToFavAsync(AddToFavInputModel addToFavInputModel, AddToFavListener listener, Context context) {
         this.listener = listener;
         this.context = context;
-        this.addToFavInputModel=addToFavInputModel;
+        this.addToFavInputModel = addToFavInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetUserProfileAsynctask");
@@ -50,21 +81,19 @@ public class AddToFavAsync extends AsyncTask<AddToFavInputModel,Void,Void> {
 
     @Override
     protected Void doInBackground(AddToFavInputModel... params) {
-      //  String urlRouteList = Util.rootUrl().trim() + Util.AddtoFavlist.trim();
 
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getAddtoFavlist());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
             httppost.addHeader(CommonConstants.AUTH_TOKEN, this.addToFavInputModel.getAuthToken().trim());
-            httppost.addHeader(CommonConstants.MOVIE_UNIQ_ID,this.addToFavInputModel.getMovie_uniq_id() );
+            httppost.addHeader(CommonConstants.MOVIE_UNIQ_ID, this.addToFavInputModel.getMovie_uniq_id());
             httppost.addHeader(CommonConstants.CONTENT_TYPE, this.addToFavInputModel.getIsEpisodeStr());
             httppost.addHeader(CommonConstants.USER_ID, this.addToFavInputModel.getLoggedInStr());
 
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 responseStr = EntityUtils.toString(response.getEntity());
-
 
 
             } catch (org.apache.http.conn.ConnectTimeoutException e) {
@@ -97,6 +126,6 @@ public class AddToFavAsync extends AsyncTask<AddToFavInputModel,Void,Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel,status,sucessMsg);
+        listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg);
     }
 }

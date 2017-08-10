@@ -22,32 +22,63 @@ import java.io.IOException;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to Get User Logged in details
  */
 public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInInputModel, Void, Void> {
 
-    CheckIfUserLoggedInInputModel checkIfUserLoggedInInputModel;
-    String responseStr;
-    int status;
-    String message,PACKAGE_NAME;
-
-    public interface CheckIfUserLogggedInListener {
-        void onCheckIfUserLogggedInPreExecuteStarted();
-        void onCheckIfUserLogggedInPostExecuteCompleted(CheckIfUserLoggedInOutputModel checkIfUserLoggedInOutputModel, int status, String message);
-    }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
-
+    private CheckIfUserLoggedInInputModel checkIfUserLoggedInInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
     private CheckIfUserLogggedInListener listener;
     private Context context;
-    CheckIfUserLoggedInOutputModel checkIfUserLoggedInOutputModel=new CheckIfUserLoggedInOutputModel();
+
+    /**
+     * Interface used to allow the caller of a CheckIfUserLoggedInAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface CheckIfUserLogggedInListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
+        void onCheckIfUserLogggedInPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param checkIfUserLoggedInOutputModel
+         * @param status
+         * @param message
+         */
+
+        void onCheckIfUserLogggedInPostExecuteCompleted(CheckIfUserLoggedInOutputModel checkIfUserLoggedInOutputModel, int status, String message);
+    }
+
+
+    CheckIfUserLoggedInOutputModel checkIfUserLoggedInOutputModel = new CheckIfUserLoggedInOutputModel();
+
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param checkIfUserLoggedInInputModel
+     * @param listener
+     * @param context
+     */
 
     public CheckIfUserLoggedInAsynTask(CheckIfUserLoggedInInputModel checkIfUserLoggedInInputModel, CheckIfUserLogggedInListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
         this.checkIfUserLoggedInInputModel = checkIfUserLoggedInInputModel;
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
-        Log.v("MUVISDK","GetContentListAsynTask");
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
+        Log.v("MUVISDK", "GetContentListAsynTask");
 
 
     }
@@ -56,7 +87,7 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
     protected Void doInBackground(CheckIfUserLoggedInInputModel... params) {
 
         try {
-            HttpClient httpclient=new DefaultHttpClient();
+            HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getCheckIfUserLoggedIn());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
             httppost.addHeader(CommonConstants.AUTH_TOKEN, this.checkIfUserLoggedInInputModel.getAuthToken());
@@ -71,25 +102,23 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
                 responseStr = EntityUtils.toString(response.getEntity());
 
 
-            } catch (org.apache.http.conn.ConnectTimeoutException e){
+            } catch (org.apache.http.conn.ConnectTimeoutException e) {
 
                 status = 0;
                 message = "Error";
 
 
-
-            }catch (IOException e) {
+            } catch (IOException e) {
                 status = 0;
                 message = "Error";
             }
 
-            JSONObject myJson =null;
-            if(responseStr!=null){
+            JSONObject myJson = null;
+            if (responseStr != null) {
                 myJson = new JSONObject(responseStr);
                 status = Integer.parseInt(myJson.optString("code"));
                 message = myJson.optString("status");
             }
-
 
 
             if (status == 200) {
@@ -99,17 +128,13 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
                 }
 
 
-            }
-
-            else{
+            } else {
 
                 responseStr = "0";
                 status = 0;
                 message = "Error";
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
 
             responseStr = "0";
             status = 0;
@@ -126,29 +151,26 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
         listener.onCheckIfUserLogggedInPreExecuteStarted();
 
         status = 0;
-            if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-            {
-                this.cancel(true);
-                message = "Packge Name Not Matched";
-                listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel,status,message);
-                return;
-            }
-            if(CommonConstants.hashKey.equals(""))
-            {
-                this.cancel(true);
-                message = "Hash Key Is Not Available. Please Initialize The SDK";
-                listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel,status,message);
-            }
+        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+            this.cancel(true);
+            message = "Packge Name Not Matched";
+            listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
+            return;
+        }
+        if (CommonConstants.hashKey.equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
+        }
 
-        listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel,status,message);
+        listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
 
     }
 
 
-
     @Override
     protected void onPostExecute(Void result) {
-        listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel,status,message);
+        listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
 
     }
 

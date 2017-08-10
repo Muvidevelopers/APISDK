@@ -23,68 +23,103 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 7/21/2017.
+ * Class to Remove Video From Favorite details
  */
 
-public class DeleteFavAsync extends  AsyncTask<DeleteFavInputModel,Void,Void>{
-    DeleteFavInputModel deleteFavInputModel;
-    String PACKAGE_NAME,  responseStr,sucessMsg;
-    int status;
+public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
+
+    private DeleteFavInputModel deleteFavInputModel;
+    private String PACKAGE_NAME;
+    private String responseStr;
+    private String sucessMsg;
+    private int status;
+    private DeleteFavListener listener;
+    private Context context;
+
+    /**
+     * Interface used to allow the caller of a DeleteFavAsync to run some code when get
+     * responses.
+     */
 
 
-    public  interface DeleteFavListener{
+    public interface DeleteFavListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onDeleteFavPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param deleteFavOutputModel
+         * @param status
+         * @param sucessMsg
+         */
+
         void onDeleteFavPostExecuteCompleted(DeleteFavOutputModel deleteFavOutputModel, int status, String sucessMsg);
     }
-    DeleteFavOutputModel deleteFavOutputModel=new DeleteFavOutputModel();
-    DeleteFavListener listener;
-    private Context context;
-    public DeleteFavAsync(DeleteFavInputModel deleteFavInputModel,DeleteFavListener listener,Context context){
-        this.deleteFavInputModel=deleteFavInputModel;
-        this.listener=listener;
-        this.context=context;
+
+    DeleteFavOutputModel deleteFavOutputModel = new DeleteFavOutputModel();
+
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param deleteFavInputModel
+     * @param listener
+     * @param context
+     */
+
+    public DeleteFavAsync(DeleteFavInputModel deleteFavInputModel, DeleteFavListener listener, Context context) {
+        this.deleteFavInputModel = deleteFavInputModel;
+        this.listener = listener;
+        this.context = context;
         PACKAGE_NAME = context.getPackageName();
     }
 
 
     @Override
     protected Void doInBackground(DeleteFavInputModel... params) {
-           // String urlRouteList = Util.rootUrl().trim() + Util.DeleteFavList.trim();
+        // String urlRouteList = Util.rootUrl().trim() + Util.DeleteFavList.trim();
+
+        try {
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(APIUrlConstant.getDeleteFavList());
+            httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
+            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.deleteFavInputModel.getAuthTokenStr().trim());
+            httppost.addHeader(CommonConstants.MOVIE_UNIQ_ID, this.deleteFavInputModel.getMovieUniqueId());
+            httppost.addHeader(CommonConstants.CONTENT_TYPE, this.deleteFavInputModel.getIsEpisode());
+            httppost.addHeader(CommonConstants.USER_ID, this.deleteFavInputModel.getLoggedInStr());
 
             try {
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost(APIUrlConstant.getDeleteFavList());
-                httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-                httppost.addHeader(CommonConstants.AUTH_TOKEN, this.deleteFavInputModel.getAuthTokenStr().trim());
-                httppost.addHeader(CommonConstants.MOVIE_UNIQ_ID, this.deleteFavInputModel.getMovieUniqueId());
-                httppost.addHeader(CommonConstants.CONTENT_TYPE, this.deleteFavInputModel.getIsEpisode());
-                httppost.addHeader(CommonConstants.USER_ID, this.deleteFavInputModel.getLoggedInStr());
-
-                try {
-                    HttpResponse response = httpclient.execute(httppost);
-                    responseStr = EntityUtils.toString(response.getEntity());
+                HttpResponse response = httpclient.execute(httppost);
+                responseStr = EntityUtils.toString(response.getEntity());
 
 
-                } catch (org.apache.http.conn.ConnectTimeoutException e) {
+            } catch (org.apache.http.conn.ConnectTimeoutException e) {
 
-                }
-            } catch (IOException e) {
+            }
+        } catch (IOException e) {
 
+            e.printStackTrace();
+        }
+        if (responseStr != null) {
+            JSONObject myJson = null;
+            try {
+                myJson = new JSONObject(responseStr);
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if (responseStr != null) {
-                JSONObject myJson = null;
-                try {
-                    myJson = new JSONObject(responseStr);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                status = Integer.parseInt(myJson.optString("code"));
-                sucessMsg = myJson.optString("msg");
+            status = Integer.parseInt(myJson.optString("code"));
+            sucessMsg = myJson.optString("msg");
 //                statusmsg = myJson.optString("status");
-                Log.v("BISHAL","response delete=="+myJson);
+            Log.v("BISHAL", "response delete==" + myJson);
 
 
-            }
+        }
 
         return null;
     }
@@ -92,7 +127,7 @@ public class DeleteFavAsync extends  AsyncTask<DeleteFavInputModel,Void,Void>{
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onDeleteFavPostExecuteCompleted(deleteFavOutputModel,status,sucessMsg);
+        listener.onDeleteFavPostExecuteCompleted(deleteFavOutputModel, status, sucessMsg);
     }
 
     @Override

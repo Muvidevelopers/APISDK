@@ -33,7 +33,7 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
     private String PACKAGE_NAME;
     private String about;
     private String responseStr;
-    private AboutUsListner listener;
+    private AboutUsListener listener;
     private Context context;
 
 
@@ -41,7 +41,8 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
      * Interface used to allow the caller of a AboutUsAsync to run some code when get
      * responses.
      */
-    public interface AboutUsListner {
+    public interface AboutUsListener {
+
         /**
          * This method will be invoked before controller start execution.
          * This method to handle pre-execution work.
@@ -63,7 +64,7 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
      * @param listener
      * @param context
      */
-    public AboutUsAsync(AboutUsInput contactUsInputModel, AboutUsListner listener, Context context) {
+    public AboutUsAsync(AboutUsInput contactUsInputModel, AboutUsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
