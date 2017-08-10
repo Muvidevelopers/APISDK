@@ -22,24 +22,40 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 7/4/2017.
+ * Class to get about us details.
  */
 
 public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
 
-    public AboutUsInput aboutUsInput;
-    int status;
-    String message,PACKAGE_NAME, about, responseStr;
+    private AboutUsInput aboutUsInput;
+    private int status;
+    private String message,PACKAGE_NAME, about, responseStr;
+    private AboutUsListner listener;
+    private Context context;
 
-    public interface AboutUs {
+
+    /**
+     * Interface for handling about us responses.
+     */
+    public interface AboutUsListner {
+        /**
+         * Method to listen the pre-execution call for about us listener.
+         */
         void onAboutUsPreExecuteStarted();
-
+        /**
+         * Method to listen the post-execution call for about us listener.
+         */
         void onAboutUsPostExecuteCompleted(String about);
     }
 
-    private AboutUs listener;
-    private Context context;
 
-    public AboutUsAsync(AboutUsInput contactUsInputModel, AboutUs listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     * @param contactUsInputModel
+     * @param listener
+     * @param context
+     */
+    public AboutUsAsync(AboutUsInput contactUsInputModel, AboutUsListner listener, Context context) {
         this.listener = listener;
         this.context = context;
 
