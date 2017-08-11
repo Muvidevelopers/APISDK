@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.ResumeVideoLogDetailsInput;
 
 import org.json.JSONException;
@@ -25,27 +25,56 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by MUVI on 7/6/2017.
+ * Class to get Resume Video Logs details.
  */
 
 public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsInput, Void, Void> {
 
-    ResumeVideoLogDetailsInput resumeVideoLogDetailsInput;
+    private ResumeVideoLogDetailsInput resumeVideoLogDetailsInput;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private String videoLogId = "";
+    private ResumeVideoLogDetailsListener listener;
+    private Context context;
 
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
-    String videoLogId = "";
+    /**
+     * Interface used to allow the caller of a ResumeVideoLogDetailsAsync to run some code when get
+     * responses.
+     */
 
-    public interface ResumeVideoLogDetails {
+
+    public interface ResumeVideoLogDetailsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetResumeVideoLogDetailsPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param status
+         * @param message
+         * @param videoLogId
+         */
 
         void onGetResumeVideoLogDetailsPostExecuteCompleted(int status, String message, String videoLogId);
     }
 
-    private ResumeVideoLogDetails listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param resumeVideoLogDetailsInput
+     * @param listener
+     * @param context
+     */
 
-    public ResumeVideoLogDetailsAsync(ResumeVideoLogDetailsInput resumeVideoLogDetailsInput, ResumeVideoLogDetails listener, Context context) {
+    public ResumeVideoLogDetailsAsync(ResumeVideoLogDetailsInput resumeVideoLogDetailsInput, ResumeVideoLogDetailsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -72,13 +101,13 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
                 conn.setDoOutput(true);
 
                 Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter(CommonConstants.AUTH_TOKEN, this.resumeVideoLogDetailsInput.getAuthToken())
-                        .appendQueryParameter(CommonConstants.USER_ID, this.resumeVideoLogDetailsInput.getUser_id())
-                        .appendQueryParameter(CommonConstants.IP_ADDRESS, this.resumeVideoLogDetailsInput.getIp_address())
-                        .appendQueryParameter(CommonConstants.MOVIE_ID, this.resumeVideoLogDetailsInput.getMovie_id())
-                        .appendQueryParameter(CommonConstants.EPISODE_ID, this.resumeVideoLogDetailsInput.getEpisode_id())
-                        .appendQueryParameter(CommonConstants.PLAYED_LENGTH, this.resumeVideoLogDetailsInput.getPlayed_length())
-                        .appendQueryParameter(CommonConstants.WATCH_STATUS, this.resumeVideoLogDetailsInput.getWatch_status());
+                        .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.resumeVideoLogDetailsInput.getAuthToken())
+                        .appendQueryParameter(HeaderConstants.USER_ID, this.resumeVideoLogDetailsInput.getUser_id())
+                        .appendQueryParameter(HeaderConstants.IP_ADDRESS, this.resumeVideoLogDetailsInput.getIp_address())
+                        .appendQueryParameter(HeaderConstants.MOVIE_ID, this.resumeVideoLogDetailsInput.getMovie_id())
+                        .appendQueryParameter(HeaderConstants.EPISODE_ID, this.resumeVideoLogDetailsInput.getEpisode_id())
+                        .appendQueryParameter(HeaderConstants.PLAYED_LENGTH, this.resumeVideoLogDetailsInput.getPlayed_length())
+                        .appendQueryParameter(HeaderConstants.WATCH_STATUS, this.resumeVideoLogDetailsInput.getWatch_status());
 
                 String query = builder.build().getEncodedQuery();
 
@@ -137,16 +166,16 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
         super.onPreExecute();
         listener.onGetResumeVideoLogDetailsPreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status,responseStr,videoLogId);
+            listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status, responseStr, videoLogId);
             return;
         }
-        if (CommonConstants.hashKey.equals("")) {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status,responseStr,videoLogId);
+            listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status, responseStr, videoLogId);
         }
 
     }
@@ -154,6 +183,6 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status,responseStr,videoLogId);
+        listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status, responseStr, videoLogId);
     }
 }

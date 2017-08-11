@@ -3,11 +3,9 @@ package com.home.apisdk.apiController;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
-import com.home.apisdk.apiModel.AuthUserPaymentInfoInputModel;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.LanguageListInputModel;
 
 import org.apache.http.HttpResponse;
@@ -20,32 +18,62 @@ import org.json.JSONObject;
 
 /**
  * Created by muvi on 4/7/17.
+ * Class to get Translate Language details.
  */
 
-public class GetTranslateLanguageAsync extends AsyncTask<Void,Void,String> {
+public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {
 
+    private GetTranslateLanguageInfoListener listener;
+    private Context context;
+    private LanguageListInputModel languageListInputModel;
+    private String PACKAGE_NAME;
+    private String message = "";
+    private String responseStr;
+    private int code;
+    private String resultJsonString = "";
 
-    public interface GetTranslateLanguageInfoListner{
+    /**
+     * Interface used to allow the caller of a GetTranslateLanguageAsync to run some code when get
+     * responses.
+     */
+
+    public interface GetTranslateLanguageInfoListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetTranslateLanguagePreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param jsonResponse
+         * @param status
+         */
+
         void onGetTranslateLanguagePostExecuteCompleted(String jsonResponse, int status);
     }
 
-    private GetTranslateLanguageInfoListner listener;
-    private Context context;
-    private LanguageListInputModel languageListInputModel;
-    private  String PACKAGE_NAME,message="",responseStr;
-    int code;
-    String resultJsonString ="";
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param languageListInputModel
+     * @param listener
+     * @param context
+     */
 
     public GetTranslateLanguageAsync(LanguageListInputModel languageListInputModel,
-                                     GetTranslateLanguageInfoListner listener, Context context) {
+                                     GetTranslateLanguageInfoListener listener, Context context) {
         this.listener = listener;
         this.context = context;
         this.languageListInputModel = languageListInputModel;
 
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
-        Log.v("MUVISDK","register user payment");
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
+        Log.v("MUVISDK", "register user payment");
     }
 
     @Override
@@ -56,8 +84,8 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void,Void,String> {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(urlRouteList);
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(CommonConstants.AUTH_TOKEN,languageListInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.LANG_CODE, languageListInputModel.getLangCode());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, languageListInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.LANG_CODE, languageListInputModel.getLangCode());
 
 
             // Execute HTTP Post Request
@@ -86,7 +114,7 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void,Void,String> {
 
     @Override
     protected void onPostExecute(String resultJsonString) {
-        listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString,code);
+        listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code);
 
     }
 
@@ -95,16 +123,16 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void,Void,String> {
         super.onPreExecute();
         listener.onGetTranslateLanguagePreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString,code);
+            listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code);
             return;
         }
-        if (CommonConstants.hashKey.equals("")) {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString,code);
+            listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code);
         }
     }
 }

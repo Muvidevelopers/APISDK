@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.SocialAuthInputModel;
 import com.home.apisdk.apiModel.SocialAuthOutputModel;
 
@@ -23,26 +23,56 @@ import java.io.IOException;
 
 /**
  * Created by Muvi on 12/16/2016.
+ * Class to get Social Auth details.
  */
+
 public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Void> {
-    SocialAuthInputModel socialAuthInputModel;
 
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
+    private SocialAuthInputModel socialAuthInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private SocialAuthListener listener;
+    private Context context;
 
-    public interface SocialAuth {
+    /**
+     * Interface used to allow the caller of a SocialAuthAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface SocialAuthListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onSocialAuthPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param socialAuthOutputModel
+         * @param status
+         * @param message
+         */
 
         void onSocialAuthPostExecuteCompleted(SocialAuthOutputModel socialAuthOutputModel, int status, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private SocialAuth listener;
-    private Context context;
     SocialAuthOutputModel socialAuthOutputModel = new SocialAuthOutputModel();
 
-    public SocialAuthAsynTask(SocialAuthInputModel socialAuthInputModel, SocialAuth listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param socialAuthInputModel
+     * @param listener
+     * @param context
+     */
+
+    public SocialAuthAsynTask(SocialAuthInputModel socialAuthInputModel, SocialAuthListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -61,12 +91,12 @@ public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Vo
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getSocialauthUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.socialAuthInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.EMAIL, this.socialAuthInputModel.getEmail());
-            httppost.addHeader(CommonConstants.PASSWORD, this.socialAuthInputModel.getPassword());
-            httppost.addHeader(CommonConstants.NAME, this.socialAuthInputModel.getName());
-            httppost.addHeader(CommonConstants.FB_USER_ID, this.socialAuthInputModel.getFb_userid());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.socialAuthInputModel.getLanguage());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.socialAuthInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.EMAIL, this.socialAuthInputModel.getEmail());
+            httppost.addHeader(HeaderConstants.PASSWORD, this.socialAuthInputModel.getPassword());
+            httppost.addHeader(HeaderConstants.NAME, this.socialAuthInputModel.getName());
+            httppost.addHeader(HeaderConstants.FB_USER_ID, this.socialAuthInputModel.getFb_userid());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.socialAuthInputModel.getLanguage());
 
 
             // Execute HTTP Post Request
@@ -188,15 +218,13 @@ public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Vo
         listener.onSocialAuthPreExecuteStarted();
 
         status = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onSocialAuthPostExecuteCompleted(socialAuthOutputModel, status, message);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onSocialAuthPostExecuteCompleted(socialAuthOutputModel, status, message);

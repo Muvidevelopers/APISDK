@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.GetInvoicePdfInputModel;
 import com.home.apisdk.apiModel.GetInvoicePdfOutputModel;
 
@@ -22,25 +22,57 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to get Invoice Pdf details.
  */
 
 public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Void, Void> {
 
-    public GetInvoicePdfInputModel getInvoicePdfInputModel;
-    String PACKAGE_NAME, message, responseStr, status;
-    int code;
-    GetInvoicePdfOutputModel getInvoicePdfOutputModel;
+    private GetInvoicePdfInputModel getInvoicePdfInputModel;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private String status;
+    private int code;
+    private GetInvoicePdfOutputModel getInvoicePdfOutputModel;
+    private GetInvoicePdfListener listener;
+    private Context context;
 
-    public interface GetInvoicePdf {
+    /**
+     * Interface used to allow the caller of a GetInvoicePdfAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface GetInvoicePdfListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetInvoicePdfPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param getInvoicePdfOutputModel
+         * @param code
+         * @param message
+         * @param status
+         */
 
         void onGetInvoicePdfPostExecuteCompleted(GetInvoicePdfOutputModel getInvoicePdfOutputModel, int code, String message, String status);
     }
 
-    private GetInvoicePdf listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param getInvoicePdfInputModel
+     * @param listener
+     * @param context
+     */
 
-    public GetInvoicePdfAsynTask(GetInvoicePdfInputModel getInvoicePdfInputModel, GetInvoicePdf listener, Context context) {
+    public GetInvoicePdfAsynTask(GetInvoicePdfInputModel getInvoicePdfInputModel, GetInvoicePdfListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -59,11 +91,11 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetInvoicePdfUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.getInvoicePdfInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.ID, this.getInvoicePdfInputModel.getId());
-            httppost.addHeader(CommonConstants.USER_ID, this.getInvoicePdfInputModel.getUser_id());
-            httppost.addHeader(CommonConstants.DEVICE_TYPE, this.getInvoicePdfInputModel.getDevice_type());
-            httppost.addHeader(CommonConstants.LANG_CODE, this.getInvoicePdfInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getInvoicePdfInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.ID, this.getInvoicePdfInputModel.getId());
+            httppost.addHeader(HeaderConstants.USER_ID, this.getInvoicePdfInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.DEVICE_TYPE, this.getInvoicePdfInputModel.getDevice_type());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.getInvoicePdfInputModel.getLang_code());
             // Execute HTTP Post Request
             try {
                 HttpResponse response = httpclient.execute(httppost);
@@ -107,18 +139,16 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
         super.onPreExecute();
         listener.onGetInvoicePdfPreExecuteStarted();
         code = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel,code,message,status);
+            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel,code,message,status);
+            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);
         }
 
 

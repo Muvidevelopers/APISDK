@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.FeatureContentInputModel;
 import com.home.apisdk.apiModel.FeatureContentOutputModel;
 
@@ -24,26 +24,56 @@ import java.util.ArrayList;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Feature Content details.
  */
 public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputModel, Void, Void> {
 
-    FeatureContentInputModel featureContentInputModel;
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
+    private FeatureContentInputModel featureContentInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private GetFeatureContentListener listener;
+    private Context context;
 
-    public interface GetFeatureContent {
+    /**
+     * Interface used to allow the caller of a GetFeatureContentAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface GetFeatureContentListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetFeatureContentPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param featureContentOutputModel
+         * @param status
+         * @param message
+         */
 
         void onGetFeatureContentPostExecuteCompleted(ArrayList<FeatureContentOutputModel> featureContentOutputModel, int status, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private GetFeatureContent listener;
-    private Context context;
+
     ArrayList<FeatureContentOutputModel> featureContentOutputModel = new ArrayList<FeatureContentOutputModel>();
 
-    public GetFeatureContentAsynTask(FeatureContentInputModel featureContentInputModel, GetFeatureContent listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param featureContentInputModel
+     * @param listener
+     * @param context
+     */
+
+    public GetFeatureContentAsynTask(FeatureContentInputModel featureContentInputModel, GetFeatureContentListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -63,13 +93,13 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetFeatureContentUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.featureContentInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.SECTION_ID, this.featureContentInputModel.getSection_id());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.featureContentInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.featureContentInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.SECTION_ID, this.featureContentInputModel.getSection_id());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.featureContentInputModel.getLang_code());
 
-            Log.v("MuviSDK","authToken = "+ this.featureContentInputModel.getAuthToken());
-            Log.v("MuviSDK","section_id = "+ this.featureContentInputModel.getSection_id());
-            Log.v("MuviSDK  ","lang_code = "+ this.featureContentInputModel.getLang_code());
+            Log.v("MuviSDK", "authToken = " + this.featureContentInputModel.getAuthToken());
+            Log.v("MuviSDK", "section_id = " + this.featureContentInputModel.getSection_id());
+            Log.v("MuviSDK  ", "lang_code = " + this.featureContentInputModel.getLang_code());
 //            httppost.addHeader("limit",this.featureContentInputModel.getLimit());
 //            httppost.addHeader("offset",this.featureContentInputModel.getOffset());
 //            httppost.addHeader("orderby",this.featureContentInputModel.getOrderby());
@@ -167,19 +197,17 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
         listener.onGetFeatureContentPreExecuteStarted();
         responseStr = "0";
         status = 0;
-            if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-            {
-                this.cancel(true);
-                message = "Packge Name Not Matched";
-                listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel,status,message);
-                return;
-            }
-            if(CommonConstants.hashKey.equals(""))
-            {
-                this.cancel(true);
-                message = "Hash Key Is Not Available. Please Initialize The SDK";
-                listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel,status,message);
-            }
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+            this.cancel(true);
+            message = "Packge Name Not Matched";
+            listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel, status, message);
+            return;
+        }
+        if (HeaderConstants.hashKey.equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel, status, message);
+        }
 
 
     }

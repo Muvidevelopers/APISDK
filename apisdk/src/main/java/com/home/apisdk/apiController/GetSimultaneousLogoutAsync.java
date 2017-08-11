@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.SimultaneousLogoutInput;
 
 import org.apache.http.HttpResponse;
@@ -22,23 +22,53 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 7/4/2017.
+ * Class to get Simultaneous Logout details.
  */
 
 public class GetSimultaneousLogoutAsync extends AsyncTask<SimultaneousLogoutInput, Void, Void> {
-    public SimultaneousLogoutInput simultaneousLogoutInput;
-    String PACKAGE_NAME, responseStr,message;
-    int code;
 
-    public interface SimultaneousLogoutAsync {
+    private SimultaneousLogoutInput simultaneousLogoutInput;
+    private String PACKAGE_NAME;
+    private String responseStr;
+    private String message;
+    private int code;
+    private SimultaneousLogoutAsyncListener listener;
+    private Context context;
+
+    /**
+     * Interface used to allow the caller of a GetSimultaneousLogoutAsync to run some code when get
+     * responses.
+     */
+
+    public interface SimultaneousLogoutAsyncListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onSimultaneousLogoutPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param code
+         */
 
         void onSimultaneousLogoutPostExecuteCompleted(int code);
     }
 
-    private SimultaneousLogoutAsync listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param simultaneousLogoutInput
+     * @param listener
+     * @param context
+     */
 
-    public GetSimultaneousLogoutAsync(SimultaneousLogoutInput simultaneousLogoutInput, SimultaneousLogoutAsync listener, Context context) {
+
+    public GetSimultaneousLogoutAsync(SimultaneousLogoutInput simultaneousLogoutInput, SimultaneousLogoutAsyncListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -58,9 +88,9 @@ public class GetSimultaneousLogoutAsync extends AsyncTask<SimultaneousLogoutInpu
             HttpPost httppost = new HttpPost(APIUrlConstant.getLogoutAll());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.simultaneousLogoutInput.getAuthToken());
-            httppost.addHeader(CommonConstants.DEVICE_TYPE, this.simultaneousLogoutInput.getDevice_type());
-            httppost.addHeader(CommonConstants.EMAIL_ID, this.simultaneousLogoutInput.getEmail_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.simultaneousLogoutInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.DEVICE_TYPE, this.simultaneousLogoutInput.getDevice_type());
+            httppost.addHeader(HeaderConstants.EMAIL_ID, this.simultaneousLogoutInput.getEmail_id());
 
             try {
                 HttpResponse response = httpclient.execute(httppost);
@@ -89,13 +119,13 @@ public class GetSimultaneousLogoutAsync extends AsyncTask<SimultaneousLogoutInpu
         super.onPreExecute();
         listener.onSimultaneousLogoutPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onSimultaneousLogoutPostExecuteCompleted(code);
             return;
         }
-        if (CommonConstants.hashKey.equals("")) {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onSimultaneousLogoutPostExecuteCompleted(code);

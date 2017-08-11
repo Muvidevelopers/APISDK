@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.PurchaseHistoryInputModel;
 import com.home.apisdk.apiModel.PurchaseHistoryOutputModel;
 
@@ -24,25 +24,55 @@ import java.util.ArrayList;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to get Purchase History details.
  */
 
 public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel, Void, Void> {
 
-    public PurchaseHistoryInputModel purchaseHistoryInputModel;
-    String PACKAGE_NAME, message, responseStr;
-    int code;
+    private PurchaseHistoryInputModel purchaseHistoryInputModel;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private int code;
+    private PurchaseHistoryListener listener;
+    private Context context;
 
-    public interface PurchaseHistory {
+    /**
+     * Interface used to allow the caller of a PurchaseHistoryAsyntask to run some code when get
+     * responses.
+     */
+
+    public interface PurchaseHistoryListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onPurchaseHistoryPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param purchaseHistoryOutputModel
+         * @param status
+         */
 
         void onPurchaseHistoryPostExecuteCompleted(ArrayList<PurchaseHistoryOutputModel> purchaseHistoryOutputModel, int status);
     }
 
-    private PurchaseHistory listener;
-    private Context context;
     ArrayList<PurchaseHistoryOutputModel> purchaseHistoryOutputModel = new ArrayList<PurchaseHistoryOutputModel>();
 
-    public PurchaseHistoryAsyntask(PurchaseHistoryInputModel purchaseHistoryInputModel, PurchaseHistory listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param purchaseHistoryInputModel
+     * @param listener
+     * @param context
+     */
+
+    public PurchaseHistoryAsyntask(PurchaseHistoryInputModel purchaseHistoryInputModel, PurchaseHistoryListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -63,10 +93,10 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
             HttpPost httppost = new HttpPost(APIUrlConstant.getPurchaseHistoryUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.purchaseHistoryInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.USER_ID, this.purchaseHistoryInputModel.getUser_id());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.purchaseHistoryInputModel.getLang_code());
-            httppost.addHeader(CommonConstants.ID,this.purchaseHistoryInputModel.getId());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.purchaseHistoryInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.purchaseHistoryInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.purchaseHistoryInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.ID, this.purchaseHistoryInputModel.getId());
 
 
             try {
@@ -151,15 +181,13 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
         super.onPreExecute();
         listener.onPurchaseHistoryPreExecuteStarted();
         code = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);

@@ -6,9 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
-import com.home.apisdk.apiModel.ContentListInput;
-import com.home.apisdk.apiModel.ContentListOutput;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.ViewFavouriteInputModel;
 import com.home.apisdk.apiModel.ViewFavouriteOutputModel;
 
@@ -26,25 +24,56 @@ import java.util.ArrayList;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get View Favorite details.
  */
 public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Void, Void> {
 
-    ViewFavouriteInputModel viewFavouriteInputModel;
-    String responseStr;
-    int status;
-    int totalItems;
-    String message, PACKAGE_NAME;
+    private ViewFavouriteInputModel viewFavouriteInputModel;
+    private String responseStr;
+    private int status;
+    private int totalItems;
+    private String message;
+    private String PACKAGE_NAME;
+    private ViewFavouriteListener listener;
+    private Context context;
+
+
+    /**
+     * Interface used to allow the caller of a ViewFavouriteAsynTask to run some code when get
+     * responses.
+     */
 
     public interface ViewFavouriteListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onViewFavouritePreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param viewFavouriteOutputModelArray
+         * @param status
+         * @param totalItems
+         * @param message
+         */
 
         void onViewFavouritePostExecuteCompleted(ArrayList<ViewFavouriteOutputModel> viewFavouriteOutputModelArray, int status, int totalItems, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private ViewFavouriteListener listener;
-    private Context context;
     ArrayList<ViewFavouriteOutputModel> viewFavouriteOutputModel = new ArrayList<ViewFavouriteOutputModel>();
+
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param viewFavouriteInputModel
+     * @param listener
+     * @param context
+     */
 
     public ViewFavouriteAsynTask(ViewFavouriteInputModel viewFavouriteInputModel, ViewFavouriteListener listener, Context context) {
         this.listener = listener;
@@ -66,11 +95,11 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
             HttpPost httppost = new HttpPost(APIUrlConstant.getViewFavorite());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.viewFavouriteInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.USER_ID, this.viewFavouriteInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.viewFavouriteInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.viewFavouriteInputModel.getUser_id());
 
-            Log.v("SUBHA", "AUTH_TOKEN" + CommonConstants.AUTH_TOKEN);
-            Log.v("SUBHA", "USER_ID" + CommonConstants.USER_ID);
+            Log.v("SUBHA", "AUTH_TOKEN" + HeaderConstants.AUTH_TOKEN);
+            Log.v("SUBHA", "USER_ID" + HeaderConstants.USER_ID);
             Log.v("SUBHA", "authtoken" + this.viewFavouriteInputModel.getAuthToken());
             Log.v("SUBHA", "user id" + this.viewFavouriteInputModel.getUser_id());
             // Execute HTTP Post Request
@@ -114,28 +143,27 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
                             content.setMovieId(jsonChildNode.optString("movie_uniq_id"));
                         }
 
-                        Log.v("SUBHA","movieid " +jsonChildNode.optString("movie_uniq_id") );
-
+                        Log.v("SUBHA", "movieid " + jsonChildNode.optString("movie_uniq_id"));
 
 
                         if ((jsonChildNode.has("title")) && jsonChildNode.optString("title").trim() != null && !jsonChildNode.optString("title").trim().isEmpty() && !jsonChildNode.optString("title").trim().equals("null") && !jsonChildNode.optString("title").trim().matches("")) {
                             content.setTitle(jsonChildNode.optString("title"));
                         }
-                        Log.v("SUBHA","title " +jsonChildNode.optString("title") );
+                        Log.v("SUBHA", "title " + jsonChildNode.optString("title"));
                         if ((jsonChildNode.has("poster")) && jsonChildNode.optString("poster").trim() != null && !jsonChildNode.optString("poster").trim().isEmpty() && !jsonChildNode.optString("poster").trim().equals("null") && !jsonChildNode.optString("poster").trim().matches("")) {
                             content.setPoster(jsonChildNode.optString("poster"));
 
                         }
-                        Log.v("SUBHA","poster " +jsonChildNode.optString("poster") );
+                        Log.v("SUBHA", "poster " + jsonChildNode.optString("poster"));
                         if ((jsonChildNode.has("permalink")) && jsonChildNode.optString("permalink").trim() != null && !jsonChildNode.optString("permalink").trim().isEmpty() && !jsonChildNode.optString("permalink").trim().equals("null") && !jsonChildNode.optString("permalink").trim().matches("")) {
                             content.setPermalink(jsonChildNode.optString("permalink"));
                         }
-                        Log.v("SUBHA","permalink " +jsonChildNode.optString("permalink") );
+                        Log.v("SUBHA", "permalink " + jsonChildNode.optString("permalink"));
                         if ((jsonChildNode.has("content_types_id")) && jsonChildNode.optString("content_types_id").trim() != null && !jsonChildNode.optString("content_types_id").trim().isEmpty() && !jsonChildNode.optString("content_types_id").trim().equals("null") && !jsonChildNode.optString("content_types_id").trim().matches("")) {
                             content.setContentTypesId(jsonChildNode.optString("content_types_id"));
 
                         }
-                        Log.v("SUBHA","content_types_id " +jsonChildNode.optString("content_types_id") );
+                        Log.v("SUBHA", "content_types_id " + jsonChildNode.optString("content_types_id"));
                         //videoTypeIdStr = "1";
 
 
@@ -144,7 +172,7 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
 
                         }
 
-                        Log.v("SUBHA","is_episode " +jsonChildNode.optString("is_episode") );
+                        Log.v("SUBHA", "is_episode " + jsonChildNode.optString("is_episode"));
                         viewFavouriteOutputModel.add(content);
                     } catch (Exception e) {
                         status = 0;
@@ -169,13 +197,13 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
         listener.onViewFavouritePreExecuteStarted();
         responseStr = "0";
         status = 0;
-        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutputModel, status, totalItems, message);
             return;
         }
-        if (CommonConstants.hashKey.equals("")) {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutputModel, status, totalItems, message);

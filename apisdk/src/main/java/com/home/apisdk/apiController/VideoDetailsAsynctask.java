@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.GetVideoDetailsInput;
 import com.home.apisdk.apiModel.Get_Video_Details_Output;
 
@@ -24,32 +24,65 @@ import java.util.ArrayList;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to get Video details.
  */
 
 public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void, Void> {
 
-    public GetVideoDetailsInput getVideoDetailsInput;
-    ArrayList<String> SubTitleName = new ArrayList<>();
-    ArrayList<String> SubTitlePath = new ArrayList<>();
-    ArrayList<String> FakeSubTitlePath = new ArrayList<>();
-    ArrayList<String> ResolutionFormat = new ArrayList<>();
-    ArrayList<String>ResolutionUrl = new ArrayList<>();
-    String PACKAGE_NAME, message, responseStr, status;
-    JSONArray SubtitleJosnArray = null;
-    JSONArray ResolutionJosnArray = null;
-    int code;
-    Get_Video_Details_Output get_video_details_output;
+    private GetVideoDetailsInput getVideoDetailsInput;
+    private ArrayList<String> SubTitleName = new ArrayList<>();
+    private ArrayList<String> SubTitlePath = new ArrayList<>();
+    private ArrayList<String> FakeSubTitlePath = new ArrayList<>();
+    private ArrayList<String> ResolutionFormat = new ArrayList<>();
+    private ArrayList<String> ResolutionUrl = new ArrayList<>();
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private String status;
+    private JSONArray SubtitleJosnArray = null;
+    private JSONArray ResolutionJosnArray = null;
+    private int code;
+    private Get_Video_Details_Output get_video_details_output;
+    private VideoDetailsListener listener;
+    private Context context;
 
-    public interface VideoDetails {
+    /**
+     * Interface used to allow the caller of a VideoDetailsAsynctask to run some code when get
+     * responses.
+     */
+
+    public interface VideoDetailsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onVideoDetailsPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param get_video_details_output
+         * @param code
+         * @param status
+         * @param message
+         */
 
         void onVideoDetailsPostExecuteCompleted(Get_Video_Details_Output get_video_details_output, int code, String status, String message);
     }
 
-    private VideoDetails listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param getVideoDetailsInput
+     * @param listener
+     * @param context
+     */
 
-    public VideoDetailsAsynctask(GetVideoDetailsInput getVideoDetailsInput, VideoDetails listener, Context context) {
+
+    public VideoDetailsAsynctask(GetVideoDetailsInput getVideoDetailsInput, VideoDetailsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -69,11 +102,11 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
             HttpPost httppost = new HttpPost(APIUrlConstant.getVideoDetailsUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.getVideoDetailsInput.getAuthToken());
-            httppost.addHeader(CommonConstants.CONTENT_UNIQ_ID, this.getVideoDetailsInput.getContent_uniq_id());
-            httppost.addHeader(CommonConstants.STREAM_UNIQ_ID, this.getVideoDetailsInput.getStream_uniq_id());
-            httppost.addHeader(CommonConstants.INTERNET_SPEED, this.getVideoDetailsInput.getInternetSpeed());
-            httppost.addHeader(CommonConstants.USER_ID, this.getVideoDetailsInput.getUser_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getVideoDetailsInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.CONTENT_UNIQ_ID, this.getVideoDetailsInput.getContent_uniq_id());
+            httppost.addHeader(HeaderConstants.STREAM_UNIQ_ID, this.getVideoDetailsInput.getStream_uniq_id());
+            httppost.addHeader(HeaderConstants.INTERNET_SPEED, this.getVideoDetailsInput.getInternetSpeed());
+            httppost.addHeader(HeaderConstants.USER_ID, this.getVideoDetailsInput.getUser_id());
 
             // Execute HTTP Post Request
             try {
@@ -120,12 +153,9 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
                     message = "";
                     status = "";
                 }
-                if(SubtitleJosnArray!=null)
-                {
-                    if(SubtitleJosnArray.length()>0)
-                    {
-                        for(int i=0;i<SubtitleJosnArray.length();i++)
-                        {
+                if (SubtitleJosnArray != null) {
+                    if (SubtitleJosnArray.length() > 0) {
+                        for (int i = 0; i < SubtitleJosnArray.length(); i++) {
                             SubTitleName.add(SubtitleJosnArray.getJSONObject(i).optString("language").trim());
                             FakeSubTitlePath.add(SubtitleJosnArray.getJSONObject(i).optString("url").trim());
 
@@ -139,25 +169,19 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
 
                 /******Resolution****/
 
-                if(ResolutionJosnArray!=null)
-                {
-                    if(ResolutionJosnArray.length()>0)
-                    {
-                        for(int i=0;i<ResolutionJosnArray.length();i++)
-                        {
-                            if((ResolutionJosnArray.getJSONObject(i).optString("resolution").trim()).equals("BEST"))
-                            {
+                if (ResolutionJosnArray != null) {
+                    if (ResolutionJosnArray.length() > 0) {
+                        for (int i = 0; i < ResolutionJosnArray.length(); i++) {
+                            if ((ResolutionJosnArray.getJSONObject(i).optString("resolution").trim()).equals("BEST")) {
                                 ResolutionFormat.add(ResolutionJosnArray.getJSONObject(i).optString("resolution").trim());
-                            }
-                            else
-                            {
-                                ResolutionFormat.add((ResolutionJosnArray.getJSONObject(i).optString("resolution").trim())+"p");
+                            } else {
+                                ResolutionFormat.add((ResolutionJosnArray.getJSONObject(i).optString("resolution").trim()) + "p");
                             }
 
                             ResolutionUrl.add(ResolutionJosnArray.getJSONObject(i).optString("url").trim());
 
-                            Log.v("MUVISDK","Resolution Format Name ="+ResolutionJosnArray.getJSONObject(i).optString("resolution").trim());
-                            Log.v("MUVISDK","Resolution url ="+ResolutionJosnArray.getJSONObject(i).optString("url").trim());
+                            Log.v("MUVISDK", "Resolution Format Name =" + ResolutionJosnArray.getJSONObject(i).optString("resolution").trim());
+                            Log.v("MUVISDK", "Resolution url =" + ResolutionJosnArray.getJSONObject(i).optString("url").trim());
                         }
 
                         get_video_details_output.setResolutionFormat(ResolutionFormat);
@@ -182,18 +206,16 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
         listener.onVideoDetailsPreExecuteStarted();
         code = 0;
         status = "";
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onVideoDetailsPostExecuteCompleted(get_video_details_output,code,status,message);
+            listener.onVideoDetailsPostExecuteCompleted(get_video_details_output, code, status, message);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onVideoDetailsPostExecuteCompleted(get_video_details_output,code,status,message);
+            listener.onVideoDetailsPostExecuteCompleted(get_video_details_output, code, status, message);
         }
     }
 

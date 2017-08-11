@@ -7,7 +7,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.VideoLogsInputModel;
 
 import org.json.JSONException;
@@ -26,26 +26,54 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Muvi on 12/16/2016.
+ * Class to get Video Logs details.
  */
 public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, Void> {
-    VideoLogsInputModel videoLogsInputModel;
 
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
-    String videoLogId = "";
+    private VideoLogsInputModel videoLogsInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private String videoLogId = "";
+    private GetVideoLogsListener listener;
+    private Context context;
 
-    public interface GetVideoLogs {
+    /**
+     * Interface used to allow the caller of a GetVideoLogsAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface GetVideoLogsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetVideoLogsPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param status
+         * @param message
+         * @param videoLogId
+         */
 
         void onGetVideoLogsPostExecuteCompleted(int status, String message, String videoLogId);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private GetVideoLogs listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param videoLogsInputModel
+     * @param listener
+     * @param context
+     */
 
-    public GetVideoLogsAsynTask(VideoLogsInputModel videoLogsInputModel, GetVideoLogs listener, Context context) {
+    public GetVideoLogsAsynTask(VideoLogsInputModel videoLogsInputModel, GetVideoLogsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -73,15 +101,15 @@ public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, V
                 conn.setDoOutput(true);
 
                 Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter(CommonConstants.AUTH_TOKEN, this.videoLogsInputModel.getAuthToken())
-                        .appendQueryParameter(CommonConstants.USER_ID, this.videoLogsInputModel.getUserId())
-                        .appendQueryParameter(CommonConstants.IP_ADDRESS, this.videoLogsInputModel.getIpAddress())
-                        .appendQueryParameter(CommonConstants.MOVIE_ID, this.videoLogsInputModel.getMuviUniqueId())
-                        .appendQueryParameter(CommonConstants.EPISODE_ID, this.videoLogsInputModel.getEpisodeStreamUniqueId())
-                        .appendQueryParameter(CommonConstants.PLAYED_LENGTH, this.videoLogsInputModel.getPlayedLength())
-                        .appendQueryParameter(CommonConstants.WATCH_STATUS, this.videoLogsInputModel.getWatchStatus())
-                        .appendQueryParameter(CommonConstants.DEVICE_TYPE, this.videoLogsInputModel.getDeviceType())
-                        .appendQueryParameter(CommonConstants.LOG_ID, this.videoLogsInputModel.getVideoLogId());
+                        .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.videoLogsInputModel.getAuthToken())
+                        .appendQueryParameter(HeaderConstants.USER_ID, this.videoLogsInputModel.getUserId())
+                        .appendQueryParameter(HeaderConstants.IP_ADDRESS, this.videoLogsInputModel.getIpAddress())
+                        .appendQueryParameter(HeaderConstants.MOVIE_ID, this.videoLogsInputModel.getMuviUniqueId())
+                        .appendQueryParameter(HeaderConstants.EPISODE_ID, this.videoLogsInputModel.getEpisodeStreamUniqueId())
+                        .appendQueryParameter(HeaderConstants.PLAYED_LENGTH, this.videoLogsInputModel.getPlayedLength())
+                        .appendQueryParameter(HeaderConstants.WATCH_STATUS, this.videoLogsInputModel.getWatchStatus())
+                        .appendQueryParameter(HeaderConstants.DEVICE_TYPE, this.videoLogsInputModel.getDeviceType())
+                        .appendQueryParameter(HeaderConstants.LOG_ID, this.videoLogsInputModel.getVideoLogId());
                 String query = builder.build().getEncodedQuery();
 
                 OutputStream os = conn.getOutputStream();
@@ -156,15 +184,13 @@ public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, V
         listener.onGetVideoLogsPreExecuteStarted();
 
         status = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetVideoLogsPostExecuteCompleted(status, message,videoLogId);
+            listener.onGetVideoLogsPostExecuteCompleted(status, message, videoLogId);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetVideoLogsPostExecuteCompleted(status, message, videoLogId);

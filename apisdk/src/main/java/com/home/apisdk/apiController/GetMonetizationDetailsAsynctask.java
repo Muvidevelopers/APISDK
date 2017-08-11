@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.GetMonetizationDetailsInputModel;
 import com.home.apisdk.apiModel.GetMonetizationDetailsOutputModel;
 
@@ -23,32 +23,63 @@ import java.io.IOException;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Monitization details.
  */
 public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDetailsInputModel, Void, Void> {
 
-    GetMonetizationDetailsInputModel getMonetizationDetailsInputModel;
-    String responseStr;
-    int status;
-    String message,PACKAGE_NAME;
+    private GetMonetizationDetailsInputModel getMonetizationDetailsInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private GetMonetizationDetailsListener listener;
+    private Context context;
 
-    public interface GetMonetizationDetails {
+    /**
+     * Interface used to allow the caller of a GetMonetizationDetailsAsynctask to run some code when get
+     * responses.
+     */
+
+    public interface GetMonetizationDetailsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetMonetizationDetailsPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param getMonetizationDetailsOutputModel
+         * @param status
+         * @param message
+         */
+
         void onGetMonetizationDetailsPostExecuteCompleted(GetMonetizationDetailsOutputModel getMonetizationDetailsOutputModel, int status, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private GetMonetizationDetails listener;
-    private Context context;
-    GetMonetizationDetailsOutputModel getMonetizationDetailsOutputModel=new GetMonetizationDetailsOutputModel();
 
-    public GetMonetizationDetailsAsynctask(GetMonetizationDetailsInputModel getMonetizationDetailsInputModel,GetMonetizationDetails listener, Context context) {
+    GetMonetizationDetailsOutputModel getMonetizationDetailsOutputModel = new GetMonetizationDetailsOutputModel();
+
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param getMonetizationDetailsInputModel
+     * @param listener
+     * @param context
+     */
+
+    public GetMonetizationDetailsAsynctask(GetMonetizationDetailsInputModel getMonetizationDetailsInputModel, GetMonetizationDetailsListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
         this.getMonetizationDetailsInputModel = getMonetizationDetailsInputModel;
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
-        Log.v("MUVISDK","transaction" + responseStr);
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
+        Log.v("MUVISDK", "transaction" + responseStr);
 
 
     }
@@ -57,14 +88,14 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
     protected Void doInBackground(GetMonetizationDetailsInputModel... params) {
 
         try {
-            HttpClient httpclient=new DefaultHttpClient();
+            HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetMonetizationDetailsUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.getMonetizationDetailsInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.USER_ID,this.getMonetizationDetailsInputModel.getUser_id());
-            httppost.addHeader(CommonConstants.MOVIE_ID,this.getMonetizationDetailsInputModel.getMovie_id());
-            httppost.addHeader(CommonConstants.PURCHASE_TYPE,this.getMonetizationDetailsInputModel.getPurchase_type());
-            httppost.addHeader(CommonConstants.STREAM_ID,this.getMonetizationDetailsInputModel.getStream_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getMonetizationDetailsInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.getMonetizationDetailsInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.MOVIE_ID, this.getMonetizationDetailsInputModel.getMovie_id());
+            httppost.addHeader(HeaderConstants.PURCHASE_TYPE, this.getMonetizationDetailsInputModel.getPurchase_type());
+            httppost.addHeader(HeaderConstants.STREAM_ID, this.getMonetizationDetailsInputModel.getStream_id());
 
 
             // Execute HTTP Post Request
@@ -73,21 +104,20 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
                 responseStr = EntityUtils.toString(response.getEntity());
 
 
-            } catch (org.apache.http.conn.ConnectTimeoutException e){
+            } catch (org.apache.http.conn.ConnectTimeoutException e) {
 
                 status = 0;
                 message = "Error";
 
 
-
-            }catch (IOException e) {
+            } catch (IOException e) {
                 status = 0;
                 message = "Error";
             }
 
-            Log.v("MUVISDK","response = "+ responseStr);
-            JSONObject myJson =null;
-            if(responseStr!=null){
+            Log.v("MUVISDK", "response = " + responseStr);
+            JSONObject myJson = null;
+            if (responseStr != null) {
                 myJson = new JSONObject(responseStr);
                 status = Integer.parseInt(myJson.optString("code"));
                 message = myJson.optString("msg");
@@ -100,17 +130,14 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
                     JSONObject mainJson = myJson.getJSONObject("monetization_plans");
                     if ((mainJson.has("voucher")) && mainJson.optString("voucher").trim() != null && !mainJson.optString("voucher").trim().isEmpty() && !mainJson.optString("voucher").trim().equals("null") && !mainJson.optString("voucher").trim().matches("")) {
                         getMonetizationDetailsOutputModel.setVoucher(mainJson.optString("voucher"));
-                    }else{
+                    } else {
                         getMonetizationDetailsOutputModel.setVoucher("");
 
                     }
 
 
-
                 }
-            }
-
-            else{
+            } else {
 
                 responseStr = "0";
                 status = 0;
@@ -120,10 +147,8 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
 
             responseStr = "0";
             status = 0;
-            message = "Error";            }
-
-        catch (Exception e)
-        {
+            message = "Error";
+        } catch (Exception e) {
 
             responseStr = "0";
             status = 0;
@@ -140,28 +165,25 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
         listener.onGetMonetizationDetailsPreExecuteStarted();
 
         status = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel,status,message);
+            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel,status,message);
+            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message);
         }
 
 
     }
 
 
-
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel,status,message);
+        listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message);
 
     }
 

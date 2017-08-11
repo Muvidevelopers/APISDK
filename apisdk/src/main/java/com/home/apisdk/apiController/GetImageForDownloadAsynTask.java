@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.GetImageForDownloadInputModel;
 import com.home.apisdk.apiModel.GetImageForDownloadOutputModel;
 
@@ -22,27 +22,58 @@ import java.io.IOException;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Image For Download details.
  */
 public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadInputModel, Void, Void> {
 
-    GetImageForDownloadInputModel getImageForDownloadInputModel;
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
+    private GetImageForDownloadInputModel getImageForDownloadInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private GetImageForDownloadListener listener;
+    private Context context;
 
-    public interface GetImageForDownload {
+    /**
+     * Interface used to allow the caller of a GetImageForDownloadAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface GetImageForDownloadListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetImageForDownloadPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param getImageForDownloadOutputModel
+         * @param status
+         * @param message
+         */
 
         void onGetImageForDownloadPostExecuteCompleted(GetImageForDownloadOutputModel getImageForDownloadOutputModel, int status, String message);
     }
 
-    private GetImageForDownload listener;
-    private Context context;
+
     GetImageForDownloadOutputModel getImageForDownloadOutputModel = new GetImageForDownloadOutputModel();
 
-    public GetImageForDownloadAsynTask(GetImageForDownloadInputModel getImageForDownloadInputModel, GetImageForDownload listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param getImageForDownloadInputModel
+     * @param listener
+     * @param context
+     */
+
+    public GetImageForDownloadAsynTask(GetImageForDownloadInputModel getImageForDownloadInputModel, GetImageForDownloadListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
 
         this.getImageForDownloadInputModel = getImageForDownloadInputModel;
@@ -60,7 +91,7 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetImageForDownloadUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.getImageForDownloadInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getImageForDownloadInputModel.getAuthToken());
 
 
             // Execute HTTP Post Request
@@ -83,8 +114,8 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
                 myJson = new JSONObject(responseStr);
                 status = Integer.parseInt(myJson.optString("code"));
                 message = myJson.optString("status");
-            }else {
-                status=0;
+            } else {
+                status = 0;
             }
 
 
@@ -109,19 +140,17 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
         listener.onGetImageForDownloadPreExecuteStarted();
         responseStr = "0";
         status = 0;
-            if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-            {
-                this.cancel(true);
-                message = "Packge Name Not Matched";
-                listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel,status,message);
-                return;
-            }
-            if(CommonConstants.hashKey.equals(""))
-            {
-                this.cancel(true);
-                message = "Hash Key Is Not Available. Please Initialize The SDK";
-                listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel,status,message);
-            }
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+            this.cancel(true);
+            message = "Packge Name Not Matched";
+            listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message);
+            return;
+        }
+        if (HeaderConstants.hashKey.equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message);
+        }
 
 
     }

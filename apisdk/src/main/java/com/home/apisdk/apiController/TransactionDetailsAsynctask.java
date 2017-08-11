@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.TransactionInputModel;
 import com.home.apisdk.apiModel.TransactionOutputModel;
 
@@ -23,26 +23,58 @@ import java.io.IOException;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Transaction details.
  */
+
+
 public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel, Void, Void> {
 
-    TransactionInputModel transactionInputModel;
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
+    private TransactionInputModel transactionInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private TransactionListener listener;
+    private Context context;
 
-    public interface Transaction {
+    /**
+     * Interface used to allow the caller of a TransactionDetailsAsynctask to run some code when get
+     * responses.
+     */
+
+    public interface TransactionListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onTransactionPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param transactionOutputModel
+         * @param status
+         * @param message
+         */
 
         void onTransactionPostExecuteCompleted(TransactionOutputModel transactionOutputModel, int status, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private Transaction listener;
-    private Context context;
+
     TransactionOutputModel transactionOutputModel = new TransactionOutputModel();
 
-    public TransactionDetailsAsynctask(TransactionInputModel transactionInputModel, Transaction listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param transactionInputModel
+     * @param listener
+     * @param context
+     */
+
+    public TransactionDetailsAsynctask(TransactionInputModel transactionInputModel, TransactionListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -61,9 +93,9 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getTransactionUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.transactionInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.USER_ID, this.transactionInputModel.getUser_id());
-            httppost.addHeader(CommonConstants.ID, this.transactionInputModel.getId());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.transactionInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.transactionInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.ID, this.transactionInputModel.getId());
 
             // Execute HTTP Post Request
             try {
@@ -182,18 +214,16 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
         listener.onTransactionPreExecuteStarted();
 
         status = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onTransactionPostExecuteCompleted(transactionOutputModel,status,message);
+            listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onTransactionPostExecuteCompleted(transactionOutputModel,status,message);
+            listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message);
         }
         listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message);
 

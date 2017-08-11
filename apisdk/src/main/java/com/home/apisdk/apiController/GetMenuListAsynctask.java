@@ -2,13 +2,11 @@ package com.home.apisdk.apiController;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.View;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.MenuListInput;
 import com.home.apisdk.apiModel.MenuListOutput;
 
@@ -26,32 +24,67 @@ import java.util.ArrayList;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to get Menu List details.
  */
 
-public class GetMenuListAsynctask extends AsyncTask<MenuListInput,Void ,Void > {
+public class GetMenuListAsynctask extends AsyncTask<MenuListInput, Void, Void> {
 
-    public MenuListInput menuListInput;
-    String PACKAGE_NAME,message,responseStr;
-    int code;
+    private MenuListInput menuListInput;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private int code;
+    private GetMenuListListener listener;
+    private Context context;
 
-    public interface GetMenuList{
+    /**
+     * Interface used to allow the caller of a GetMenuListAsynctask to run some code when get
+     * responses.
+     */
+
+    public interface GetMenuListListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetMenuListPreExecuteStarted();
-        void onGetMenuListPostExecuteCompleted(ArrayList<MenuListOutput> menuListOutput,ArrayList<MenuListOutput> footermenuListOutput, int status, String message);
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param menuListOutput
+         * @param footermenuListOutput
+         * @param status
+         * @param message
+         */
+
+        void onGetMenuListPostExecuteCompleted(ArrayList<MenuListOutput> menuListOutput, ArrayList<MenuListOutput> footermenuListOutput, int status, String message);
     }
 
-    private GetMenuList listener;
-    private Context context;
+
     ArrayList<MenuListOutput> menuListOutput = new ArrayList<MenuListOutput>();
     ArrayList<MenuListOutput> footermenuListOutput = new ArrayList<MenuListOutput>();
-    public GetMenuListAsynctask(MenuListInput menuListInput,GetMenuList listener, Context context) {
+
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param menuListInput
+     * @param listener
+     * @param context
+     */
+
+    public GetMenuListAsynctask(MenuListInput menuListInput, GetMenuListListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
 
         this.menuListInput = menuListInput;
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
-        Log.v("MUVISDK","GetMenuListAsynctask");
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
+        Log.v("MUVISDK", "GetMenuListAsynctask");
 
     }
 
@@ -63,9 +96,9 @@ public class GetMenuListAsynctask extends AsyncTask<MenuListInput,Void ,Void > {
             HttpPost httppost = new HttpPost(APIUrlConstant.getMenuListUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.menuListInput.getAuthToken());
-            httppost.addHeader(CommonConstants.COUNTRY, this.menuListInput.getCountry());
-            httppost.addHeader(CommonConstants.LANG_CODE, this.menuListInput.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.menuListInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.COUNTRY, this.menuListInput.getCountry());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.menuListInput.getLang_code());
 
             // Execute HTTP Post Request
             try {
@@ -144,24 +177,22 @@ public class GetMenuListAsynctask extends AsyncTask<MenuListInput,Void ,Void > {
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onGetMenuListPreExecuteStarted();
-        code= 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        code = 0;
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetMenuListPostExecuteCompleted(menuListOutput,footermenuListOutput,code,message);
+            listener.onGetMenuListPostExecuteCompleted(menuListOutput, footermenuListOutput, code, message);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetMenuListPostExecuteCompleted(menuListOutput,footermenuListOutput,code,message);
+            listener.onGetMenuListPostExecuteCompleted(menuListOutput, footermenuListOutput, code, message);
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetMenuListPostExecuteCompleted(menuListOutput,footermenuListOutput,code,message);
+        listener.onGetMenuListPostExecuteCompleted(menuListOutput, footermenuListOutput, code, message);
     }
 }

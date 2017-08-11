@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.GetVoucherPlanInputModel;
 import com.home.apisdk.apiModel.GetVoucherPlanOutputModel;
 
@@ -22,25 +22,56 @@ import java.io.IOException;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Voucher Plan details.
  */
 public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, Void, Void> {
 
-    GetVoucherPlanInputModel getVoucherPlanInputModel;
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
+    private GetVoucherPlanInputModel getVoucherPlanInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private GetVoucherPlanListener listener;
+    private Context context;
 
-    public interface GetVoucherPlan {
+    /**
+     * Interface used to allow the caller of a GetVoucherPlanAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface GetVoucherPlanListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetVoucherPlanPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param getVoucherPlanOutputModel
+         * @param status
+         * @param message
+         */
 
         void onGetVoucherPlanPostExecuteCompleted(GetVoucherPlanOutputModel getVoucherPlanOutputModel, int status, String message);
     }
 
-    private GetVoucherPlan listener;
-    private Context context;
+
     GetVoucherPlanOutputModel getVoucherPlanOutputModel = new GetVoucherPlanOutputModel();
 
-    public GetVoucherPlanAsynTask(GetVoucherPlanInputModel getVoucherPlanInputModel, GetVoucherPlan listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param getVoucherPlanInputModel
+     * @param listener
+     * @param context
+     */
+
+    public GetVoucherPlanAsynTask(GetVoucherPlanInputModel getVoucherPlanInputModel, GetVoucherPlanListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -60,11 +91,11 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetVoucherPlanUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.getVoucherPlanInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.MOVIE_ID, this.getVoucherPlanInputModel.getMovie_id());
-            httppost.addHeader(CommonConstants.STREAM_ID, this.getVoucherPlanInputModel.getStream_id());
-            httppost.addHeader(CommonConstants.SEASON, this.getVoucherPlanInputModel.getSeason());
-            httppost.addHeader(CommonConstants.USER_ID, this.getVoucherPlanInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getVoucherPlanInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.MOVIE_ID, this.getVoucherPlanInputModel.getMovie_id());
+            httppost.addHeader(HeaderConstants.STREAM_ID, this.getVoucherPlanInputModel.getStream_id());
+            httppost.addHeader(HeaderConstants.SEASON, this.getVoucherPlanInputModel.getSeason());
+            httppost.addHeader(HeaderConstants.USER_ID, this.getVoucherPlanInputModel.getUser_id());
 
 
             // Execute HTTP Post Request
@@ -117,19 +148,17 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
         listener.onGetVoucherPlanPreExecuteStarted();
         responseStr = "0";
         status = 0;
-            if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-            {
-                this.cancel(true);
-                message = "Packge Name Not Matched";
-                listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);
-                return;
-            }
-            if(CommonConstants.hashKey.equals(""))
-            {
-                this.cancel(true);
-                message = "Hash Key Is Not Available. Please Initialize The SDK";
-                listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);
-            }
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+            this.cancel(true);
+            message = "Packge Name Not Matched";
+            listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);
+            return;
+        }
+        if (HeaderConstants.hashKey.equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);
+        }
 
 
     }

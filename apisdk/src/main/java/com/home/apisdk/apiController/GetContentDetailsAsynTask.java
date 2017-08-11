@@ -6,9 +6,8 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.APVModel;
-import com.home.apisdk.apiModel.CastAndCrewModel;
 import com.home.apisdk.apiModel.ContentDetailsInput;
 import com.home.apisdk.apiModel.ContentDetailsOutput;
 import com.home.apisdk.apiModel.CurrencyModel;
@@ -20,7 +19,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,27 +28,58 @@ import java.util.Arrays;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Content details.
  */
 public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Void, Void> {
 
-    ContentDetailsInput contentDetailsInput;
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
-    ArrayList<String> season;
+    private ContentDetailsInput contentDetailsInput;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private ArrayList<String> season;
+    private GetContentDetailsListener listener;
+    private Context context;
 
-    public interface GetContentDetails {
+    /**
+     * Interface used to allow the caller of a GetContentDetailsAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface GetContentDetailsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
+
         void onGetContentDetailsPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param contentDetailsOutput
+         * @param status
+         * @param message
+         */
 
         void onGetContentDetailsPostExecuteCompleted(ContentDetailsOutput contentDetailsOutput, int status, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private GetContentDetails listener;
-    private Context context;
+
     ContentDetailsOutput contentDetailsOutput = new ContentDetailsOutput();
 
-    public GetContentDetailsAsynTask(ContentDetailsInput contentDetailsInput, GetContentDetails listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param contentDetailsInput
+     * @param listener
+     * @param context
+     */
+
+    public GetContentDetailsAsynTask(ContentDetailsInput contentDetailsInput, GetContentDetailsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -69,15 +98,15 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getContentDetailsUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.contentDetailsInput.getAuthToken());
-            httppost.addHeader(CommonConstants.PERMALINK, this.contentDetailsInput.getPermalink());
-            httppost.addHeader(CommonConstants.USER_ID, this.contentDetailsInput.getUser_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.contentDetailsInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.PERMALINK, this.contentDetailsInput.getPermalink());
+            httppost.addHeader(HeaderConstants.USER_ID, this.contentDetailsInput.getUser_id());
 
             // Execute HTTP Post Request
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 responseStr = EntityUtils.toString(response.getEntity());
-                Log.v("SUBHA","responseStr====== "+responseStr);
+                Log.v("SUBHA", "responseStr====== " + responseStr);
 
 
             } catch (org.apache.http.conn.ConnectTimeoutException e) {
@@ -101,27 +130,26 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
             if (myJson.has("rating") && myJson.has("rating") != false && myJson.getString("rating").trim() != null && !myJson.getString("rating").trim().isEmpty() && !myJson.getString("rating").trim().equals("null") && !myJson.getString("rating").trim().equals("false")) {
                 contentDetailsOutput.setRating(myJson.getString("rating"));
 
-            }else{
-               contentDetailsOutput.setRating("0");
+            } else {
+                contentDetailsOutput.setRating("0");
             }
 
             if (myJson.has("review") && myJson.has("review") != false && myJson.getString("review").trim() != null && !myJson.getString("review").trim().isEmpty() && !myJson.getString("review").trim().equals("null") && !myJson.getString("review").trim().equals("false")) {
                 contentDetailsOutput.setReview(myJson.getString("review"));
-            }else{
-               contentDetailsOutput.setReview("0");
+            } else {
+                contentDetailsOutput.setReview("0");
             }
 
-           if ((myJson.has("epDetails")) && myJson.getString("epDetails").trim() != null && !myJson.getString("epDetails").trim().isEmpty() && !myJson.getString("epDetails").trim().equals("null") && !myJson.getString("epDetails").trim().matches("")) {
-                JSONObject epDetailsJson =myJson.getJSONObject("epDetails");
-               Log.v("SUBHA","epDetailsJson====== "+epDetailsJson.getString("series_number").split(","));
+            if ((myJson.has("epDetails")) && myJson.getString("epDetails").trim() != null && !myJson.getString("epDetails").trim().isEmpty() && !myJson.getString("epDetails").trim().equals("null") && !myJson.getString("epDetails").trim().matches("")) {
+                JSONObject epDetailsJson = myJson.getJSONObject("epDetails");
+                Log.v("SUBHA", "epDetailsJson====== " + epDetailsJson.getString("series_number").split(","));
 
-               if ((epDetailsJson.has("series_number")) && epDetailsJson.getString("series_number").trim() != null && !epDetailsJson.getString("series_number").trim().isEmpty() && !epDetailsJson.getString("series_number").trim().equals("null") && !epDetailsJson.getString("series_number").trim().matches("") && !epDetailsJson.getString("series_number").trim().matches("0")) {
+                if ((epDetailsJson.has("series_number")) && epDetailsJson.getString("series_number").trim() != null && !epDetailsJson.getString("series_number").trim().isEmpty() && !epDetailsJson.getString("series_number").trim().equals("null") && !epDetailsJson.getString("series_number").trim().matches("") && !epDetailsJson.getString("series_number").trim().matches("0")) {
                     String s[] = epDetailsJson.getString("series_number").split(",");
-                   Log.v("SUBHA","s====== "+s.length);
+                    Log.v("SUBHA", "s====== " + s.length);
 
-                   Arrays.sort(s);
+                    Arrays.sort(s);
                     contentDetailsOutput.setSeason(s);
-
 
 
                 }
@@ -147,8 +175,8 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
                     if ((mainJson.has("genre")) && mainJson.optString("genre").trim() != null && !mainJson.optString("genre").trim().isEmpty() && !mainJson.optString("genre").trim().equals("null") && !mainJson.optString("genre").trim().matches("")) {
                         movieTypeStr = mainJson.getString("genre");
                         movieTypeStr = movieTypeStr.replaceAll("\\[", "");
-                        movieTypeStr = movieTypeStr.replaceAll("\\]","");
-                        movieTypeStr = movieTypeStr.replaceAll(","," , ");
+                        movieTypeStr = movieTypeStr.replaceAll("\\]", "");
+                        movieTypeStr = movieTypeStr.replaceAll(",", " , ");
                         movieTypeStr = movieTypeStr.replaceAll("\"", "");
 
                         contentDetailsOutput.setGenre(mainJson.optString(movieTypeStr));
@@ -278,7 +306,7 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
 
                     }
 
-                    if (mainJson.has("cast_detail") && mainJson.has("cast_detail")!= false && mainJson.getString("cast_detail").trim() != null && !mainJson.getString("cast_detail").trim().isEmpty() && !mainJson.getString("cast_detail").trim().equals("null") && !mainJson.getString("cast_detail").trim().equals("false")){
+                    if (mainJson.has("cast_detail") && mainJson.has("cast_detail") != false && mainJson.getString("cast_detail").trim() != null && !mainJson.getString("cast_detail").trim().isEmpty() && !mainJson.getString("cast_detail").trim().equals("null") && !mainJson.getString("cast_detail").trim().equals("false")) {
                         contentDetailsOutput.setCastStr(true);
 
                     }
@@ -389,13 +417,13 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
         listener.onGetContentDetailsPreExecuteStarted();
 
         status = 0;
-      /*  if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+      /*  if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetContentDetailsPostExecuteCompleted(contentDetailsOutput, status, message);
             return;
         }
-        if (CommonConstants.hashKey.equals("")) {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetContentDetailsPostExecuteCompleted(contentDetailsOutput, status, message);

@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.GetStaticPageDetailsModelOutput;
 import com.home.apisdk.apiModel.GetStaticPagesDeatilsModelInput;
 
@@ -22,25 +22,56 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to get Static Page details.
  */
 
 public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeatilsModelInput, Void, Void> {
 
-    public GetStaticPagesDeatilsModelInput getStaticPagesDeatilsModelInput;
-    String PACKAGE_NAME, message, responseStr, status;
-    int code;
-    GetStaticPageDetailsModelOutput getStaticPageDetailsModelOutput;
+    private GetStaticPagesDeatilsModelInput getStaticPagesDeatilsModelInput;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private String status;
+    private int code;
+    private GetStaticPageDetailsModelOutput getStaticPageDetailsModelOutput;
+    private GetStaticPageDetailsListener listener;
+    private Context context;
 
-    public interface GetStaticPageDetails {
+    /**
+     * Interface used to allow the caller of a GetStaticPagesDetailsAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface GetStaticPageDetailsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetStaticPageDetailsPreExecuteStarted();
 
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param getStaticPageDetailsModelOutput
+         * @param code
+         * @param message
+         * @param status
+         */
         void onGetStaticPageDetailsPostExecuteCompleted(GetStaticPageDetailsModelOutput getStaticPageDetailsModelOutput, int code, String message, String status);
     }
 
-    private GetStaticPageDetails listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param getStaticPagesDeatilsModelInput
+     * @param listener
+     * @param context
+     */
 
-    public GetStaticPagesDetailsAsynTask(GetStaticPagesDeatilsModelInput getStaticPagesDeatilsModelInput, GetStaticPageDetails listener, Context context) {
+    public GetStaticPagesDetailsAsynTask(GetStaticPagesDeatilsModelInput getStaticPagesDeatilsModelInput, GetStaticPageDetailsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -60,8 +91,8 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetstaticpagesUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.getStaticPagesDeatilsModelInput.getAuthToken());
-            httppost.addHeader(CommonConstants.PERMALINK, this.getStaticPagesDeatilsModelInput.getPermalink());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getStaticPagesDeatilsModelInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.PERMALINK, this.getStaticPagesDeatilsModelInput.getPermalink());
 
 
             // Execute HTTP Post Request
@@ -126,18 +157,16 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
         super.onPreExecute();
         listener.onGetStaticPageDetailsPreExecuteStarted();
         code = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsModelOutput,code,message,status);
+            listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsModelOutput, code, message, status);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsModelOutput,code,message,status);
+            listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsModelOutput, code, message, status);
         }
         listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsModelOutput, code, message, status);
 

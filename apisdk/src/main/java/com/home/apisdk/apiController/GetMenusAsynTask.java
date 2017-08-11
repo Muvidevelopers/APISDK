@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.GetMenusInputModel;
 import com.home.apisdk.apiModel.GetMenusOutputModel;
 
@@ -23,45 +23,100 @@ import java.util.ArrayList;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Menu details.
  */
 public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> {
 
-    GetMenusInputModel getMenusInputModel;
-    String responseStr,movieUniqueId;
-    int status;
-    String message,permalink,PACKAGE_NAME; String title, Permalink, ID, TitleChild, PermalinkChild, IDChild, ClasChild, UserTitleChild,
-            UserIDChild, UserParentIdChild, UserPermalinkChild, UserClasChild, fdomain, flink_type, fid, fdisplay_name,
-            fpermalink, furl, ParentIdChild, LinkTypeChild, ParentId, Clas, LinkType, UserTitle, UserPermalink, UserID,
-            UserParentId, UserClas;
+    private GetMenusInputModel getMenusInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private String title;
+    private String Permalink;
+    private String ID;
+    private String TitleChild;
+    private String PermalinkChild;
+    private String IDChild;
+    private String UserTitleChild;
+    private String UserIDChild;
+    private String UserParentIdChild;
+    private String UserPermalinkChild;
+    private String UserClasChild;
+    private String fdomain;
+    private String flink_type;
+    private String fid;
+    private String fdisplay_name;
+    private String fpermalink;
+    private String furl;
+    private String ParentIdChild;
+    private String LinkTypeChild;
+    private String ParentId;
+    private String Clas;
+    private String LinkType;
+    private String UserTitle;
+    private String UserPermalink;
+    private String UserID;
+    private String UserParentId;
+    private String UserClas;
+    private GetMenusListener listener;
+    private Context context;
+    private String str = "#";
 
-    String str = "#", abs;
+    /**
+     * Interface used to allow the caller of a GetMenusAsynTask to run some code when get
+     * responses.
+     */
 
-    public interface GetMenusListner {
+
+    public interface GetMenusListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetMenusPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param getMenusOutputModel
+         * @param status
+         * @param message
+         */
+
         void onGetMenusPostExecuteCompleted(GetMenusOutputModel getMenusOutputModel, int status, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private GetMenusListner listener;
-    private Context context;
+
     GetMenusOutputModel getMenusOutputModel;
-    GetMenusOutputModel.MainMenu mainMenu ;
-    GetMenusOutputModel.UserMenu userMenu ;
-    GetMenusOutputModel.FooterMenu footerMenu ;
-    GetMenusOutputModel.MainMenu.MainMenuChild mainMenuChild ;
-    GetMenusOutputModel.UserMenu.UserMenuChild userMenuChild ;
+    GetMenusOutputModel.MainMenu mainMenu;
+    GetMenusOutputModel.UserMenu userMenu;
+    GetMenusOutputModel.FooterMenu footerMenu;
+    GetMenusOutputModel.MainMenu.MainMenuChild mainMenuChild;
+    GetMenusOutputModel.UserMenu.UserMenuChild userMenuChild;
     ArrayList<GetMenusOutputModel.MainMenu.MainMenuChild> mainMenuChildArrayList;
     ArrayList<GetMenusOutputModel.UserMenu.UserMenuChild> userMenuChildArrayList;
     ArrayList<GetMenusOutputModel.MainMenu> mainMenuArrayList;
     ArrayList<GetMenusOutputModel.UserMenu> userMenuArrayList;
     ArrayList<GetMenusOutputModel.FooterMenu> footerMenuArrayList;
 
-    public GetMenusAsynTask(GetMenusInputModel getMenusInputModel, GetMenusListner listener, Context context) {
-        this.listener=listener;
-        this.context=context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param getMenusInputModel
+     * @param listener
+     * @param context
+     */
+
+    public GetMenusAsynTask(GetMenusInputModel getMenusInputModel, GetMenusListener listener, Context context) {
+        this.listener = listener;
+        this.context = context;
         this.getMenusInputModel = getMenusInputModel;
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetMenusAsynTask");
 
     }
@@ -71,11 +126,11 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
 
 
         try {
-            HttpClient httpclient=new DefaultHttpClient();
+            HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetMenusUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.getMenusInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.getMenusInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getMenusInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.getMenusInputModel.getLang_code());
 
 
             // Execute HTTP Post Request
@@ -84,18 +139,18 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
                 responseStr = EntityUtils.toString(response.getEntity());
 
 
-            } catch (org.apache.http.conn.ConnectTimeoutException e){
+            } catch (org.apache.http.conn.ConnectTimeoutException e) {
 
                 status = 0;
                 message = "Error";
 
-            }catch (IOException e) {
+            } catch (IOException e) {
                 status = 0;
                 message = "Error";
             }
 
-            JSONObject myJson =null;
-            if(responseStr!=null){
+            JSONObject myJson = null;
+            if (responseStr != null) {
                 myJson = new JSONObject(responseStr);
                 status = Integer.parseInt(myJson.optString("code"));
                 message = myJson.optString("status");
@@ -114,51 +169,50 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
 
 
                     try {
-                        JSONObject jsonMain = myJson.optJSONObject ("menus");
-                        JSONArray jsonMainMenu = jsonMain.optJSONArray ("mainmenu");
+                        JSONObject jsonMain = myJson.optJSONObject("menus");
+                        JSONArray jsonMainMenu = jsonMain.optJSONArray("mainmenu");
                         mainMenuArrayList = new ArrayList<>();
 
 
-
-                        for (int i = 0; i < jsonMainMenu.length (); i++) {
+                        for (int i = 0; i < jsonMainMenu.length(); i++) {
                             mainMenu = new GetMenusOutputModel().new MainMenu();
 
-                            title = jsonMainMenu.getJSONObject (i).optString ("title").toString ().trim ();
-                            mainMenu.setTitle (title);
-                            Permalink = jsonMainMenu.getJSONObject (i).optString ("permalink").toString ().trim ();
-                            mainMenu.setPermalink (Permalink);
-                            ID = jsonMainMenu.getJSONObject (i).optString ("id").toString ().trim ();
-                            mainMenu.setId (ID);
-                            ParentId = jsonMainMenu.getJSONObject (i).optString ("parent_id").toString ().trim ();
-                            mainMenu.setParent_id (ParentId);
-                            LinkType = jsonMainMenu.getJSONObject (i).optString ("link_type").toString ().trim ();
-                            mainMenu.setLink_type (LinkType);
+                            title = jsonMainMenu.getJSONObject(i).optString("title").toString().trim();
+                            mainMenu.setTitle(title);
+                            Permalink = jsonMainMenu.getJSONObject(i).optString("permalink").toString().trim();
+                            mainMenu.setPermalink(Permalink);
+                            ID = jsonMainMenu.getJSONObject(i).optString("id").toString().trim();
+                            mainMenu.setId(ID);
+                            ParentId = jsonMainMenu.getJSONObject(i).optString("parent_id").toString().trim();
+                            mainMenu.setParent_id(ParentId);
+                            LinkType = jsonMainMenu.getJSONObject(i).optString("link_type").toString().trim();
+                            mainMenu.setLink_type(LinkType);
 
 
                             try {
 
 
-                                JSONArray jsonChildNode = jsonMainMenu.getJSONObject (i).getJSONArray ("children");
-                                for (int j = 0; j < jsonChildNode.length (); j++) {
+                                JSONArray jsonChildNode = jsonMainMenu.getJSONObject(i).getJSONArray("children");
+                                for (int j = 0; j < jsonChildNode.length(); j++) {
 
                                     mainMenuChild = mainMenu.new MainMenuChild();
-                                    TitleChild = jsonChildNode.getJSONObject (j).optString ("title").toString ().trim ();
-                                    mainMenuChild.setTitle (TitleChild);
-                                    PermalinkChild = jsonChildNode.getJSONObject (j).optString ("permalink").toString ().trim ();
-                                    mainMenuChild.setPermalink (PermalinkChild);
-                                    IDChild = jsonChildNode.getJSONObject (j).optString ("id").toString ().trim ();
-                                    mainMenuChild.setId (IDChild);
-                                    ParentIdChild = jsonChildNode.getJSONObject (j).optString ("parent_id").toString ().trim ();
-                                    mainMenuChild.setParent_id (ParentIdChild);
+                                    TitleChild = jsonChildNode.getJSONObject(j).optString("title").toString().trim();
+                                    mainMenuChild.setTitle(TitleChild);
+                                    PermalinkChild = jsonChildNode.getJSONObject(j).optString("permalink").toString().trim();
+                                    mainMenuChild.setPermalink(PermalinkChild);
+                                    IDChild = jsonChildNode.getJSONObject(j).optString("id").toString().trim();
+                                    mainMenuChild.setId(IDChild);
+                                    ParentIdChild = jsonChildNode.getJSONObject(j).optString("parent_id").toString().trim();
+                                    mainMenuChild.setParent_id(ParentIdChild);
 
-                                    LinkTypeChild = jsonChildNode.getJSONObject (j).optString ("link_type").toString ().trim ();
-                                    mainMenuChild.setLink_type (LinkTypeChild);
-                                    mainMenuChildArrayList.add (mainMenuChild);
+                                    LinkTypeChild = jsonChildNode.getJSONObject(j).optString("link_type").toString().trim();
+                                    mainMenuChild.setLink_type(LinkTypeChild);
+                                    mainMenuChildArrayList.add(mainMenuChild);
 
 
                                 }
                                 mainMenu.setMainMenuChildModel(mainMenuChildArrayList);
-                                mainMenuArrayList.add (mainMenu);
+                                mainMenuArrayList.add(mainMenu);
 
                             } catch (Exception e) {
                             }
@@ -168,59 +222,53 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
                         getMenusOutputModel.setMainMenuModel(mainMenuArrayList);
 
 
-                       JSONArray jsonUserMenu = jsonMain.optJSONArray ("usermenu");
+                        JSONArray jsonUserMenu = jsonMain.optJSONArray("usermenu");
                         userMenuArrayList = new ArrayList<>();
                         try {
-                            for (int i = 0; i < jsonUserMenu.length (); i++) {
+                            for (int i = 0; i < jsonUserMenu.length(); i++) {
                                 userMenu = new GetMenusOutputModel().new UserMenu();
-                                UserTitle = jsonUserMenu.optJSONObject (i).optString ("title").toString ().trim ();
-                                userMenu.setTitle (UserTitle);
-                                UserPermalink = jsonUserMenu.optJSONObject (i).optString ("permalink").toString ().trim ();
-                                userMenu.setPermalink (UserPermalink);
+                                UserTitle = jsonUserMenu.optJSONObject(i).optString("title").toString().trim();
+                                userMenu.setTitle(UserTitle);
+                                UserPermalink = jsonUserMenu.optJSONObject(i).optString("permalink").toString().trim();
+                                userMenu.setPermalink(UserPermalink);
 
-                                UserParentId = jsonUserMenu.optJSONObject (i).optString ("parent_id").toString ().trim ();
-                                userMenu.setParent_id (UserParentId);
-
-
+                                UserParentId = jsonUserMenu.optJSONObject(i).optString("parent_id").toString().trim();
+                                userMenu.setParent_id(UserParentId);
 
 
-                                if (UserPermalink.equals (str)) {
+                                if (UserPermalink.equals(str)) {
                                     try {
 
-                                        JSONArray jsonUserChildNode = jsonUserMenu.getJSONObject (i).getJSONArray ("children");
-                                        int lengthJsonUserChildArr = jsonUserChildNode.length ();
+                                        JSONArray jsonUserChildNode = jsonUserMenu.getJSONObject(i).getJSONArray("children");
+                                        int lengthJsonUserChildArr = jsonUserChildNode.length();
                                         for (int j = 0; j < lengthJsonUserChildArr; j++) {
 
                                             userMenuChild = userMenu.new UserMenuChild();
-                                            UserTitleChild = jsonUserChildNode.optJSONObject (j).optString ("title").toString ().trim ();
-                                            userMenuChild.setTitle (UserTitleChild);
+                                            UserTitleChild = jsonUserChildNode.optJSONObject(j).optString("title").toString().trim();
+                                            userMenuChild.setTitle(UserTitleChild);
 
-                                            UserPermalinkChild = jsonUserChildNode.optJSONObject (j).optString ("permalink").toString ().trim ();
-                                            userMenuChild.setPermalink (UserPermalinkChild);
+                                            UserPermalinkChild = jsonUserChildNode.optJSONObject(j).optString("permalink").toString().trim();
+                                            userMenuChild.setPermalink(UserPermalinkChild);
 
-                                            UserIDChild = jsonUserChildNode.optJSONObject (j).optString ("id").toString ().trim ();
-                                            userMenuChild.setId (UserIDChild);
-                                            Log.d ("ANU", "Response===" + UserIDChild);
-                                            UserParentIdChild = jsonUserChildNode.optJSONObject (j).optString ("parent_id").toString ().trim ();
-                                            userMenuChild.setParent_id (UserParentIdChild);
-                                            Log.d ("ANU", "Response===" + UserParentIdChild);
+                                            UserIDChild = jsonUserChildNode.optJSONObject(j).optString("id").toString().trim();
+                                            userMenuChild.setId(UserIDChild);
+                                            Log.d("ANU", "Response===" + UserIDChild);
+                                            UserParentIdChild = jsonUserChildNode.optJSONObject(j).optString("parent_id").toString().trim();
+                                            userMenuChild.setParent_id(UserParentIdChild);
+                                            Log.d("ANU", "Response===" + UserParentIdChild);
 
-                                            Log.d ("ANU", "Response===" + UserClasChild);
-                                            userMenuChildArrayList.add (userMenuChild);
+                                            Log.d("ANU", "Response===" + UserClasChild);
+                                            userMenuChildArrayList.add(userMenuChild);
 
 
                                         }
 
                                         userMenu.setUserMenuChildModel(userMenuChildArrayList);
-                                    }
-
-
-
-                                    catch (Exception e) {
+                                    } catch (Exception e) {
                                     }
                                 }
 
-                                userMenuArrayList.add (userMenu);
+                                userMenuArrayList.add(userMenu);
                             }
 
 
@@ -230,24 +278,24 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
 
 
                         footerMenuArrayList = new ArrayList<>();
-                        JSONArray jsonFooterMenu = jsonMain.optJSONArray ("footer_menu");
+                        JSONArray jsonFooterMenu = jsonMain.optJSONArray("footer_menu");
 
                         try {
-                            for (int i = 0; i < jsonFooterMenu.length (); i++) {
+                            for (int i = 0; i < jsonFooterMenu.length(); i++) {
                                 footerMenu = new GetMenusOutputModel().new FooterMenu();
-                                fdomain = jsonFooterMenu.getJSONObject (i).optString ("domain").toString ().trim ();
-                                footerMenu.setDomain (fdomain);
-                                flink_type = jsonFooterMenu.getJSONObject (i).optString ("link_type").toString ().trim ();
-                                footerMenu.setLink_type (Permalink);
-                                fid = jsonFooterMenu.getJSONObject (i).optString ("id").toString ().trim ();
-                                footerMenu.setId (fid);
-                                fdisplay_name = jsonFooterMenu.getJSONObject (i).optString ("display_name").toString ().trim ();
-                                footerMenu.setDisplay_name (fdisplay_name);
-                                fpermalink = jsonFooterMenu.getJSONObject (i).optString ("permalink").toString ().trim ();
-                                footerMenu.setPermalink (fpermalink);
-                                furl = jsonFooterMenu.getJSONObject (i).optString ("url").toString ().trim ();
-                                footerMenu.setUrl (furl);
-                                footerMenuArrayList.add (footerMenu);
+                                fdomain = jsonFooterMenu.getJSONObject(i).optString("domain").toString().trim();
+                                footerMenu.setDomain(fdomain);
+                                flink_type = jsonFooterMenu.getJSONObject(i).optString("link_type").toString().trim();
+                                footerMenu.setLink_type(Permalink);
+                                fid = jsonFooterMenu.getJSONObject(i).optString("id").toString().trim();
+                                footerMenu.setId(fid);
+                                fdisplay_name = jsonFooterMenu.getJSONObject(i).optString("display_name").toString().trim();
+                                footerMenu.setDisplay_name(fdisplay_name);
+                                fpermalink = jsonFooterMenu.getJSONObject(i).optString("permalink").toString().trim();
+                                footerMenu.setPermalink(fpermalink);
+                                furl = jsonFooterMenu.getJSONObject(i).optString("url").toString().trim();
+                                footerMenu.setUrl(furl);
+                                footerMenuArrayList.add(footerMenu);
 
                             }
 
@@ -281,27 +329,24 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
         super.onPreExecute();
         listener.onGetMenusPreExecuteStarted();
         status = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetMenusPostExecuteCompleted(getMenusOutputModel, status, message);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetMenusPostExecuteCompleted(getMenusOutputModel, status,message);
+            listener.onGetMenusPostExecuteCompleted(getMenusOutputModel, status, message);
         }
 
     }
 
 
-
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetMenusPostExecuteCompleted(getMenusOutputModel, status,message);
+        listener.onGetMenusPostExecuteCompleted(getMenusOutputModel, status, message);
 
     }
 

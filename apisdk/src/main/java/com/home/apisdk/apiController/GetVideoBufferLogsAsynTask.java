@@ -7,7 +7,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.VideoBufferLogsInputModel;
 import com.home.apisdk.apiModel.VideoBufferLogsOutputModel;
 
@@ -27,33 +27,65 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Muvi on 12/16/2016.
+ * Class to get Video Buffer Logs details.
  */
 public class GetVideoBufferLogsAsynTask extends AsyncTask<VideoBufferLogsInputModel, Void, Void> {
-    VideoBufferLogsInputModel videoBufferLogsInputModel;
 
-    String responseStr;
-    int status;
-    String message,PACKAGE_NAME;
-    public interface GetVideoBufferLogs{
+    private VideoBufferLogsInputModel videoBufferLogsInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private GetVideoBufferLogsListener listener;
+    private Context context;
+
+    /**
+     * Interface used to allow the caller of a GetVideoBufferLogsAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface GetVideoBufferLogsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetVideoBufferLogsPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param videoBufferLogsOutputModel
+         * @param status
+         * @param message
+         */
+
         void onGetVideoBufferLogsPostExecuteCompleted(VideoBufferLogsOutputModel videoBufferLogsOutputModel, int status, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private GetVideoBufferLogs listener;
-    private Context context;
-    VideoBufferLogsOutputModel videoBufferLogsOutputModel=new VideoBufferLogsOutputModel();
+    VideoBufferLogsOutputModel videoBufferLogsOutputModel = new VideoBufferLogsOutputModel();
 
-    public GetVideoBufferLogsAsynTask(VideoBufferLogsInputModel videoBufferLogsInputModel,GetVideoBufferLogs listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param videoBufferLogsInputModel
+     * @param listener
+     * @param context
+     */
+
+    public GetVideoBufferLogsAsynTask(VideoBufferLogsInputModel videoBufferLogsInputModel, GetVideoBufferLogsListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
         this.videoBufferLogsInputModel = videoBufferLogsInputModel;
         Log.v("MUVISDK", "LoginAsynTask");
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
 
     }
+
     @Override
     protected Void doInBackground(VideoBufferLogsInputModel... params) {
 
@@ -71,18 +103,18 @@ public class GetVideoBufferLogsAsynTask extends AsyncTask<VideoBufferLogsInputMo
                 conn.setDoOutput(true);
 
                 Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter(CommonConstants.AUTH_TOKEN, this.videoBufferLogsInputModel.getAuthToken())
-                        .appendQueryParameter(CommonConstants.USER_ID, this.videoBufferLogsInputModel.getUserId())
-                        .appendQueryParameter(CommonConstants.IP_ADDRESS, this.videoBufferLogsInputModel.getIpAddress())
-                        .appendQueryParameter(CommonConstants.MOVIE_ID, this.videoBufferLogsInputModel.getMuviUniqueId())
-                        .appendQueryParameter(CommonConstants.EPISODE_ID, this.videoBufferLogsInputModel.getEpisodeStreamUniqueId())
-                        .appendQueryParameter(CommonConstants.LOG_ID, this.videoBufferLogsInputModel.getBufferLogId())
-                        .appendQueryParameter(CommonConstants.RESOLUTION, this.videoBufferLogsInputModel.getVideoResolution())
-                        .appendQueryParameter(CommonConstants.DEVICE_TYPE, this.videoBufferLogsInputModel.getDeviceType())
-                        .appendQueryParameter(CommonConstants.START_TIME, this.videoBufferLogsInputModel.getBufferStartTime())
-                        .appendQueryParameter(CommonConstants.END_TIME, this.videoBufferLogsInputModel.getBufferEndTime())
-                        .appendQueryParameter(CommonConstants.LOG_UNIQUE_ID, this.videoBufferLogsInputModel.getBufferLogUniqueId())
-                        .appendQueryParameter(CommonConstants.LOCATION, this.videoBufferLogsInputModel.getLocation());
+                        .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.videoBufferLogsInputModel.getAuthToken())
+                        .appendQueryParameter(HeaderConstants.USER_ID, this.videoBufferLogsInputModel.getUserId())
+                        .appendQueryParameter(HeaderConstants.IP_ADDRESS, this.videoBufferLogsInputModel.getIpAddress())
+                        .appendQueryParameter(HeaderConstants.MOVIE_ID, this.videoBufferLogsInputModel.getMuviUniqueId())
+                        .appendQueryParameter(HeaderConstants.EPISODE_ID, this.videoBufferLogsInputModel.getEpisodeStreamUniqueId())
+                        .appendQueryParameter(HeaderConstants.LOG_ID, this.videoBufferLogsInputModel.getBufferLogId())
+                        .appendQueryParameter(HeaderConstants.RESOLUTION, this.videoBufferLogsInputModel.getVideoResolution())
+                        .appendQueryParameter(HeaderConstants.DEVICE_TYPE, this.videoBufferLogsInputModel.getDeviceType())
+                        .appendQueryParameter(HeaderConstants.START_TIME, this.videoBufferLogsInputModel.getBufferStartTime())
+                        .appendQueryParameter(HeaderConstants.END_TIME, this.videoBufferLogsInputModel.getBufferEndTime())
+                        .appendQueryParameter(HeaderConstants.LOG_UNIQUE_ID, this.videoBufferLogsInputModel.getBufferLogUniqueId())
+                        .appendQueryParameter(HeaderConstants.LOCATION, this.videoBufferLogsInputModel.getLocation());
 
                 String query = builder.build().getEncodedQuery();
 
@@ -103,26 +135,25 @@ public class GetVideoBufferLogsAsynTask extends AsyncTask<VideoBufferLogsInputMo
                 while ((inputLine = in.readLine()) != null) {
                     System.out.println(inputLine);
                     responseStr = inputLine;
-                    Log.v("MUVISDK", "responseStr" +responseStr);
+                    Log.v("MUVISDK", "responseStr" + responseStr);
 
                 }
                 in.close();
 
 
-            } catch (org.apache.http.conn.ConnectTimeoutException e){
+            } catch (org.apache.http.conn.ConnectTimeoutException e) {
 
                 status = 0;
                 message = "Error";
 
 
-
-            }catch (IOException e) {
+            } catch (IOException e) {
                 status = 0;
                 message = "Error";
             }
 
-            JSONObject mainJson =null;
-            if(responseStr!=null) {
+            JSONObject mainJson = null;
+            if (responseStr != null) {
                 mainJson = new JSONObject(responseStr);
                 status = Integer.parseInt(mainJson.optString("code"));
 
@@ -140,9 +171,7 @@ public class GetVideoBufferLogsAsynTask extends AsyncTask<VideoBufferLogsInputMo
 
                 }
 
-            }
-
-            else{
+            } else {
                 responseStr = "0";
                 status = 0;
                 message = "Error";
@@ -151,10 +180,8 @@ public class GetVideoBufferLogsAsynTask extends AsyncTask<VideoBufferLogsInputMo
 
             responseStr = "0";
             status = 0;
-            message = "Error";            }
-
-        catch (Exception e)
-        {
+            message = "Error";
+        } catch (Exception e) {
 
             responseStr = "0";
             status = 0;
@@ -164,33 +191,31 @@ public class GetVideoBufferLogsAsynTask extends AsyncTask<VideoBufferLogsInputMo
 
 
     }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onGetVideoBufferLogsPreExecuteStarted();
 
         status = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetVideoBufferLogsPostExecuteCompleted(videoBufferLogsOutputModel,status, message);
+            listener.onGetVideoBufferLogsPostExecuteCompleted(videoBufferLogsOutputModel, status, message);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetVideoBufferLogsPostExecuteCompleted(videoBufferLogsOutputModel,status, message);
+            listener.onGetVideoBufferLogsPostExecuteCompleted(videoBufferLogsOutputModel, status, message);
         }
 
     }
 
 
-
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetVideoBufferLogsPostExecuteCompleted(videoBufferLogsOutputModel,status, message);
+        listener.onGetVideoBufferLogsPostExecuteCompleted(videoBufferLogsOutputModel, status, message);
 
     }
 

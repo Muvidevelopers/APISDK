@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.LogoutInput;
 
 import org.apache.http.HttpResponse;
@@ -21,26 +21,56 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to get Logout details.
  */
 
 public class LogoutAsynctask extends AsyncTask<LogoutInput, Void, Void> {
 
-    public LogoutInput logoutInput;
-    String PACKAGE_NAME, message, responseStr, status;
-    int code;
-
-
-
-    public interface Logout {
-        void onLogoutPreExecuteStarted();
-
-        void onLogoutPostExecuteCompleted(int code, String status, String message);
-    }
-
-    private Logout listener;
+    private LogoutInput logoutInput;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private String status;
+    private int code;
+    private LogoutListener listener;
     private Context context;
 
-    public LogoutAsynctask(LogoutInput logoutInput, Logout listener, Context context) {
+    /**
+     * Interface used to allow the caller of a LogoutAsynctask to run some code when get
+     * responses.
+     */
+
+    public interface LogoutListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
+        void onLogoutPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param code
+         * @param status
+         * @param message
+         */
+
+        void onLogoutPostExecuteCompleted(int code, String status, String message);
+
+    }
+
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param logoutInput
+     * @param listener
+     * @param context
+     */
+
+    public LogoutAsynctask(LogoutInput logoutInput, LogoutListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -60,9 +90,9 @@ public class LogoutAsynctask extends AsyncTask<LogoutInput, Void, Void> {
             HttpPost httppost = new HttpPost(APIUrlConstant.getLogoutUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.logoutInput.getAuthToken());
-            httppost.addHeader(CommonConstants.LOGIN_HISTORY_ID, this.logoutInput.getLogin_history_id());
-            httppost.addHeader(CommonConstants.LANG_CODE, this.logoutInput.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.logoutInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.LOGIN_HISTORY_ID, this.logoutInput.getLogin_history_id());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.logoutInput.getLang_code());
 
             // Execute HTTP Post Request
             try {
@@ -104,18 +134,16 @@ public class LogoutAsynctask extends AsyncTask<LogoutInput, Void, Void> {
         listener.onLogoutPreExecuteStarted();
         code = 0;
         status = "";
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onLogoutPostExecuteCompleted(code,status,message);
+            listener.onLogoutPostExecuteCompleted(code, status, message);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onLogoutPostExecuteCompleted(code,status,message);
+            listener.onLogoutPostExecuteCompleted(code, status, message);
         }
     }
 

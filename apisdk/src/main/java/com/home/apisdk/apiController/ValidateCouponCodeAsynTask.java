@@ -3,11 +3,10 @@ package com.home.apisdk.apiController;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.ValidateCouponCodeInputModel;
 import com.home.apisdk.apiModel.ValidateCouponCodeOutputModel;
 
@@ -17,35 +16,66 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Validate Coupon Code details.
  */
+
+
 public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInputModel, Void, Void> {
 
-    ValidateCouponCodeInputModel validateCouponCodeInputModel;
-    String responseStr;
-    int status;
-    float planPrice = 0.0f;
-    float chargedPrice = 0.0f;
-    float previousChargedPrice = 0.0f;
-    String message, PACKAGE_NAME;
+    private ValidateCouponCodeInputModel validateCouponCodeInputModel;
+    private String responseStr;
+    private int status;
+    private float planPrice = 0.0f;
+    private float chargedPrice = 0.0f;
+    private float previousChargedPrice = 0.0f;
+    private String message;
+    private String PACKAGE_NAME;
+    private ValidateCouponCodeLIstener listener;
+    private Context context;
 
-    public interface ValidateCouponCode {
+    /**
+     * Interface used to allow the caller of a ValidateCouponCodeAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface ValidateCouponCodeLIstener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onValidateCouponCodePreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param validateCouponCodeOutputModel
+         * @param status
+         * @param message
+         */
 
         void onValidateCouponCodePostExecuteCompleted(ValidateCouponCodeOutputModel validateCouponCodeOutputModel, int status, String message);
     }
 
-    private ValidateCouponCode listener;
-    private Context context;
     ValidateCouponCodeOutputModel validateCouponCodeOutputModel = new ValidateCouponCodeOutputModel();
 
-    public ValidateCouponCodeAsynTask(ValidateCouponCodeInputModel validateCouponCodeInputModel, ValidateCouponCode listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param validateCouponCodeInputModel
+     * @param listener
+     * @param context
+     */
+
+    public ValidateCouponCodeAsynTask(ValidateCouponCodeInputModel validateCouponCodeInputModel, ValidateCouponCodeLIstener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -65,11 +95,11 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
             HttpPost httppost = new HttpPost(APIUrlConstant.getValidateCouponCodeUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.validateCouponCodeInputModel.getAuthToken().trim());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.validateCouponCodeInputModel.getAuthToken().trim());
 
-            httppost.addHeader(CommonConstants.USER_ID, this.validateCouponCodeInputModel.getUser_id().trim());
-            httppost.addHeader(CommonConstants.COUPAN_CODE, this.validateCouponCodeInputModel.getCouponCode().trim());
-            httppost.addHeader(CommonConstants.CURRENCY_ID, this.validateCouponCodeInputModel.getCurrencyId().trim());
+            httppost.addHeader(HeaderConstants.USER_ID, this.validateCouponCodeInputModel.getUser_id().trim());
+            httppost.addHeader(HeaderConstants.COUPAN_CODE, this.validateCouponCodeInputModel.getCouponCode().trim());
+            httppost.addHeader(HeaderConstants.CURRENCY_ID, this.validateCouponCodeInputModel.getCurrencyId().trim());
 
 
             // Execute HTTP Post Request
@@ -125,19 +155,17 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
         listener.onValidateCouponCodePreExecuteStarted();
         responseStr = "0";
         status = 0;
-            if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-            {
-                this.cancel(true);
-                message = "Packge Name Not Matched";
-                listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, responseStr);
-                return;
-            }
-            if(CommonConstants.hashKey.equals(""))
-            {
-                this.cancel(true);
-                message = "Hash Key Is Not Available. Please Initialize The SDK";
-                listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, responseStr);
-            }
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+            this.cancel(true);
+            message = "Packge Name Not Matched";
+            listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, responseStr);
+            return;
+        }
+        if (HeaderConstants.hashKey.equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, responseStr);
+        }
 
 
     }

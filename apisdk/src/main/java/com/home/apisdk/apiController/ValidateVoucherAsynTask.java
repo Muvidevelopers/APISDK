@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.ValidateVoucherInputModel;
 import com.home.apisdk.apiModel.ValidateVoucherOutputModel;
 
@@ -22,25 +22,57 @@ import java.io.IOException;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Validate Voucher details.
  */
+
+
 public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel, Void, Void> {
 
-    ValidateVoucherInputModel validateVoucherInputModel;
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
+    private ValidateVoucherInputModel validateVoucherInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private ValidateVoucherListener listener;
+    private Context context;
 
-    public interface ValidateVoucher {
+    /**
+     * Interface used to allow the caller of a ValidateVoucherAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface ValidateVoucherListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onValidateVoucherPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param validateVoucherOutputModel
+         * @param status
+         * @param message
+         */
 
         void onValidateVoucherPostExecuteCompleted(ValidateVoucherOutputModel validateVoucherOutputModel, int status, String message);
     }
 
-    private ValidateVoucher listener;
-    private Context context;
     ValidateVoucherOutputModel validateVoucherOutputModel = new ValidateVoucherOutputModel();
 
-    public ValidateVoucherAsynTask(ValidateVoucherInputModel validateVoucherInputModel, ValidateVoucher listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param validateVoucherInputModel
+     * @param listener
+     * @param context
+     */
+
+    public ValidateVoucherAsynTask(ValidateVoucherInputModel validateVoucherInputModel, ValidateVoucherListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -60,13 +92,13 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
             HttpPost httppost = new HttpPost(APIUrlConstant.getValidateVoucherUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.validateVoucherInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.MOVIE_ID, this.validateVoucherInputModel.getMovie_id());
-            httppost.addHeader(CommonConstants.STREAM_ID, this.validateVoucherInputModel.getStream_id());
-            httppost.addHeader(CommonConstants.PURCHASE_TYPE, this.validateVoucherInputModel.getPurchase_type());
-            httppost.addHeader(CommonConstants.SEASON, this.validateVoucherInputModel.getSeason());
-            httppost.addHeader(CommonConstants.VOUCHER_CODE, this.validateVoucherInputModel.getVoucher_code());
-            httppost.addHeader(CommonConstants.USER_ID, this.validateVoucherInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.validateVoucherInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.MOVIE_ID, this.validateVoucherInputModel.getMovie_id());
+            httppost.addHeader(HeaderConstants.STREAM_ID, this.validateVoucherInputModel.getStream_id());
+            httppost.addHeader(HeaderConstants.PURCHASE_TYPE, this.validateVoucherInputModel.getPurchase_type());
+            httppost.addHeader(HeaderConstants.SEASON, this.validateVoucherInputModel.getSeason());
+            httppost.addHeader(HeaderConstants.VOUCHER_CODE, this.validateVoucherInputModel.getVoucher_code());
+            httppost.addHeader(HeaderConstants.USER_ID, this.validateVoucherInputModel.getUser_id());
 
 
             // Execute HTTP Post Request
@@ -113,19 +145,17 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
         listener.onValidateVoucherPreExecuteStarted();
         responseStr = "0";
         status = 0;
-            if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-            {
-                this.cancel(true);
-                message = "Packge Name Not Matched";
-                listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message);
-                return;
-            }
-            if(CommonConstants.hashKey.equals(""))
-            {
-                this.cancel(true);
-                message = "Hash Key Is Not Available. Please Initialize The SDK";
-                listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message);
-            }
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+            this.cancel(true);
+            message = "Packge Name Not Matched";
+            listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message);
+            return;
+        }
+        if (HeaderConstants.hashKey.equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message);
+        }
 
 
     }

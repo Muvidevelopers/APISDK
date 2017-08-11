@@ -7,7 +7,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.LanguageListInputModel;
 import com.home.apisdk.apiModel.LanguageListOutputModel;
 
@@ -28,27 +28,57 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Language List details.
  */
 public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, Void, Void> {
 
-    LanguageListInputModel languageListInputModel;
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
-    String defaultLanguage = "en";
+    private LanguageListInputModel languageListInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private String defaultLanguage = "en";
+    private GetLanguageListListener listener;
+    private Context context;
 
-    public interface GetLanguageList {
+    /**
+     * Interface used to allow the caller of a GetLanguageListAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface GetLanguageListListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetLanguageListPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param languageListOutputArray
+         * @param status
+         * @param message
+         * @param defaultLanguage
+         */
 
         void onGetLanguageListPostExecuteCompleted(ArrayList<LanguageListOutputModel> languageListOutputArray, int status, String message, String defaultLanguage);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private GetLanguageList listener;
-    private Context context;
     ArrayList<LanguageListOutputModel> languageListOutputArray = new ArrayList<LanguageListOutputModel>();
 
-    public GetLanguageListAsynTask(LanguageListInputModel languageListInputModel, GetLanguageList listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param languageListInputModel
+     * @param listener
+     * @param context
+     */
+
+    public GetLanguageListAsynTask(LanguageListInputModel languageListInputModel, GetLanguageListListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -170,21 +200,19 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onGetLanguageListPreExecuteStarted();
-            status= 0;
-            responseStr = "0";
-            if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-            {
-                this.cancel(true);
-                message = "Packge Name Not Matched";
-                listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message,defaultLanguage);
-                return;
-            }
-            if(CommonConstants.hashKey.equals(""))
-            {
-                this.cancel(true);
-                message = "Hash Key Is Not Available. Please Initialize The SDK";
-                listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message,defaultLanguage);
-            }
+        status = 0;
+        responseStr = "0";
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+            this.cancel(true);
+            message = "Packge Name Not Matched";
+            listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage);
+            return;
+        }
+        if (HeaderConstants.hashKey.equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage);
+        }
     }
 
 

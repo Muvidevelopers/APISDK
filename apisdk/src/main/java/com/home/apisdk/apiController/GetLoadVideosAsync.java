@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.LoadVideoInput;
 import com.home.apisdk.apiModel.LoadVideoOutput;
 
@@ -23,25 +23,58 @@ import java.util.ArrayList;
 
 /**
  * Created by MUVI on 7/5/2017.
+ * Class to get Video Load details.
  */
 
 public class GetLoadVideosAsync extends AsyncTask<LoadVideoInput, Void, Void> {
 
-    public LoadVideoInput loadVideoInput;
-    String PACKAGE_NAME, message, responseStr,status;
-    int code;
+    private LoadVideoInput loadVideoInput;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private String status;
+    private int code;
+    private LoadVideosAsyncListener listener;
+    private Context context;
 
-    public interface LoadVideosAsync {
+    /**
+     * Interface used to allow the caller of a GetLoadVideosAsync to run some code when get
+     * responses.
+     */
+
+    public interface LoadVideosAsyncListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onLoadVideosAsyncPreExecuteStarted();
 
-        void onLoadVideosAsyncPostExecuteCompleted(ArrayList<LoadVideoOutput> loadVideoOutputs, int code,String status);
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param loadVideoOutputs
+         * @param code
+         * @param status
+         */
+
+        void onLoadVideosAsyncPostExecuteCompleted(ArrayList<LoadVideoOutput> loadVideoOutputs, int code, String status);
     }
 
-    private LoadVideosAsync listener;
-    private Context context;
+
     ArrayList<LoadVideoOutput> loadVideoOutputs = new ArrayList<LoadVideoOutput>();
 
-    public GetLoadVideosAsync(LoadVideoInput loadVideoInput, LoadVideosAsync listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param loadVideoInput
+     * @param listener
+     * @param context
+     */
+
+    public GetLoadVideosAsync(LoadVideoInput loadVideoInput, LoadVideosAsyncListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -60,13 +93,13 @@ public class GetLoadVideosAsync extends AsyncTask<LoadVideoInput, Void, Void> {
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetFeatureContentUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.loadVideoInput.getAuthToken());
-            httppost.addHeader(CommonConstants.SECTION_ID, this.loadVideoInput.getSection_id());
-            httppost.addHeader(CommonConstants.LANG_CODE, this.loadVideoInput.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.loadVideoInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.SECTION_ID, this.loadVideoInput.getSection_id());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.loadVideoInput.getLang_code());
 
-            Log.v("Abhi Auth",this.loadVideoInput.getAuthToken());
-            Log.v("Abhi Session",this.loadVideoInput.getSection_id());
-            Log.v("Abhi Lang",this.loadVideoInput.getLang_code());
+            Log.v("Abhi Auth", this.loadVideoInput.getAuthToken());
+            Log.v("Abhi Session", this.loadVideoInput.getSection_id());
+            Log.v("Abhi Lang", this.loadVideoInput.getLang_code());
 
             try {
                 HttpResponse response = httpclient.execute(httppost);
@@ -148,22 +181,22 @@ public class GetLoadVideosAsync extends AsyncTask<LoadVideoInput, Void, Void> {
         super.onPreExecute();
         listener.onLoadVideosAsyncPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onLoadVideosAsyncPostExecuteCompleted(loadVideoOutputs,code,responseStr);
+            listener.onLoadVideosAsyncPostExecuteCompleted(loadVideoOutputs, code, responseStr);
             return;
         }
-        if (CommonConstants.hashKey.equals("")) {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onLoadVideosAsyncPostExecuteCompleted(loadVideoOutputs,code,responseStr);
+            listener.onLoadVideosAsyncPostExecuteCompleted(loadVideoOutputs, code, responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onLoadVideosAsyncPostExecuteCompleted(loadVideoOutputs,code,responseStr);
+        listener.onLoadVideosAsyncPostExecuteCompleted(loadVideoOutputs, code, responseStr);
     }
 }

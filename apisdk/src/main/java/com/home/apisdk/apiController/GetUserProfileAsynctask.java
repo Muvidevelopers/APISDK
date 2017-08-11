@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.Get_UserProfile_Input;
 import com.home.apisdk.apiModel.Get_UserProfile_Output;
 
@@ -16,32 +16,63 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to get User Profile details.
  */
 
 public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Void, Void> {
 
-    public Get_UserProfile_Input get_userProfile_input;
-    String PACKAGE_NAME, message, responseStr, status;
-    int code;
-    Get_UserProfile_Output get_userProfile_output;
+    private Get_UserProfile_Input get_userProfile_input;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private String status;
+    private int code;
+    private Get_UserProfile_Output get_userProfile_output;
+    private Get_UserProfileListener listener;
+    private Context context;
 
-    public interface Get_UserProfile {
+    /**
+     * Interface used to allow the caller of a GetUserProfileAsynctask to run some code when get
+     * responses.
+     */
+
+    public interface Get_UserProfileListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGet_UserProfilePreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param get_userProfile_output
+         * @param code
+         * @param message
+         * @param status
+         */
 
         void onGet_UserProfilePostExecuteCompleted(Get_UserProfile_Output get_userProfile_output, int code, String message, String status);
     }
 
-    private Get_UserProfile listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param get_userProfile_input
+     * @param listener
+     * @param context
+     */
 
-    public GetUserProfileAsynctask(Get_UserProfile_Input get_userProfile_input, Get_UserProfile listener, Context context) {
+    public GetUserProfileAsynctask(Get_UserProfile_Input get_userProfile_input, Get_UserProfileListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -61,10 +92,10 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetProfileDetailsUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.get_userProfile_input.getAuthToken());
-            httppost.addHeader(CommonConstants.EMAIL, this.get_userProfile_input.getEmail());
-            httppost.addHeader(CommonConstants.USER_ID, this.get_userProfile_input.getUser_id());
-            httppost.addHeader(CommonConstants.LANG_CODE, this.get_userProfile_input.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.get_userProfile_input.getAuthToken());
+            httppost.addHeader(HeaderConstants.EMAIL, this.get_userProfile_input.getEmail());
+            httppost.addHeader(HeaderConstants.USER_ID, this.get_userProfile_input.getUser_id());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.get_userProfile_input.getLang_code());
 
             // Execute HTTP Post Request
             try {
@@ -104,10 +135,10 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
                     get_userProfile_output.setIsSubscribed(myJson.optString("isSubscribed"));
 
 
-                    if (myJson.has("custom_languages")){
+                    if (myJson.has("custom_languages")) {
                         get_userProfile_output.setCustom_languages("custom_languages");
                     }
-                    if (myJson.has("custom_country")){
+                    if (myJson.has("custom_country")) {
                         get_userProfile_output.setCustom_country("custom_country");
                     }
 
@@ -131,13 +162,13 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
         super.onPreExecute();
         listener.onGet_UserProfilePreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGet_UserProfilePostExecuteCompleted(get_userProfile_output, code, message, status);
             return;
         }
-        if (CommonConstants.hashKey.equals("")) {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGet_UserProfilePostExecuteCompleted(get_userProfile_output, code, message, status);

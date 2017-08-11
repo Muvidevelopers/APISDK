@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.MyLibraryInputModel;
 import com.home.apisdk.apiModel.MyLibraryOutputModel;
 
@@ -24,27 +24,57 @@ import java.util.ArrayList;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get My Library details.
  */
 public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void> {
 
-    MyLibraryInputModel myLibraryInputModel;
-    String responseStr;
-    int status;
-    String totalItems;
-    String message, PACKAGE_NAME;
+    private MyLibraryInputModel myLibraryInputModel;
+    private String responseStr;
+    private int status;
+    private String totalItems;
+    private String message;
+    private String PACKAGE_NAME;
+    private MyLibraryListener listener;
+    private Context context;
 
-    public interface MyLibrary {
+    /**
+     * Interface used to allow the caller of a MyLibraryAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface MyLibraryListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onMyLibraryPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param myLibraryOutputModelArray
+         * @param status
+         * @param totalItems
+         * @param message
+         */
 
         void onMyLibraryPostExecuteCompleted(ArrayList<MyLibraryOutputModel> myLibraryOutputModelArray, int status, String totalItems, String message);
     }
 
-
-    private MyLibrary listener;
-    private Context context;
     ArrayList<MyLibraryOutputModel> myLibraryOutputModel = new ArrayList<MyLibraryOutputModel>();
 
-    public MyLibraryAsynTask(MyLibraryInputModel myLibraryInputModel, MyLibrary listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param myLibraryInputModel
+     * @param listener
+     * @param context
+     */
+
+    public MyLibraryAsynTask(MyLibraryInputModel myLibraryInputModel, MyLibraryListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -64,12 +94,12 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
             HttpPost httppost = new HttpPost(APIUrlConstant.getMylibraryUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.myLibraryInputModel.getAuthToken());
-            httppost.addHeader(CommonConstants.USER_ID, this.myLibraryInputModel.getUser_id());
-            httppost.addHeader(CommonConstants.LIMIT,this.myLibraryInputModel.getLimit());
-            httppost.addHeader(CommonConstants.OFFSET,this.myLibraryInputModel.getOffset());
-            httppost.addHeader(CommonConstants.COUNTRY,this.myLibraryInputModel.getCountry());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.myLibraryInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.myLibraryInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.myLibraryInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.LIMIT, this.myLibraryInputModel.getLimit());
+            httppost.addHeader(HeaderConstants.OFFSET, this.myLibraryInputModel.getOffset());
+            httppost.addHeader(HeaderConstants.COUNTRY, this.myLibraryInputModel.getCountry());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.myLibraryInputModel.getLang_code());
 
 
             // Execute HTTP Post Request
@@ -94,7 +124,7 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
                 myJson = new JSONObject(responseStr);
                 status = Integer.parseInt(myJson.optString("code"));
                 message = myJson.optString("status");
-                totalItems=myJson.optString("item_count");
+                totalItems = myJson.optString("item_count");
             }
 
 
@@ -176,19 +206,17 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
         listener.onMyLibraryPreExecuteStarted();
         responseStr = "0";
         status = 0;
-            if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-            {
-                this.cancel(true);
-                message = "Packge Name Not Matched";
-                listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, responseStr);
-                return;
-            }
-            if(CommonConstants.hashKey.equals(""))
-            {
-                this.cancel(true);
-                message = "Hash Key Is Not Available. Please Initialize The SDK";
-                listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, responseStr);
-            }
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+            this.cancel(true);
+            message = "Packge Name Not Matched";
+            listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, responseStr);
+            return;
+        }
+        if (HeaderConstants.hashKey.equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, responseStr);
+        }
 
     }
 

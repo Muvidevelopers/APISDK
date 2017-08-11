@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.CurrencyModel;
 import com.home.apisdk.apiModel.SubscriptionPlanInputModel;
 import com.home.apisdk.apiModel.SubscriptionPlanOutputModel;
@@ -25,27 +25,58 @@ import java.util.ArrayList;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to get Plan List details.
  */
 
 public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, Void, Void> {
 
-    public SubscriptionPlanInputModel planListInput;
-    String PACKAGE_NAME, message, responseStr;
-    int code;
+    private SubscriptionPlanInputModel planListInput;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private int code;
+    private GetStudioPlanListsListener listener;
+    private Context context;
 
-    public interface GetStudioPlanLists {
+    /**
+     * Interface used to allow the caller of a GetPlanListAsynctask to run some code when get
+     * responses.
+     */
+
+    public interface GetStudioPlanListsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetPlanListPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param planListOutput
+         * @param status
+         */
 
         void onGetPlanListPostExecuteCompleted(ArrayList<SubscriptionPlanOutputModel> planListOutput, int status);
     }
 
-    private GetStudioPlanLists listener;
-    private Context context;
+
     ArrayList<SubscriptionPlanOutputModel> planListOutput = new ArrayList<SubscriptionPlanOutputModel>();
 
-    public GetPlanListAsynctask(SubscriptionPlanInputModel planListInput, GetStudioPlanLists listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param planListInput
+     * @param listener
+     * @param context
+     */
+
+    public GetPlanListAsynctask(SubscriptionPlanInputModel planListInput, GetStudioPlanListsListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
         this.planListInput = planListInput;
         PACKAGE_NAME = context.getPackageName();
@@ -63,8 +94,8 @@ public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, 
             HttpPost httppost = new HttpPost(APIUrlConstant.getSubscriptionPlanLists());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.planListInput.getAuthToken());
-            httppost.addHeader(CommonConstants.LANG_CODE, this.planListInput.getLang());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.planListInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.planListInput.getLang());
 
             Log.v("MUVISDK", "authToken = " + this.planListInput.getAuthToken());
             // Execute HTTP Post Request
@@ -180,18 +211,16 @@ public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, 
         super.onPreExecute();
         listener.onGetPlanListPreExecuteStarted();
         code = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetPlanListPostExecuteCompleted(planListOutput,code);
+            listener.onGetPlanListPostExecuteCompleted(planListOutput, code);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetPlanListPostExecuteCompleted(planListOutput,code);
+            listener.onGetPlanListPostExecuteCompleted(planListOutput, code);
         }
 
 

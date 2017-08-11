@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.Login_input;
 import com.home.apisdk.apiModel.Login_output;
 
@@ -23,26 +23,55 @@ import java.io.IOException;
 
 /**
  * Created by Muvi on 12/16/2016.
+ * Class to get Login details.
  */
 public class LoginAsynTask extends AsyncTask<Login_input, Void, Void> {
-    Login_input login_input;
 
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
+    private Login_input login_input;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private LoinDetailsListener listener;
+    private Context context;
 
-    public interface LoinDetails {
+    /**
+     * Interface used to allow the caller of a LoginAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface LoinDetailsListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onLoginPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param login_output
+         * @param status
+         * @param message
+         */
 
         void onLoginPostExecuteCompleted(Login_output login_output, int status, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private LoinDetails listener;
-    private Context context;
     Login_output login_output = new Login_output();
 
-    public LoginAsynTask(Login_input login_input, LoinDetails listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param login_input
+     * @param listener
+     * @param context
+     */
+
+    public LoginAsynTask(Login_input login_input, LoinDetailsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -61,13 +90,13 @@ public class LoginAsynTask extends AsyncTask<Login_input, Void, Void> {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getLoginUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.login_input.getAuthToken());
-            httppost.addHeader(CommonConstants.EMAIL, this.login_input.getEmail());
-            httppost.addHeader(CommonConstants.PASSWORD, this.login_input.getPassword());
-            httppost.addHeader(CommonConstants.LANG_CODE, this.login_input.getLang_code());
-            httppost.addHeader(CommonConstants.DEVICE_ID, this.login_input.getDevice_id());
-            httppost.addHeader(CommonConstants.GOOGLE_ID, this.login_input.getGoogle_id());
-            httppost.addHeader(CommonConstants.DEVICE_TYPE, "1");
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.login_input.getAuthToken());
+            httppost.addHeader(HeaderConstants.EMAIL, this.login_input.getEmail());
+            httppost.addHeader(HeaderConstants.PASSWORD, this.login_input.getPassword());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.login_input.getLang_code());
+            httppost.addHeader(HeaderConstants.DEVICE_ID, this.login_input.getDevice_id());
+            httppost.addHeader(HeaderConstants.GOOGLE_ID, this.login_input.getGoogle_id());
+            httppost.addHeader(HeaderConstants.DEVICE_TYPE, "1");
 
             // Execute HTTP Post Request
             try {
@@ -182,13 +211,13 @@ public class LoginAsynTask extends AsyncTask<Login_input, Void, Void> {
         listener.onLoginPreExecuteStarted();
 
         status = 0;
-        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onLoginPostExecuteCompleted(login_output, status, message);
             return;
         }
-        if (CommonConstants.hashKey.equals("")) {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onLoginPostExecuteCompleted(login_output, status, message);

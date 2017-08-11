@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.GenreListInput;
 import com.home.apisdk.apiModel.GenreListOutput;
 
@@ -24,31 +24,64 @@ import java.util.ArrayList;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to get Genre List details.
  */
 
-public class GetGenreListAsynctask extends AsyncTask<GenreListInput,Void ,Void > {
+public class GetGenreListAsynctask extends AsyncTask<GenreListInput, Void, Void> {
 
-    public GenreListInput genreListInput;
-    String PACKAGE_NAME,status,responseStr;
-    int code;
+    private GenreListInput genreListInput;
+    private String PACKAGE_NAME;
+    private String status;
+    private String responseStr;
+    private int code;
+    private GenreListListener listener;
+    private Context context;
 
-    public interface GenreList{
+    /**
+     * Interface used to allow the caller of a GetGenreListAsynctask to run some code when get
+     * responses.
+     */
+
+    public interface GenreListListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetGenreListPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param genreListOutput
+         * @param code
+         * @param status
+         */
+
         void onGetGenreListPostExecuteCompleted(ArrayList<GenreListOutput> genreListOutput, int code, String status);
     }
 
-    private GenreList listener;
-    private Context context;
+
     ArrayList<GenreListOutput> genreListOutput = new ArrayList<GenreListOutput>();
 
-    public GetGenreListAsynctask(GenreListInput genreListInput, GenreList listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param genreListInput
+     * @param listener
+     * @param context
+     */
+
+    public GetGenreListAsynctask(GenreListInput genreListInput, GenreListListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
         this.genreListInput = genreListInput;
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
-        Log.v("MUVISDK","GetGenreListAsynctask");
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
+        Log.v("MUVISDK", "GetGenreListAsynctask");
 
     }
 
@@ -60,7 +93,7 @@ public class GetGenreListAsynctask extends AsyncTask<GenreListInput,Void ,Void >
             HttpPost httppost = new HttpPost(APIUrlConstant.getGenreListUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.genreListInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.genreListInput.getAuthToken());
 
             // Execute HTTP Post Request
             try {
@@ -83,25 +116,25 @@ public class GetGenreListAsynctask extends AsyncTask<GenreListInput,Void ,Void >
                 status = myJson.optString("status");
             }
 
-                if (code == 200) {
+            if (code == 200) {
 
-                    JSONArray jsonMainNode = myJson.getJSONArray("genre_list");
+                JSONArray jsonMainNode = myJson.getJSONArray("genre_list");
 
-                    int lengthJsonArr = jsonMainNode.length();
-                    for (int i = 0; i < lengthJsonArr; i++) {
-                        try {
-                            GenreListOutput content = new GenreListOutput();
-                            content.setGenre_name(jsonMainNode.get(i).toString());
+                int lengthJsonArr = jsonMainNode.length();
+                for (int i = 0; i < lengthJsonArr; i++) {
+                    try {
+                        GenreListOutput content = new GenreListOutput();
+                        content.setGenre_name(jsonMainNode.get(i).toString());
 
-                            Log.v("MUVISDK", "setGenre_name====== " +jsonMainNode.get(i).toString());
+                        Log.v("MUVISDK", "setGenre_name====== " + jsonMainNode.get(i).toString());
 
-                            genreListOutput.add(content);
-                        } catch (Exception e) {
-                            code = 0;
-                            status = "";
-                        }
+                        genreListOutput.add(content);
+                    } catch (Exception e) {
+                        code = 0;
+                        status = "";
                     }
                 }
+            }
         } catch (Exception e) {
             code = 0;
             status = "";
@@ -114,24 +147,22 @@ public class GetGenreListAsynctask extends AsyncTask<GenreListInput,Void ,Void >
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onGetGenreListPreExecuteStarted();
-        code= 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        code = 0;
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             status = "Package Name Not Matched";
-            listener.onGetGenreListPostExecuteCompleted(genreListOutput,code,status);
+            listener.onGetGenreListPostExecuteCompleted(genreListOutput, code, status);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             status = "Please Initialize The SDK";
-            listener.onGetGenreListPostExecuteCompleted(genreListOutput,code,status);
+            listener.onGetGenreListPostExecuteCompleted(genreListOutput, code, status);
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetGenreListPostExecuteCompleted(genreListOutput,code,status);
+        listener.onGetGenreListPostExecuteCompleted(genreListOutput, code, status);
     }
 }

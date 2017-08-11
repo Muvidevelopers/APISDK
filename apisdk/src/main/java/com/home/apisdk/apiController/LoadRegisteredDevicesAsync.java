@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.LoadRegisteredDevicesInput;
 import com.home.apisdk.apiModel.LoadRegisteredDevicesOutput;
 
@@ -27,23 +27,56 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by MUVI on 7/5/2017.
+ * Class to Load Registered Device details
  */
 
 public class LoadRegisteredDevicesAsync extends AsyncTask<LoadRegisteredDevicesInput, Void, Void> {
-    private LoadRegisteredDevicesInput loadRegisteredDevicesInput;
-    String responseStr;
-    int status;
-    String message, PACKAGE_NAME;
 
-    public interface LoadRegisteredDevices {
+    private LoadRegisteredDevicesInput loadRegisteredDevicesInput;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private LoadRegisteredDevicesListener listener;
+    private Context context;
+
+    /**
+     * Interface used to allow the caller of a LoadRegisteredDevicesAsync to run some code when get
+     * responses.
+     */
+
+    public interface LoadRegisteredDevicesListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onLoadRegisteredDevicesPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param loadRegisteredDevicesOutputs
+         * @param status
+         * @param message
+         */
 
         void onLoadRegisteredDevicesPostExecuteCompleted(ArrayList<LoadRegisteredDevicesOutput> loadRegisteredDevicesOutputs, int status, String message);
     }
 
-    public LoadRegisteredDevicesAsync(LoadRegisteredDevicesInput loadRegisteredDevicesInput, LoadRegisteredDevices listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param loadRegisteredDevicesInput
+     * @param listener
+     * @param context
+     */
+
+    public LoadRegisteredDevicesAsync(LoadRegisteredDevicesInput loadRegisteredDevicesInput, LoadRegisteredDevicesListener listener, Context context) {
         this.listener = listener;
-        this.context = context;  
+        this.context = context;
 
 
         this.loadRegisteredDevicesInput = loadRegisteredDevicesInput;
@@ -53,10 +86,7 @@ public class LoadRegisteredDevicesAsync extends AsyncTask<LoadRegisteredDevicesI
 
     }
 
-    private LoadRegisteredDevices listener;
-    private Context context;
     ArrayList<LoadRegisteredDevicesOutput> loadRegisteredDevicesOutputArrayList = new ArrayList<LoadRegisteredDevicesOutput>();
-
 
 
     @Override
@@ -74,10 +104,10 @@ public class LoadRegisteredDevicesAsync extends AsyncTask<LoadRegisteredDevicesI
                 conn.setDoOutput(true);
 
                 Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter(CommonConstants.AUTH_TOKEN, this.loadRegisteredDevicesInput.getAuthToken())
-                        .appendQueryParameter(CommonConstants.USER_ID, this.loadRegisteredDevicesInput.getUser_id())
-                        .appendQueryParameter(CommonConstants.DEVICE, this.loadRegisteredDevicesInput.getDevice())
-                        .appendQueryParameter(CommonConstants.LANG_CODE, this.loadRegisteredDevicesInput.getLang_code());
+                        .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.loadRegisteredDevicesInput.getAuthToken())
+                        .appendQueryParameter(HeaderConstants.USER_ID, this.loadRegisteredDevicesInput.getUser_id())
+                        .appendQueryParameter(HeaderConstants.DEVICE, this.loadRegisteredDevicesInput.getDevice())
+                        .appendQueryParameter(HeaderConstants.LANG_CODE, this.loadRegisteredDevicesInput.getLang_code());
                 String query = builder.build().getEncodedQuery();
 
 
@@ -98,20 +128,19 @@ public class LoadRegisteredDevicesAsync extends AsyncTask<LoadRegisteredDevicesI
                 while ((inputLine = in.readLine()) != null) {
                     System.out.println(inputLine);
                     responseStr = inputLine;
-                    Log.v("MUVISDK", "responseStr" +responseStr);
+                    Log.v("MUVISDK", "responseStr" + responseStr);
 
                 }
                 in.close();
 
 
-            } catch (org.apache.http.conn.ConnectTimeoutException e){
+            } catch (org.apache.http.conn.ConnectTimeoutException e) {
 
                 status = 0;
                 message = "Error";
 
 
-
-            }catch (IOException e) {
+            } catch (IOException e) {
                 status = 0;
                 message = "Error";
             }
@@ -171,16 +200,16 @@ public class LoadRegisteredDevicesAsync extends AsyncTask<LoadRegisteredDevicesI
         super.onPreExecute();
         listener.onLoadRegisteredDevicesPreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onLoadRegisteredDevicesPostExecuteCompleted(loadRegisteredDevicesOutputArrayList,status,responseStr);
+            listener.onLoadRegisteredDevicesPostExecuteCompleted(loadRegisteredDevicesOutputArrayList, status, responseStr);
             return;
         }
-        if (CommonConstants.hashKey.equals("")) {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onLoadRegisteredDevicesPostExecuteCompleted(loadRegisteredDevicesOutputArrayList,status,responseStr);
+            listener.onLoadRegisteredDevicesPostExecuteCompleted(loadRegisteredDevicesOutputArrayList, status, responseStr);
         }
     }
 
@@ -188,6 +217,6 @@ public class LoadRegisteredDevicesAsync extends AsyncTask<LoadRegisteredDevicesI
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        listener.onLoadRegisteredDevicesPostExecuteCompleted(loadRegisteredDevicesOutputArrayList,status,responseStr);
+        listener.onLoadRegisteredDevicesPostExecuteCompleted(loadRegisteredDevicesOutputArrayList, status, responseStr);
     }
 }

@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.Update_UserProfile_Input;
 import com.home.apisdk.apiModel.Update_UserProfile_Output;
 
@@ -22,25 +22,55 @@ import java.io.IOException;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to Update User Profile details.
  */
 
 public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Input, Void, Void> {
 
-    public Update_UserProfile_Input update_userProfile_input;
-    String PACKAGE_NAME, message, responseStr;
-    int code;
-    Update_UserProfile_Output update_userProfile_output;
+    private Update_UserProfile_Input update_userProfile_input;
+    private String PACKAGE_NAME;
+    private String message;
+    private String responseStr;
+    private int code;
+    private Update_UserProfile_Output update_userProfile_output;
+    private Update_UserProfileListener listener;
+    private Context context;
 
-    public interface Update_UserProfile {
+    /**
+     * Interface used to allow the caller of a UpadteUserProfileAsynctask to run some code when get
+     * responses.
+     */
+
+    public interface Update_UserProfileListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onUpdateUserProfilePreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param update_userProfile_output
+         * @param code
+         * @param message
+         */
 
         void onUpdateUserProfilePostExecuteCompleted(Update_UserProfile_Output update_userProfile_output, int code, String message);
     }
 
-    private Update_UserProfile listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param update_userProfile_input
+     * @param listener
+     * @param context
+     */
 
-    public UpadteUserProfileAsynctask(Update_UserProfile_Input update_userProfile_input, Update_UserProfile listener, Context context) {
+    public UpadteUserProfileAsynctask(Update_UserProfile_Input update_userProfile_input, Update_UserProfileListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -60,13 +90,13 @@ public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Inp
             HttpPost httppost = new HttpPost(APIUrlConstant.getUpdateProfileUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.update_userProfile_input.getAuthToken());
-            httppost.addHeader(CommonConstants.USER_ID, this.update_userProfile_input.getUser_id());
-            httppost.addHeader(CommonConstants.NAME, this.update_userProfile_input.getName());
-            httppost.addHeader(CommonConstants.PASSWORD, this.update_userProfile_input.getPassword());
-            httppost.addHeader(CommonConstants.CUSTOM_LANGUAGES,this.update_userProfile_input.getCustom_languages());
-            httppost.addHeader(CommonConstants.CUSTOM_COUNTRY,this.update_userProfile_input.getCustom_country());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.update_userProfile_input.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.update_userProfile_input.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.update_userProfile_input.getUser_id());
+            httppost.addHeader(HeaderConstants.NAME, this.update_userProfile_input.getName());
+            httppost.addHeader(HeaderConstants.PASSWORD, this.update_userProfile_input.getPassword());
+            httppost.addHeader(HeaderConstants.CUSTOM_LANGUAGES, this.update_userProfile_input.getCustom_languages());
+            httppost.addHeader(HeaderConstants.CUSTOM_COUNTRY, this.update_userProfile_input.getCustom_country());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.update_userProfile_input.getLang_code());
 
             // Execute HTTP Post Request
             try {
@@ -120,13 +150,13 @@ public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Inp
         super.onPreExecute();
         listener.onUpdateUserProfilePreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onUpdateUserProfilePostExecuteCompleted(update_userProfile_output, code, message);
             return;
         }
-        if (CommonConstants.hashKey.equals("")) {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onUpdateUserProfilePostExecuteCompleted(update_userProfile_output, code, message);

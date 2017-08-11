@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -22,26 +22,57 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by MUVI on 1/20/2017.
+ * Class to get IP Address details.
  */
 
-public class GetIpAddressAsynTask extends AsyncTask<Void,Void ,Void > {
+public class GetIpAddressAsynTask extends AsyncTask<Void, Void, Void> {
 
-    String PACKAGE_NAME,ipAddressStr="",responseStr;
-    int statusCode;
-    String message;
-    public interface IpAddress{
+    private String PACKAGE_NAME;
+    private String ipAddressStr = "";
+    private String responseStr;
+    private int statusCode;
+    private String message;
+    private IpAddressListener listener;
+    private Context context;
+
+    /**
+     * Interface used to allow the caller of a GetIpAddressAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface IpAddressListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onIPAddressPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param message
+         * @param statusCode
+         * @param ipAddressStr
+
+         */
         void onIPAddressPostExecuteCompleted(String message, int statusCode, String ipAddressStr);
     }
 
-    private IpAddress listener;
-    private Context context;
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param listener
+     * @param context
+     */
 
-    public GetIpAddressAsynTask(IpAddress listener,Context context) {
+    public GetIpAddressAsynTask(IpAddressListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
-        PACKAGE_NAME=context.getPackageName();
+        PACKAGE_NAME = context.getPackageName();
 
     }
 
@@ -102,28 +133,26 @@ public class GetIpAddressAsynTask extends AsyncTask<Void,Void ,Void > {
             message = "Failure";
 
 
-
         }
         return null;
     }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onIPAddressPreExecuteStarted();
-        statusCode= 0;
-        Log.v("BKS1","ip value=="+ipAddressStr);
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        statusCode = 0;
+        Log.v("BKS1", "ip value==" + ipAddressStr);
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onIPAddressPostExecuteCompleted(message,statusCode,ipAddressStr);
+            listener.onIPAddressPostExecuteCompleted(message, statusCode, ipAddressStr);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onIPAddressPostExecuteCompleted(message,statusCode,ipAddressStr);
+            listener.onIPAddressPostExecuteCompleted(message, statusCode, ipAddressStr);
         }
         //listener.onIPAddressPostExecuteCompleted(message,statusCode,ipAddressStr);
 
@@ -131,6 +160,6 @@ public class GetIpAddressAsynTask extends AsyncTask<Void,Void ,Void > {
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onIPAddressPostExecuteCompleted(message, statusCode,ipAddressStr);
+        listener.onIPAddressPostExecuteCompleted(message, statusCode, ipAddressStr);
     }
 }

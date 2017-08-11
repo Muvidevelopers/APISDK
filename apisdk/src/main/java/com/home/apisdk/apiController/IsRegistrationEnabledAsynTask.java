@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.IsRegistrationEnabledInputModel;
 import com.home.apisdk.apiModel.IsRegistrationEnabledOutputModel;
 
@@ -22,32 +22,63 @@ import java.io.IOException;
 
 /**
  * Created by User on 12-12-2016.
+ * Class to get Registration Enable details.
  */
 public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabledInputModel, Void, Void> {
 
-    IsRegistrationEnabledInputModel isRegistrationEnabledInputModel;
-    String responseStr;
-    int status;
-    String message,PACKAGE_NAME;
+    private IsRegistrationEnabledInputModel isRegistrationEnabledInputModel;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private IsRegistrationenabledListener listener;
+    private Context context;
 
-    public interface IsRegistrationenabled {
+    /**
+     * Interface used to allow the caller of a IsRegistrationEnabledAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface IsRegistrationenabledListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onIsRegistrationenabledPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param isRegistrationEnabledOutputModel
+         * @param status
+         * @param message
+         */
+
         void onIsRegistrationenabledPostExecuteCompleted(IsRegistrationEnabledOutputModel isRegistrationEnabledOutputModel, int status, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private IsRegistrationenabled listener;
-    private Context context;
-    IsRegistrationEnabledOutputModel isRegistrationEnabledOutputModel=new IsRegistrationEnabledOutputModel();
 
-    public IsRegistrationEnabledAsynTask(IsRegistrationEnabledInputModel isRegistrationEnabledInputModel,IsRegistrationenabled listener, Context context) {
+    IsRegistrationEnabledOutputModel isRegistrationEnabledOutputModel = new IsRegistrationEnabledOutputModel();
+
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param isRegistrationEnabledInputModel
+     * @param listener
+     * @param context
+     */
+
+    public IsRegistrationEnabledAsynTask(IsRegistrationEnabledInputModel isRegistrationEnabledInputModel, IsRegistrationenabledListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
         this.isRegistrationEnabledInputModel = isRegistrationEnabledInputModel;
-        PACKAGE_NAME=context.getPackageName();
-        Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
-        Log.v("MUVISDK","GetContentListAsynTask");
+        PACKAGE_NAME = context.getPackageName();
+        Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
+        Log.v("MUVISDK", "GetContentListAsynTask");
 
 
     }
@@ -56,10 +87,10 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
     protected Void doInBackground(IsRegistrationEnabledInputModel... params) {
 
         try {
-            HttpClient httpclient=new DefaultHttpClient();
+            HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getIsRegistrationenabledUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.isRegistrationEnabledInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.isRegistrationEnabledInputModel.getAuthToken());
 
 
             // Execute HTTP Post Request
@@ -68,25 +99,23 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
                 responseStr = EntityUtils.toString(response.getEntity());
 
 
-            } catch (org.apache.http.conn.ConnectTimeoutException e){
+            } catch (org.apache.http.conn.ConnectTimeoutException e) {
 
                 status = 0;
                 message = "Error";
 
 
-
-            }catch (IOException e) {
+            } catch (IOException e) {
                 status = 0;
                 message = "Error";
             }
 
-            JSONObject myJson =null;
-            if(responseStr!=null){
+            JSONObject myJson = null;
+            if (responseStr != null) {
                 myJson = new JSONObject(responseStr);
                 status = Integer.parseInt(myJson.optString("code"));
                 message = myJson.optString("status");
             }
-
 
 
             if (status == 200) {
@@ -113,17 +142,13 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
                 }
 
 
-            }
-
-            else{
+            } else {
 
                 responseStr = "0";
                 status = 0;
                 message = "Error";
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
 
             responseStr = "0";
             status = 0;
@@ -140,29 +165,26 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
         listener.onIsRegistrationenabledPreExecuteStarted();
 
         status = 0;
-            if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-            {
-                this.cancel(true);
-                message = "Packge Name Not Matched";
-                listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel,status,message);
-                return;
-            }
-            if(CommonConstants.hashKey.equals(""))
-            {
-                this.cancel(true);
-                message = "Hash Key Is Not Available. Please Initialize The SDK";
-                listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel,status,message);
-            }
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+            this.cancel(true);
+            message = "Packge Name Not Matched";
+            listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel, status, message);
+            return;
+        }
+        if (HeaderConstants.hashKey.equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel, status, message);
+        }
 
-        listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel,status,message);
+        listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel, status, message);
 
     }
 
 
-
     @Override
     protected void onPostExecute(Void result) {
-        listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel,status,message);
+        listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel, status, message);
 
     }
 

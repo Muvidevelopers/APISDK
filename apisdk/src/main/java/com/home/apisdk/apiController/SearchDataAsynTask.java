@@ -6,7 +6,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.Search_Data_input;
 import com.home.apisdk.apiModel.Search_Data_otput;
 
@@ -24,27 +24,57 @@ import java.util.ArrayList;
 
 /**
  * Created by Muvi on 12/14/2016.
+ * Class to Search Data details.
  */
 public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void> {
-    Search_Data_input search_data_input;
-    String responseStr;
-    int status;
-    int totalItems;
-    String message, PACKAGE_NAME;
 
+    private Search_Data_input search_data_input;
+    private String responseStr;
+    private int status;
+    private int totalItems;
+    private String message;
+    private String PACKAGE_NAME;
+    private SearchDataListener listener;
+    private Context context;
 
-    public interface SearchData {
+    /**
+     * Interface used to allow the caller of a SearchDataAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface SearchDataListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onSearchDataPreexecute();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param contentListOutputArray
+         * @param status
+         * @param totalItems
+         * @param message
+         */
 
         void onSearchDataPostExecuteCompleted(ArrayList<Search_Data_otput> contentListOutputArray, int status, int totalItems, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private SearchData listener;
-    private Context context;
     ArrayList<Search_Data_otput> search_data_otputs = new ArrayList<Search_Data_otput>();
 
-    public SearchDataAsynTask(Search_Data_input search_data_input, SearchData listener, Context context) {
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param search_data_input
+     * @param listener
+     * @param context
+     */
+
+    public SearchDataAsynTask(Search_Data_input search_data_input, SearchDataListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -52,13 +82,6 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
     }
-   /* public SearchDataAsynTask(Search_Data_input search_data_input,SearchData listener) {
-        this.listener = listener;
-
-        this.search_data_input = search_data_input;
-        Log.v("MUVI", "GetContentListAsynTask");
-
-    }*/
 
     @Override
     protected Void doInBackground(Search_Data_input... params) {
@@ -68,12 +91,12 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
             HttpPost httppost = new HttpPost(APIUrlConstant.getSearchDataUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(CommonConstants.AUTH_TOKEN, this.search_data_input.getAuthToken());
-            httppost.addHeader(CommonConstants.LIMIT, this.search_data_input.getLimit());
-            httppost.addHeader(CommonConstants.OFFSET, this.search_data_input.getOffset());
-            httppost.addHeader(CommonConstants.Q, this.search_data_input.getQ());
-            httppost.addHeader(CommonConstants.COUNTRY,this.search_data_input.getCountry());
-            httppost.addHeader(CommonConstants.LANG_CODE,this.search_data_input.getLanguage_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.search_data_input.getAuthToken());
+            httppost.addHeader(HeaderConstants.LIMIT, this.search_data_input.getLimit());
+            httppost.addHeader(HeaderConstants.OFFSET, this.search_data_input.getOffset());
+            httppost.addHeader(HeaderConstants.Q, this.search_data_input.getQ());
+            httppost.addHeader(HeaderConstants.COUNTRY, this.search_data_input.getCountry());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.search_data_input.getLanguage_code());
 
 
             // Execute HTTP Post Request
@@ -209,13 +232,13 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
 
         status = 0;
         totalItems = 0;
-        if (!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message);
             return;
         }
-        if (CommonConstants.hashKey.equals("")) {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message);

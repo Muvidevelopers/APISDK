@@ -7,7 +7,7 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.CommonConstants;
+import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.ValidateUserInput;
 import com.home.apisdk.apiModel.ValidateUserOutput;
 
@@ -27,32 +27,66 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Muvi on 12/16/2016.
+ * Class to get Validate User details.
  */
 public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, Void> {
-    ValidateUserInput validateUserInput;
 
-    String responseStr;
-    int status;
-    String message,PACKAGE_NAME;
-    String validuser_str,isSubscribed;
-    public interface GetValidateUser{
+    private ValidateUserInput validateUserInput;
+    private String responseStr;
+    private int status;
+    private String message;
+    private String PACKAGE_NAME;
+    private String validuser_str;
+    private String isSubscribed;
+    private GetValidateUserListener listener;
+    private Context context;
+
+    /**
+     * Interface used to allow the caller of a GetValidateUserAsynTask to run some code when get
+     * responses.
+     */
+
+    public interface GetValidateUserListener {
+
+        /**
+         * This method will be invoked before controller start execution.
+         * This method to handle pre-execution work.
+         */
+
         void onGetValidateUserPreExecuteStarted();
+
+        /**
+         * This method will be invoked after controller complete execution.
+         * This method to handle post-execution work.
+         *
+         * @param validateUserOutput
+         * @param status
+         * @param message
+         */
+
         void onGetValidateUserPostExecuteCompleted(ValidateUserOutput validateUserOutput, int status, String message);
     }
-   /* public class GetContentListAsync extends AsyncTask<Void, Void, Void> {*/
 
-    private GetValidateUser listener;
-    private Context context;
-    ValidateUserOutput validateUserOutput=new ValidateUserOutput();
 
-    public GetValidateUserAsynTask(ValidateUserInput validateUserInput,GetValidateUser listener, Context context) {
+    ValidateUserOutput validateUserOutput = new ValidateUserOutput();
+
+    /**
+     * Constructor to initialise the private data members.
+     *
+     * @param validateUserInput
+     * @param listener
+     * @param context
+     */
+
+    public GetValidateUserAsynTask(ValidateUserInput validateUserInput, GetValidateUserListener listener, Context context) {
         this.listener = listener;
-        this.context=context;
+        this.context = context;
 
         this.validateUserInput = validateUserInput;
-        PACKAGE_NAME=context.getPackageName();
+        PACKAGE_NAME = context.getPackageName();
 
     }
+
     @Override
     protected Void doInBackground(ValidateUserInput... params) {
 
@@ -70,27 +104,27 @@ public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, 
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
                 Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getUserId());
-                Log.v("MUVISDK","this.validateUserInput.getUserId()"+this.validateUserInput.getMuviUniqueId());
-                Log.v("MUVISDK","this.validateUserInput.getUserId()"+this.validateUserInput.getAuthToken());
+                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getMuviUniqueId());
+                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getAuthToken());
 
-                Log.v("MUVISDK","this.validateUserInput.getUserId()"+this.validateUserInput.getEpisodeStreamUniqueId());
-                Log.v("MUVISDK","this.validateUserInput.getUserId()"+this.validateUserInput.getSeasonId());
-                Log.v("MUVISDK","this.validateUserInput.getUserId()"+this.validateUserInput.getLanguageCode());
-                Log.v("MUVISDK","this.validateUserInput.getUserId()"+this.validateUserInput.getPurchaseType());
+                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getEpisodeStreamUniqueId());
+                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getSeasonId());
+                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getLanguageCode());
+                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getPurchaseType());
 
                 Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter(CommonConstants.AUTH_TOKEN, this.validateUserInput.getAuthToken())
-                        .appendQueryParameter(CommonConstants.USER_ID, this.validateUserInput.getUserId())
-                        .appendQueryParameter(CommonConstants.MOVIE_ID, this.validateUserInput.getMuviUniqueId())
-                        .appendQueryParameter(CommonConstants.EPISODE_ID, this.validateUserInput.getEpisodeStreamUniqueId())
-                        .appendQueryParameter(CommonConstants.SEASON_ID, this.validateUserInput.getSeasonId())
-                        .appendQueryParameter(CommonConstants.LANG_CODE, this.validateUserInput.getLanguageCode())
-                        .appendQueryParameter(CommonConstants.PURCHASE_TYPE, this.validateUserInput.getPurchaseType());
+                        .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.validateUserInput.getAuthToken())
+                        .appendQueryParameter(HeaderConstants.USER_ID, this.validateUserInput.getUserId())
+                        .appendQueryParameter(HeaderConstants.MOVIE_ID, this.validateUserInput.getMuviUniqueId())
+                        .appendQueryParameter(HeaderConstants.EPISODE_ID, this.validateUserInput.getEpisodeStreamUniqueId())
+                        .appendQueryParameter(HeaderConstants.SEASON_ID, this.validateUserInput.getSeasonId())
+                        .appendQueryParameter(HeaderConstants.LANG_CODE, this.validateUserInput.getLanguageCode())
+                        .appendQueryParameter(HeaderConstants.PURCHASE_TYPE, this.validateUserInput.getPurchaseType());
                 String query = builder.build().getEncodedQuery();
 
-                Log.v("MUVISDK", "authToken" +this.validateUserInput.getAuthToken());
-                Log.v("MUVISDK", "user_id" +this.validateUserInput.getUserId());
-                Log.v("MUVISDK", "movie_id" +this.validateUserInput.getMuviUniqueId());
+                Log.v("MUVISDK", "authToken" + this.validateUserInput.getAuthToken());
+                Log.v("MUVISDK", "user_id" + this.validateUserInput.getUserId());
+                Log.v("MUVISDK", "movie_id" + this.validateUserInput.getMuviUniqueId());
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
@@ -98,7 +132,6 @@ public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, 
                 writer.flush();
                 writer.close();
                 os.close();
-
 
 
                 int responseCode = conn.getResponseCode();
@@ -115,13 +148,13 @@ public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, 
                         while ((inputLine = in.readLine()) != null) {
                             System.out.println(inputLine);
                             responseStr = inputLine;
-                            Log.v("MUVISDK", "responseStr" +responseStr);
+                            Log.v("MUVISDK", "responseStr" + responseStr);
 
                         }
                         in.close();
                         err.close();
                     }
-                }else{
+                } else {
                     InputStream ins = conn.getInputStream();
 
                     InputStreamReader isr = new InputStreamReader(ins);
@@ -132,31 +165,29 @@ public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, 
                     while ((inputLine = in.readLine()) != null) {
                         System.out.println(inputLine);
                         responseStr = inputLine;
-                        Log.v("MUVISDK", "responseStr" +responseStr);
+                        Log.v("MUVISDK", "responseStr" + responseStr);
 
                     }
                     in.close();
                 }
 
 
-
-            } catch (org.apache.http.conn.ConnectTimeoutException e){
+            } catch (org.apache.http.conn.ConnectTimeoutException e) {
 
                 status = 0;
                 message = "Error";
-                Log.v("MUVISDK", "ConnectTimeoutException" +e);
+                Log.v("MUVISDK", "ConnectTimeoutException" + e);
 
 
-
-            }catch (IOException e) {
+            } catch (IOException e) {
                 status = 0;
                 message = "Error";
-                Log.v("MUVISDK", "IOException" +e);
+                Log.v("MUVISDK", "IOException" + e);
 
             }
 
-            JSONObject mainJson =null;
-            if(responseStr!=null) {
+            JSONObject mainJson = null;
+            if (responseStr != null) {
                 mainJson = new JSONObject(responseStr);
                 status = Integer.parseInt(mainJson.optString("code"));
                 if ((mainJson.has("msg")) && mainJson.optString("msg").trim() != null && !mainJson.optString("msg").trim().isEmpty() && !mainJson.optString("msg").trim().equals("null") && !mainJson.optString("msg").trim().matches("")) {
@@ -166,7 +197,7 @@ public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, 
                 }
                 if ((mainJson.has("member_subscribed")) && mainJson.optString("member_subscribed").trim() != null && !mainJson.optString("member_subscribed").trim().isEmpty() && !mainJson.optString("member_subscribed").trim().equals("null") && !mainJson.optString("member_subscribed").trim().matches("")) {
                     validateUserOutput.setIsMemberSubscribed(mainJson.optString("member_subscribed"));
-                    isSubscribed=mainJson.optString("member_subscribed");
+                    isSubscribed = mainJson.optString("member_subscribed");
 
                 }
 
@@ -175,23 +206,19 @@ public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, 
                     validuser_str = mainJson.optString("status");
 
                 }
-            }
-
-            else{
+            } else {
                 responseStr = "0";
                 status = 0;
                 message = "Error";
             }
         } catch (final JSONException e1) {
-            Log.v("MUVISDK", "JSONException" +e1);
+            Log.v("MUVISDK", "JSONException" + e1);
 
             responseStr = "0";
             status = 0;
-            message = "Error";            }
-
-        catch (Exception e)
-        {
-            Log.v("MUVISDK", "Exception" +e);
+            message = "Error";
+        } catch (Exception e) {
+            Log.v("MUVISDK", "Exception" + e);
 
             responseStr = "0";
             status = 0;
@@ -201,28 +228,26 @@ public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, 
 
 
     }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onGetValidateUserPreExecuteStarted();
 
         status = 0;
-        if(!PACKAGE_NAME.equals(CommonConstants.user_Package_Name_At_Api))
-        {
+        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetValidateUserPostExecuteCompleted(validateUserOutput, status, message);
             return;
         }
-        if(CommonConstants.hashKey.equals(""))
-        {
+        if (HeaderConstants.hashKey.equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetValidateUserPostExecuteCompleted(validateUserOutput, status, message);
         }
 
     }
-
 
 
     @Override
