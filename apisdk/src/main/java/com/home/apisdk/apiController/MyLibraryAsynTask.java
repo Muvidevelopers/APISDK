@@ -23,8 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get My Library details.
+ * This Class loads the MyLibrary details of the user.
+ *
+ * @author MUVI
  */
 public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void> {
 

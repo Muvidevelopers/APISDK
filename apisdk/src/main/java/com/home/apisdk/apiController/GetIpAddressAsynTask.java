@@ -21,8 +21,9 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to get IP Address details.
+ * This Class gets the IP Address of the user's device on which application is running.
+ *
+ * @author MUVI
  */
 
 public class GetIpAddressAsynTask extends AsyncTask<Void, Void, Void> {

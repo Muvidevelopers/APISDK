@@ -22,8 +22,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 7/21/2017.
- * Class to Remove Video From Favorite details
+ * This Class is use to delete the movies/series from the "Add Favorite" list section.
+ *
+ * @author MUVI
  */
 
 public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {

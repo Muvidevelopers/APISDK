@@ -21,8 +21,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Voucher Plan details.
+ * This Class shows the Voucher plans to the user so that they can buy any voucher according to their need.
+ *
+ * @author MUVI
  */
 public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, Void, Void> {
 

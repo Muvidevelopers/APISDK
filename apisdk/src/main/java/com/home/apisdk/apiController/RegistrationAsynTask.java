@@ -22,8 +22,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by Muvi on 12/16/2016.
- * Class to get Registration details.
+ * This Class allow users to register themselves to the application if they are not member.
+ *
+ * @author MUVI
  */
 public class RegistrationAsynTask extends AsyncTask<Registration_input, Void, Void> {
     private Registration_input registration_input;

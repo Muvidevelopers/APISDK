@@ -22,8 +22,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by MUVI on 7/5/2017.
- * Class to get Video Load details.
+ * This Class Loads the video and play it.
+ *
+ * @author MUVI
  */
 
 public class GetLoadVideosAsync extends AsyncTask<LoadVideoInput, Void, Void> {

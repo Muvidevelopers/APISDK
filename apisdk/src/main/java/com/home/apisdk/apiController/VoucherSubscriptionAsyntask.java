@@ -21,8 +21,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to get Voucher Subscription details.
+ * This Class helps in subscription of the voucher.
+ *
+ * @author MUVI
  */
 
 public class VoucherSubscriptionAsyntask extends AsyncTask<VoucherSubscriptionInputModel, Void, Void> {

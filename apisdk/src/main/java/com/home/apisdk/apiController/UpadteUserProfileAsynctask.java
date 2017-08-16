@@ -21,8 +21,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to Update User Profile details.
+ * This Class allow users to update their profile details whenever needed.
+ *
+ * @author MUVI
  */
 
 public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Input, Void, Void> {

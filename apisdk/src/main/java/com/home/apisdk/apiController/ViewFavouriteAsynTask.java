@@ -23,8 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get View Favorite details.
+ * This Class shows all the videos which has been added in to favorite list so that user can play them anytime.
+ *
+ * @author MUVI
  */
 public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Void, Void> {
 

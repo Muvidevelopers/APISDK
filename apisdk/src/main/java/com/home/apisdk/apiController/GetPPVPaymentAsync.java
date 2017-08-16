@@ -20,8 +20,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 7/6/2017.
- * Class to get PPV Payment details.
+ * This Class gives the details of the Pay-per-view payment to the users.
+ *
+ * @author MUVI
  */
 
 public class GetPPVPaymentAsync extends AsyncTask<RegisterUserPaymentInputModel, Void, Void> {

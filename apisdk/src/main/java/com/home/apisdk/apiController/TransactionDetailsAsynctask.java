@@ -22,8 +22,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Transaction details.
+ * This Class shows all the transaction details of the user.
+ *
+ * @author MUVI
  */
 
 

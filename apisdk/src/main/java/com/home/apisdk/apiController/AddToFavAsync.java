@@ -21,8 +21,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 7/20/2017.
- * Class to Add Favorite details
+ * This Class helps user to add their favorite series/Movie to their favorite list section. Users
+ * can watch their favorite series/movies without wasting much time in searching them.
+ *
+ * @author MUVI
  */
 
 public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {

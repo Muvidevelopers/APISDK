@@ -23,8 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Card List For PPV details.
+ * This Class shows the list of the cards that users had saved for the payment purpose.
+ *
+ * @author MUVI
  */
 public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputModel, Void, Void> {
 

@@ -21,8 +21,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Registration Enable details.
+ * This Class checks whether the registration is enable or not.
+ *
+ * @author MUVI
  */
 public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabledInputModel, Void, Void> {
 

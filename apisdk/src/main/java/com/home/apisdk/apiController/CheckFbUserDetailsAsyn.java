@@ -21,8 +21,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 7/4/2017.
- * Class to Get Facebook User details
+ * This Class checks all the necessary details about the user when they login via Facebook.
+ * Details like Name, Email, Profile picture etc.
+ *
+ * @author MUVI
  */
 
 public class CheckFbUserDetailsAsyn extends AsyncTask<CheckFbUserDetailsInput, Void, Void> {

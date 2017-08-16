@@ -24,8 +24,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to get Plan List details.
+ * This Class holds the plans of the video according to budget of the user.
+ *
+ * @author MUVI
  */
 
 public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, Void, Void> {

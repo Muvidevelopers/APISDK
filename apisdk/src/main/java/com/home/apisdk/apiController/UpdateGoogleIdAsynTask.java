@@ -20,8 +20,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by User on 12-12-2016.
- * Class to Update Goodle Id details
+ * This Class allow to update the Google Id of the users.
+ *
+ * @author MUVI
  */
 
 

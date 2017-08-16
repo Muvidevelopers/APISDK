@@ -21,8 +21,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to get Register User Payment details.
+ * This Class Register the User Payment Details.
+ *
+ * @author MUVI
  */
 
 public class RegisterUserPaymentAsyntask extends AsyncTask<RegisterUserPaymentInputModel, Void, Void> {

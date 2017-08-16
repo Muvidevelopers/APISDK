@@ -22,8 +22,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Cast details.
+ * This Class shows the cast details of the video such as Name of the artists, summary of the movie, Image of the artist etc.
+ *
+ * @author MUVI
  */
 public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void, Void> {
 

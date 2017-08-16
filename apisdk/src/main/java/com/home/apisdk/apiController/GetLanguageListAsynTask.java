@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Language List details.
+ * This Class gives the list of the languages to the users.
+ * Users can choose their prefer language among the list of languages.
+ *
+ * @author MUVI
  */
 public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, Void, Void> {
 

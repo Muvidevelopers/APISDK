@@ -23,8 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to get Video details.
+ * This Class provides all the details related to the video such as video lenght, resolution etc.
+ *
+ * @author MUVI
  */
 
 public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void, Void> {

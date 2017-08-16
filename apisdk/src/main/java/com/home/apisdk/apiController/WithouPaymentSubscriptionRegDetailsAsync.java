@@ -24,8 +24,9 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Created by MUVI on 7/6/2017.
- * Class to get Without Payment Subscription Registration details.
+ * This Class allow to register user without paying any subscription charges.
+ *
+ * @author MUVI
  */
 
 public class WithouPaymentSubscriptionRegDetailsAsync extends AsyncTask<WithouPaymentSubscriptionRegDetailsInput, Void, Void> {

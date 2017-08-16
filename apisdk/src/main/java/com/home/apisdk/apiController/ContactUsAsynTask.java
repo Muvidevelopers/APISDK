@@ -21,8 +21,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to Get Contact Us details
+ * This Class provides users to contact the company if they have any feedback, suggestions or Issue.
+ * They can share anything by contacting the company via Email.
+ *
+ * @author MUVI
  */
 
 public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void> {

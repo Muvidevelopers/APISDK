@@ -21,8 +21,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Image For Download details.
+ * This Class allow the users to download the image of his/him choice.
+ *
+ * @author MUVI
  */
 public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadInputModel, Void, Void> {
 

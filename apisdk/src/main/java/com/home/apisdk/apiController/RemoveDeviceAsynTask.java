@@ -20,8 +20,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Remove Device details.
+ * This Class allow users to remove the register device details from the application.
+ *
+ * @author MUVI
  */
 public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void, Void> {
 

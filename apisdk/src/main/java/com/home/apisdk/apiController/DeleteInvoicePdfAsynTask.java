@@ -21,8 +21,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to Delete Invoice Pdf details
+ * This Class delete the Invoice Pdf of the user.
+ *
+ * @author MUVI
  */
 
 public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputModel, Void, Void> {

@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Content details.
+ * This Class gives all the important content about movie/series such as story, poster, Release Date etc.
+ * This Class tells the user all the necessary things that user is looking for like Video Duration, whether the content is free or paid, banner, rating, reviews etc.
+ *
+ * @author MUVI
  */
 public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Void, Void> {
 
@@ -91,6 +93,12 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
 
     }
 
+    /**
+     * Background thread to execute.
+     * @param params
+     * @return
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
     @Override
     protected Void doInBackground(ContentDetailsInput... params) {
 
@@ -432,7 +440,10 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
 
     }
 
-
+    /**
+     *
+     * @param result
+     */
     @Override
     protected void onPostExecute(Void result) {
         listener.onGetContentDetailsPostExecuteCompleted(contentDetailsOutput, status, message);

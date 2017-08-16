@@ -23,8 +23,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Content List details.
+ * This Class is use to show the content list to the users.
+ * Among the movies they can select their favorite movies/series and can check all the details about that particular movie/series.
+ *
+ * @author MUVI
  */
 public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Void> {
 

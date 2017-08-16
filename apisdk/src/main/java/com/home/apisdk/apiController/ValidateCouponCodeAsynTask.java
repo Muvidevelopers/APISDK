@@ -21,8 +21,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Validate Coupon Code details.
+ * This Class checks whether coupon code entered by the user is valid or invalid.
+ *
+ * @author MUVI
  */
 
 

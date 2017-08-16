@@ -27,8 +27,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Home Page details.
+ * This Class loads the Home page.
+ *
+ * @author MUVI
  */
 public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> {
 

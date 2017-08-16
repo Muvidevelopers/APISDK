@@ -21,8 +21,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to get User Profile details.
+ * This Class shows the profile detail of the user.
+ *
+ * @author MUVI
  */
 
 public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Void, Void> {

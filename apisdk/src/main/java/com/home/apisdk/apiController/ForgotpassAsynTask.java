@@ -22,8 +22,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by Muvi on 12/19/2016.
- * Class to get Forgot Password details.
+ * This Class helps users to reset their password if they forgot somehow.
+ * This Class send reset link to the registered Email id provided by the user.
+ *
+ * @author MUVI
  */
 public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Void> {
 

@@ -20,8 +20,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by User on 12-12-2016.
- * Class to Get User Logged in details
+ * This Class checks the login status of an user.
+ *
+ *@author MUVI
  */
 public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInInputModel, Void, Void> {
 

@@ -26,8 +26,10 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Created by Muvi on 12/16/2016.
- * Class to get Validate User details.
+ * This Class checks whether the user is validate or not.
+ * If user is not validate then it won't allow that user to see any video.
+ *
+ * @author MUVI
  */
 public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, Void> {
 

@@ -21,8 +21,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to Get Payment Information details
+ * This Class shows the payment information of the users who logs in using Social Media platforms such as Facebook.
+ *
+ * @author MUVI
  */
 
 public class AuthUserPaymentInfoAsyntask extends AsyncTask<AuthUserPaymentInfoInputModel, Void, Void> {

@@ -21,8 +21,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 7/4/2017.
- * Class to get about us details.
+ * This Class gives a short note about the company/organisation to its users.
+ *
+ *@author MUVI
  */
 
 public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {

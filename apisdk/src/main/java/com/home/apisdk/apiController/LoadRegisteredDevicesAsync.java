@@ -26,8 +26,9 @@ import java.util.ArrayList;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Created by MUVI on 7/5/2017.
- * Class to Load Registered Device details
+ * This Class Loads the details of the registered device
+ *
+ * @author MUVI
  */
 
 public class LoadRegisteredDevicesAsync extends AsyncTask<LoadRegisteredDevicesInput, Void, Void> {

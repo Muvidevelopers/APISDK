@@ -20,8 +20,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to get Logout details.
+ * This Class helps user to successfully logout from the application whenever they want.
+ *
+ * @author MUVI
  */
 
 public class LogoutAsynctask extends AsyncTask<LogoutInput, Void, Void> {

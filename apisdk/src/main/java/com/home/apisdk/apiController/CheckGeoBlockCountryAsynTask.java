@@ -22,8 +22,9 @@ import org.json.JSONTokener;
 import java.io.IOException;
 
 /**
- * Created by User on 12-12-2016.
- * Class to Get Country details
+ * This Class is use to find out the user's current country from where he/she is logging in.
+ *
+ * @author MUVI
  */
 public class CheckGeoBlockCountryAsynTask extends AsyncTask<CheckGeoBlockInputModel, Void, Void> {
 

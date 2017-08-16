@@ -21,8 +21,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to get Invoice Pdf details.
+ * This Class generate Payment Invoice Pdf to help user to pay for the subscription.
+ * This Class gives the details of the payment.
+ *
+ * @author MUVI
  */
 
 public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Void, Void> {

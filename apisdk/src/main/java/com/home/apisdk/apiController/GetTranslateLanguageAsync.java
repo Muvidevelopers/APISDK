@@ -17,8 +17,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 /**
- * Created by muvi on 4/7/17.
- * Class to get Translate Language details.
+ * This Class Translate the language according to the user's choice.
+ *
+ * @author MUVI
  */
 
 public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {

@@ -22,8 +22,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by User on 12-12-2016.
- * Class to View Content Rating details.
+ * This Class shows all the rating of the contents to the users.
+ *
+ * @author MUVI
  */
 public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputModel, Void, Void> {
 

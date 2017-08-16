@@ -23,8 +23,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by Muvi on 12/14/2016.
- * Class to Search Data details.
+ * This Class helps user in searching data like movies, episode, series etc.
+ * They can search using search box.
+ *
+ * @author MUVI
  */
 public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void> {
 

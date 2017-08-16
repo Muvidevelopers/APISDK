@@ -22,8 +22,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Monitization details.
+ * This Class holds all the details of payment.
+ * This gives monitization details and voucher details to the users.
+ *
+ * @author MUVI
  */
 public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDetailsInputModel, Void, Void> {
 

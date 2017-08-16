@@ -22,8 +22,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by MUVI on 7/4/2017.
- * Class to Get Device details
+ * This Class checks all the information about the device on which the application is running.
+ * With the help of this Class we can get the device name, device type, device Id etc.
+ *
+ * @author MUVI
  */
 
 public class CheckDeviceAsyncTask extends AsyncTask<Void, Void, Void> {

@@ -23,8 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to get Genre List details.
+ * This Class fetch the genre list from the server.
+ *
+ * @author MUVI
  */
 
 public class GetGenreListAsynctask extends AsyncTask<GenreListInput, Void, Void> {

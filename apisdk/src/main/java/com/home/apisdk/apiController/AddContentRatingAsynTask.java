@@ -20,9 +20,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by User on 12-12-2016.
- * Class to Add Content Rating details
+ *This Class Allows the users to rate their favorite contents. The more is the rating
+ *of the content the more users will it attract.
+ *
+ *@author MUVI
  */
+
 public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputModel, Void, Void> {
 
     private AddContentRatingInputModel addContentRatingInputModel;

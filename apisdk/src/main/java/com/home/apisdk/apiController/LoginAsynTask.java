@@ -22,8 +22,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by Muvi on 12/16/2016.
- * Class to get Login details.
+ * This Class allow user to successfully login using their email and password.
+ *
+ * @author MUVI
  */
 public class LoginAsynTask extends AsyncTask<Login_input, Void, Void> {
 

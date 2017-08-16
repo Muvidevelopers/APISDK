@@ -26,8 +26,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by Muvi on 12/14/2016.
- * Class to get Episode details.
+ * This Class gives all the details about the Episode to the users which they are looking for.
+ * Details like Poster, Duration, Price for subscription etc.
+ *
+ * @author MUVI
  */
 public class GetEpisodeDeatailsAsynTask extends AsyncTask<Episode_Details_input, Void, Void> {
 

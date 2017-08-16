@@ -22,8 +22,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * Created by Muvi on 12/16/2016.
- * Class to get Social Auth details.
+ * This Class authenticate users facebook details and help them to login using Facebook.
+ *
+ * @author MUVI
  */
 
 public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Void> {

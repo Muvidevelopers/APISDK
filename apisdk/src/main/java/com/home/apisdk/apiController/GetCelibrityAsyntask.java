@@ -23,8 +23,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by MUVI on 1/20/2017.
- * Class to get Celebrity details.
+ * This Class gives detail of the celebrity who have acted on that particular series/movie which user is looking for.
+ * This gives full cast detail like actor, actress, director etc.
+ *
+ * @author MUVI
  */
 
 public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, Void> {
