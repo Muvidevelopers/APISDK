@@ -217,13 +217,13 @@ public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Vo
         listener.onSocialAuthPreExecuteStarted();
 
         status = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onSocialAuthPostExecuteCompleted(socialAuthOutputModel, status, message);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onSocialAuthPostExecuteCompleted(socialAuthOutputModel, status, message);
