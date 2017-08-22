@@ -22,7 +22,7 @@ import java.io.IOException;
 
 public class SDKInitializer {
     
-    private static  SDKInitializer _instance;
+    private static SDKInitializer _instance;
     private static String hashKey = "";
 
     public static String getHashKey() {

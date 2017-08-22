@@ -201,13 +201,13 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
         listener.onGetLanguageListPreExecuteStarted();
         status = 0;
         responseStr = "0";
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage);
