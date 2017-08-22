@@ -6,9 +6,6 @@ package com.home.apisdk.apiController;
  */
 
 public class HeaderConstants {
-    protected static String hashKey = "x";
-    protected static String user_Package_Name_At_Api = "com.release.vishwamtv";
-
 
     //constant use in header
     /**

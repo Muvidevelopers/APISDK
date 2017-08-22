@@ -1,8 +1,10 @@
-package com.home.apisdk;
+package com.home.apisdk.apiController;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.home.apisdk.APIUrlConstant;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -19,6 +21,38 @@ import java.io.IOException;
  */
 
 public class SDKInitializer {
+    
+    private static  SDKInitializer _instance;
+    private static String hashKey = "";
+
+    public static String getHashKey() {
+        return hashKey;
+    }
+
+    public static void setHashKey(String hashKey) {
+        SDKInitializer.hashKey = hashKey;
+    }
+
+    public static String getUser_Package_Name_At_Api() {
+        return user_Package_Name_At_Api;
+    }
+
+    public static void setUser_Package_Name_At_Api(String user_Package_Name_At_Api) {
+        SDKInitializer.user_Package_Name_At_Api = user_Package_Name_At_Api;
+    }
+
+    private static String user_Package_Name_At_Api = "";
+    
+    private SDKInitializer(){}
+    
+    public static SDKInitializer getInstance(){
+        if(_instance==null){
+            return new SDKInitializer();
+        }
+            return _instance;
+    }
+    
+   
 
 
     public void init(SDKInitializerListner sdkInitializerListner,
@@ -104,35 +138,16 @@ public class SDKInitializer {
 
                     if (status == 200) {
                         if ((myJson.has("pkgname")) && myJson.getString("pkgname").trim() != null && !myJson.getString("pkgname").trim().isEmpty() && !myJson.getString("pkgname").trim().equals("null") && !myJson.getString("pkgname").trim().matches("")) {
-                            //HeaderConstants.User_Package_Name_At_Api = (myJson.getString("pkgname"));
-
                             String PNAME=myJson.getString("pkgname");
-                            HeaderConstants.user_Package_Name_At_Api = PNAME;
-                           /* sp = context.getSharedPreferences(mypreference,0);
-                            SharedPreferences.Editor editor = sp.edit();
-                            editor.putString("PNME", PNAME);
-                            editor.commit();*/
-
-                            Log.v("BIBHU", "pkgname at class="+(myJson.getString("pkgname")));
-                            //  Log.v("SANJAY", "pkgname FROM sharedpref="+sp.getString("PNME",""));
-                        }else{
-//                        HeaderConstants.User_Package_Name_At_Api = "";
-//                        Log.v("BIBHU", "pkgname at else class="+(myJson.getString("pkgname")));
+                           setUser_Package_Name_At_Api(PNAME);
+                            Log.v("MUVI", "pkgname at class="+(myJson.getString("pkgname")));
                         }
 
 
                         if ((myJson.has("hashkey")) && myJson.getString("hashkey").trim() != null && !myJson.getString("hashkey").trim().isEmpty() && !myJson.getString("hashkey").trim().equals("null") && !myJson.getString("hashkey").trim().matches("")) {
-                            HeaderConstants.hashKey = (myJson.getString("hashkey"));
-//                        String HASH=myJson.getString("hashkey");
-//                        sp = context.getSharedPreferences(mypreference,0);
-//                        SharedPreferences.Editor editor1 = sp.edit();
-//                        editor1.putString("hashket", HASH);
-//                        editor1.commit();
-
-                            Log.v("BIBHU", "Hash Key at class="+(myJson.getString("hashkey")));
-                            //  Log.v("SANJAY", "pkgname FROM commonconstant="+HeaderConstants.HashKey);
-                        }else{
-                            //HeaderConstants.HashKey = "";
+                            String hashKey = (myJson.getString("hashkey"));
+                            setHashKey(hashKey);
+                            Log.v("MUVI", "Hash Key at class=" + (myJson.getString("hashkey")));
                         }
                     }
                 }else{

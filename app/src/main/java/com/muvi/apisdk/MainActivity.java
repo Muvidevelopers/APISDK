@@ -3,8 +3,6 @@ package com.muvi.apisdk;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.home.apisdk.SDKInitializer;
-
 public class MainActivity extends AppCompatActivity implements SDKInitializer.SDKInitializerListner{
     public static final String APP_TOKEN = "your token";
 
