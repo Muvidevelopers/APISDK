@@ -122,7 +122,12 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
             if (code == 200) {
 
                 getInvoicePdfOutputModel = new GetInvoicePdfOutputModel();
-                getInvoicePdfOutputModel.setSection(myJson.optString("section"));
+                if ((myJson.has("section")) && myJson.optString("section").trim() != null && !myJson.optString("section").trim().isEmpty() && !myJson.optString("section").trim().equals("null") && !myJson.optString("section").trim().matches("")) {
+
+                    getInvoicePdfOutputModel.setSection(myJson.optString("section"));
+
+                }
+
 
             }
         } catch (Exception e) {

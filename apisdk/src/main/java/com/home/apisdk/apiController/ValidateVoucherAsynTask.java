@@ -98,7 +98,7 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
             httppost.addHeader(HeaderConstants.SEASON, this.validateVoucherInputModel.getSeason());
             httppost.addHeader(HeaderConstants.VOUCHER_CODE, this.validateVoucherInputModel.getVoucher_code());
             httppost.addHeader(HeaderConstants.USER_ID, this.validateVoucherInputModel.getUser_id());
-
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.validateVoucherInputModel.getLanguage());
 
             // Execute HTTP Post Request
             try {

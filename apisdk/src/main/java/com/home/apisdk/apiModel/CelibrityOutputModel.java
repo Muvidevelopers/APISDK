@@ -10,6 +10,25 @@ public class   CelibrityOutputModel {
     String cast_type;
     String celebrity_image;
 
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public String getPermalink() {
+        return permalink;
+    }
+
+    public void setPermalink(String permalink) {
+        this.permalink = permalink;
+    }
+
+    String summary;
+    String permalink;
+
 
     public String getCelebrity_image() {
         return celebrity_image;

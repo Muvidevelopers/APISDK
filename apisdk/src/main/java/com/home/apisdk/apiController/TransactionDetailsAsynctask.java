@@ -95,6 +95,7 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
             httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.transactionInputModel.getAuthToken());
             httppost.addHeader(HeaderConstants.USER_ID, this.transactionInputModel.getUser_id());
             httppost.addHeader(HeaderConstants.ID, this.transactionInputModel.getId());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.transactionInputModel.getLanguage());
 
             // Execute HTTP Post Request
             try {

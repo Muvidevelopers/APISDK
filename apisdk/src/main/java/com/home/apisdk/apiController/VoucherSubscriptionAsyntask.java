@@ -98,7 +98,7 @@ public class VoucherSubscriptionAsyntask extends AsyncTask<VoucherSubscriptionIn
             httppost.addHeader(HeaderConstants.VOUCHER_CODE, this.voucherSubscriptionInputModel.getVoucher_code());
             httppost.addHeader(HeaderConstants.IS_PREORDER, this.voucherSubscriptionInputModel.getIs_preorder());
             httppost.addHeader(HeaderConstants.SEASON, this.voucherSubscriptionInputModel.getSeason());
-
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.voucherSubscriptionInputModel.getLanguage());
 
             try {
                 HttpResponse response = httpclient.execute(httppost);

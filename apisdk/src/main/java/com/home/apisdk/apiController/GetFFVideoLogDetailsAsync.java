@@ -34,6 +34,7 @@ public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput,
     private int code;
     private String PACKAGE_NAME;
     private String videoLogId = "";
+    private String videoLogstreamId="";
     private GetFFVideoLogsListener listener;
     private Context context;
 
@@ -147,6 +148,10 @@ public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput,
                 if (code == 200) {
                     if ((mainJson.has("log_id")) && mainJson.optString("log_id").trim() != null && !mainJson.optString("log_id").trim().isEmpty() && !mainJson.optString("log_id").trim().equals("null") && !mainJson.optString("log_id").trim().matches("")) {
                         videoLogId = mainJson.optString("log_id");
+                    }
+
+                    if ((mainJson.has("restrict_stream_id")) && mainJson.optString("restrict_stream_id").trim() != null && !mainJson.optString("restrict_stream_id").trim().isEmpty() && !mainJson.optString("restrict_stream_id").trim().equals("null") && !mainJson.optString("restrict_stream_id").trim().matches("")) {
+                        videoLogstreamId = mainJson.optString("restrict_stream_id");
                     }
 
                 } else {

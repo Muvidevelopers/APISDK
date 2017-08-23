@@ -138,6 +138,11 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
                         CelibrityOutputModel content = new CelibrityOutputModel();
                         String celebrityName = jsonChildNode.optString("name");
                         String celebrityImage = jsonChildNode.optString("celebrity_image");
+                        String celebrityPermalink = jsonChildNode.optString("permalink");
+                        String celebritySummary = jsonChildNode.optString("summary");
+
+
+
                         String celebrityCastType = jsonChildNode.optString("cast_type");
 
                         celebrityCastType = celebrityCastType.replaceAll("\\[", "");
@@ -157,6 +162,8 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
                         content.setName(celebrityName);
                         content.setCast_type(celebrityCastType);
                         content.setCelebrity_image(celebrityImage);
+                        content.setSummary(celebritySummary);
+                        content.setPermalink(celebrityPermalink);
 
                         celibrityOutputModel.add(content);
                     } catch (Exception e) {

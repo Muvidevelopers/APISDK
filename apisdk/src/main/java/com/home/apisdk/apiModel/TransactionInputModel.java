@@ -5,11 +5,18 @@ package com.home.apisdk.apiModel;
  */
 
 public class TransactionInputModel {
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
     String authToken;
     String user_id;
     String id;
-
+    String language;
 
     public String getUser_id() {
         return user_id;

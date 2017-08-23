@@ -7,8 +7,17 @@ package com.home.apisdk.apiModel;
 public class GetStaticPagesDeatilsModelInput {
 
     String authToken;
-    String permalink;
 
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    String permalink;
+    String language;
 
     public String getPermalink() {
         return permalink;

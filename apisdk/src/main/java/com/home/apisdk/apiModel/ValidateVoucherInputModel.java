@@ -7,12 +7,22 @@ package com.home.apisdk.apiModel;
 public class ValidateVoucherInputModel {
 
     String authToken;
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
     String user_id;
     String movie_id;
     String stream_id;
     String season;
     String purchase_type;
     String voucher_code;
+    String language;
 
     public String getVoucher_code() {
         return voucher_code;

@@ -8,8 +8,27 @@ public class SocialAuthInputModel {
     String email;
     String password;
     String name;
+
+    public String getDevice_type() {
+        return device_type;
+    }
+
+    public void setDevice_type(String device_type) {
+        this.device_type = device_type;
+    }
+
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
+
     String fb_userid;
     String Language;
+    String device_type;
+    String device_id;
 
     public String getLanguage() {
         return Language;

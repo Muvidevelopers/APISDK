@@ -92,7 +92,7 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
 
             httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getStaticPagesDeatilsModelInput.getAuthToken());
             httppost.addHeader(HeaderConstants.PERMALINK, this.getStaticPagesDeatilsModelInput.getPermalink());
-
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.getStaticPagesDeatilsModelInput.getLanguage());
 
             // Execute HTTP Post Request
             try {
