@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -56,10 +61,10 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getCardListForPPVOutputModel
-         * @param status
-         * @param totalItems
-         * @param message
+         * @param getCardListForPPVOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                       Response Code From The Server
+         * @param totalItems                   Getting the total item
+         * @param message                      On Success Message
          */
 
         void onGetCardListForPPVPostExecuteCompleted(ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutputModel, int status, int totalItems, String message);
@@ -70,9 +75,11 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getCardListForPPVInputModel
-     * @param listener
-     * @param context
+     * @param getCardListForPPVInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                    For Example: to use this API we have to set following attributes:
+     *                                    setAuthToken(),setUser_id() etc.
+     * @param listener                    GetCardListForPPV Listener
+     * @param context                     android.content.Context
      */
 
     public GetCardListForPPVAsynTask(GetCardListForPPVInputModel getCardListForPPVInputModel, GetCardListForPPVListener listener, Context context) {
@@ -86,6 +93,12 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
         Log.v("MUVISDK", "GetContentListAsynTask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(GetCardListForPPVInputModel... params) {

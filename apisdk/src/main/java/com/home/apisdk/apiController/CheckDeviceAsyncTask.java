@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -59,9 +64,9 @@ public class CheckDeviceAsyncTask extends AsyncTask<Void, Void, Void> {
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param checkDeviceOutput
-         * @param code
-         * @param message
+         * @param checkDeviceOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code              Response Code From the Server
+         * @param message           On Success Message
          */
 
         void onCheckDevicePostExecuteCompleted(CheckDeviceOutput checkDeviceOutput, int code, String message);
@@ -70,9 +75,11 @@ public class CheckDeviceAsyncTask extends AsyncTask<Void, Void, Void> {
     /**
      * Constructor to initialise the private data members.
      *
-     * @param checkDeviceInput
-     * @param listener
-     * @param context
+     * @param checkDeviceInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                         For Example: to use this API we have to set following attributes:
+     *                         setAuthToken(),setUser_id() etc.
+     * @param listener         CheckDevice Listener
+     * @param context          android.content.Context
      */
 
     public CheckDeviceAsyncTask(CheckDeviceInput checkDeviceInput, CheckDeviceListener listener, Context context) {
@@ -86,6 +93,12 @@ public class CheckDeviceAsyncTask extends AsyncTask<Void, Void, Void> {
 
     }
 
+    /**
+     * Background thread to execute.
+     *
+     * @return  null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
     @Override
     protected Void doInBackground(Void... params) {
 

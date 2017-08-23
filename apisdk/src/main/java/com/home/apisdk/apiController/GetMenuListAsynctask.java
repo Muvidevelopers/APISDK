@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -56,10 +61,10 @@ public class GetMenuListAsynctask extends AsyncTask<MenuListInput, Void, Void> {
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param menuListOutput
-         * @param footermenuListOutput
-         * @param status
-         * @param message
+         * @param menuListOutput       A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param footermenuListOutput A Array List which contains footer menu List. We need to call the respective getter methods to get the values.
+         * @param status               Response Code From The Server
+         * @param message              On Success Message
          */
 
         void onGetMenuListPostExecuteCompleted(ArrayList<MenuListOutput> menuListOutput, ArrayList<MenuListOutput> footermenuListOutput, int status, String message);
@@ -72,9 +77,11 @@ public class GetMenuListAsynctask extends AsyncTask<MenuListInput, Void, Void> {
     /**
      * Constructor to initialise the private data members.
      *
-     * @param menuListInput
-     * @param listener
-     * @param context
+     * @param menuListInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                      For Example: to use this API we have to set following attributes:
+     *                      setAuthToken(),setLang_code() etc.
+     * @param listener      GetMenuList Listener
+     * @param context       android.content.Context
      */
 
     public GetMenuListAsynctask(MenuListInput menuListInput, GetMenuListListener listener, Context context) {
@@ -88,6 +95,12 @@ public class GetMenuListAsynctask extends AsyncTask<MenuListInput, Void, Void> {
         Log.v("MUVISDK", "GetMenuListAsynctask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(MenuListInput... params) {

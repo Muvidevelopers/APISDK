@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -56,9 +61,9 @@ public class CheckGeoBlockCountryAsynTask extends AsyncTask<CheckGeoBlockInputMo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param checkGeoBlockOutputModel
-         * @param status
-         * @param message
+         * @param checkGeoBlockOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status Response Code From The Server
+         * @param message On Success Message
          */
 
         void onCheckGeoBlockCountryPostExecuteCompleted(CheckGeoBlockOutputModel checkGeoBlockOutputModel, int status, String message);
@@ -70,9 +75,11 @@ public class CheckGeoBlockCountryAsynTask extends AsyncTask<CheckGeoBlockInputMo
     /**
      * Constructor to initialise the private data members.
      *
-     * @param checkGeoBlockInputModel
-     * @param listener
-     * @param context
+     * @param checkGeoBlockInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                For Example: to use this API we have to set following attributes:
+     *                                setAuthToken(),setIp() etc.
+     * @param listener                CheckGeoBlockForCountry Listener
+     * @param context                 android.content.Context
      */
 
     public CheckGeoBlockCountryAsynTask(CheckGeoBlockInputModel checkGeoBlockInputModel, CheckGeoBlockForCountryListener listener, Context context) {
@@ -85,6 +92,13 @@ public class CheckGeoBlockCountryAsynTask extends AsyncTask<CheckGeoBlockInputMo
         Log.v("MUVISDK", "getFeatureContentAsynTask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @param params
+     * @return
+     */
 
     @Override
     protected Void doInBackground(CheckGeoBlockInputModel... params) {

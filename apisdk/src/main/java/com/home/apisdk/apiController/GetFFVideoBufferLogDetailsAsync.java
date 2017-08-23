@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -24,8 +29,9 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Created by MUVI on 7/5/2017.
- * Class to get FF Video Buffer Log details.
+ * This Class is used  for the buffering of video while playing online
+ *
+ * @author MUVI
  */
 
 public class GetFFVideoBufferLogDetailsAsync extends AsyncTask<VideoBufferLogsInputModel, Void, Void> {
@@ -56,9 +62,9 @@ public class GetFFVideoBufferLogDetailsAsync extends AsyncTask<VideoBufferLogsIn
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param videoBufferLogsOutputModel
-         * @param status
-         * @param message
+         * @param videoBufferLogsOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                     Response From The Server
+         * @param message                    On Success Message
          */
 
         void onGetFFVideoBufferLogsPostExecuteCompleted(VideoBufferLogsOutputModel videoBufferLogsOutputModel, int status, String message);
@@ -67,9 +73,11 @@ public class GetFFVideoBufferLogDetailsAsync extends AsyncTask<VideoBufferLogsIn
     /**
      * Constructor to initialise the private data members.
      *
-     * @param videoBufferLogsInputModel
-     * @param listener
-     * @param context
+     * @param videoBufferLogsInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                  For Example: to use this API we have to set following attributes:
+     *                                  setAuthToken(),setUserId() etc.
+     * @param listener                  GetFFVideoBufferLogsListener
+     * @param context                   android.content.Context
      */
 
     public GetFFVideoBufferLogDetailsAsync(VideoBufferLogsInputModel videoBufferLogsInputModel, GetFFVideoBufferLogsListener listener, Context context) {
@@ -85,6 +93,12 @@ public class GetFFVideoBufferLogDetailsAsync extends AsyncTask<VideoBufferLogsIn
 
 
     VideoBufferLogsOutputModel videoBufferLogsOutputModel = new VideoBufferLogsOutputModel();
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(VideoBufferLogsInputModel... params) {

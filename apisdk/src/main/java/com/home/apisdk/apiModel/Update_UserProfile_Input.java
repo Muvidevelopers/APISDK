@@ -1,7 +1,9 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by MUVI on 1/20/2017.
+ * This Model Class Holds All The Input Attributes For UpadteUserProfileAsynctask
+ *
+ * @author MUVI
  */
 
 public class Update_UserProfile_Input {
@@ -12,9 +14,21 @@ public class Update_UserProfile_Input {
     String password;
     String lang_code;
 
+    /**
+     * This Method is use to Get the Language Code
+     *
+     * @return lang_code
+     */
+
     public String getLang_code() {
         return lang_code;
     }
+
+    /**
+     * This Method is use to Set the Language Code
+     *
+     * @param lang_code For Setting The Language Code
+     */
 
     public void setLang_code(String lang_code) {
         this.lang_code = lang_code;
@@ -38,20 +52,59 @@ public class Update_UserProfile_Input {
 
     String custom_country;
     String custom_languages;
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
     }
-    public String getName(){
+
+    public String getName() {
         return name;
     }
 
-    public void setAuthToken(String authToken){this.authToken = authToken;}
-    public String getAuthToken(){return authToken;}
+    /**
+     * This Method is use to Set the Auth Token
+     *
+     * @param authToken For Setting The Auth Token
+     */
 
-    public void setUser_id(String user_id){this.user_id = user_id;}
-    public String getUser_id(){return user_id;}
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
 
-    public void setPassword(String password){this.password = password;}
-    public String getPassword(){return password;}
+    /**
+     * This Method is use to Get the Auth Token
+     *
+     * @return authToken
+     */
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    /**
+     * This Method is use to Set the Password
+     *
+     * @param password For Setting The Password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * This Method is use to Get the Password
+     *
+     * @return password
+     */
+    public String getPassword() {
+        return password;
+    }
 
 }

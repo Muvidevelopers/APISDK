@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -56,10 +61,10 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param get_userProfile_output
-         * @param code
-         * @param message
-         * @param status
+         * @param get_userProfile_output A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code                   Response Code From The Server
+         * @param message                On Success Message
+         * @param status                 For Getting The Status
          */
 
         void onGet_UserProfilePostExecuteCompleted(Get_UserProfile_Output get_userProfile_output, int code, String message, String status);
@@ -68,9 +73,11 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
     /**
      * Constructor to initialise the private data members.
      *
-     * @param get_userProfile_input
-     * @param listener
-     * @param context
+     * @param get_userProfile_input A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                              For Example: to use this API we have to set following attributes:
+     *                              setAuthToken(),setEmail() etc.
+     * @param listener              Get_UserProfile Listener
+     * @param context               android.content.Context
      */
 
     public GetUserProfileAsynctask(Get_UserProfile_Input get_userProfile_input, Get_UserProfileListener listener, Context context) {
@@ -84,6 +91,12 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
         Log.v("MUVISDK", "GetUserProfileAsynctask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(Get_UserProfile_Input... params) {

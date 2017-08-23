@@ -1,17 +1,20 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by Muvi on 9/29/2016.
+ * This Model Class Holds All The Output Attributes For SearchDataAsynTask
+ *
+ * @author MUVI
  */
-public class Search_Data_otput{
-    int is_converted=0;
-    int is_ppv=0;
+
+public class Search_Data_otput {
+    int is_converted = 0;
+    int is_ppv = 0;
 
     public int getIs_advance() {
         return is_advance;
     }
 
-    int is_advance=0;
+    int is_advance = 0;
     String movie_id;
     String movie_stream_id;
     String episode_story;
@@ -56,8 +59,7 @@ public class Search_Data_otput{
         this.thirdparty_url = thirdparty_url;
     }
 
-    String thirdparty_url
-            ;
+    String thirdparty_url;
 
     public String getMovie_id() {
         return movie_id;
@@ -358,7 +360,6 @@ public class Search_Data_otput{
     public void setIs_ppv(int is_ppv) {
         this.is_ppv = is_ppv;
     }
-
 
 
 }

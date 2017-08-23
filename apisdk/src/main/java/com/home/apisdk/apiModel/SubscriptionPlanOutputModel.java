@@ -1,7 +1,9 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by Muvi on 08-May-17.
+ * This Model Class Holds All The Input Attributes For GetPlanListAsynctask
+ *
+ * @author MUVI
  */
 
 public class SubscriptionPlanOutputModel {
@@ -106,7 +108,6 @@ public class SubscriptionPlanOutputModel {
     public void setTrial_period(String trial_period) {
         this.trial_period = trial_period;
     }
-
 
 
 }

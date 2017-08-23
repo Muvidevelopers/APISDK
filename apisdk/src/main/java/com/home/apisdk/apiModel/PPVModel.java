@@ -3,8 +3,11 @@ package com.home.apisdk.apiModel;
 import java.io.Serializable;
 
 /**
- * Created by User on 13-12-2016.
+ * This Model Class Holds All The PPV Attributes For GetEpisodeDeatailsAsynTask
+ *
+ * @author MUVI
  */
+
 public class PPVModel implements Serializable {
     private String ppvPriceForUnsubscribedStr;
     private String ppvPriceForsubscribedStr;

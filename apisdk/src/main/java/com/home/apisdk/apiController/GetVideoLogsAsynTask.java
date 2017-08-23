@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -57,9 +62,9 @@ public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, V
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param status
-         * @param message
-         * @param videoLogId
+         * @param status     Response Code From The Server
+         * @param message    On Success Message
+         * @param videoLogId For Getting the Video Log Id
          */
 
         void onGetVideoLogsPostExecuteCompleted(int status, String message, String videoLogId);
@@ -68,9 +73,11 @@ public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, V
     /**
      * Constructor to initialise the private data members.
      *
-     * @param videoLogsInputModel
-     * @param listener
-     * @param context
+     * @param videoLogsInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                            For Example: to use this API we have to set following attributes:
+     *                            setAuthToken(),setUserId() etc.
+     * @param listener            GetVideoLogs Listener
+     * @param context             android.content.Context
      */
 
     public GetVideoLogsAsynTask(VideoLogsInputModel videoLogsInputModel, GetVideoLogsListener listener, Context context) {
@@ -83,6 +90,13 @@ public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, V
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
 
     @Override
     protected Void doInBackground(VideoLogsInputModel... params) {

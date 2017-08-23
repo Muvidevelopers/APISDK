@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -55,10 +60,10 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getStaticPageDetailsModelOutput
-         * @param code
-         * @param message
-         * @param status
+         * @param getStaticPageDetailsModelOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code                            Response Code From The Server
+         * @param message                         On Success Message
+         * @param status                          For Getting The Status
          */
         void onGetStaticPageDetailsPostExecuteCompleted(GetStaticPageDetailsModelOutput getStaticPageDetailsModelOutput, int code, String message, String status);
     }
@@ -66,9 +71,11 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getStaticPagesDeatilsModelInput
-     * @param listener
-     * @param context
+     * @param getStaticPagesDeatilsModelInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                        For Example: to use this API we have to set following attributes:
+     *                                        setAuthToken(),setPermalink() etc.
+     * @param listener                        GetStaticPageDetails Listener
+     * @param context                         android.content.Context
      */
 
     public GetStaticPagesDetailsAsynTask(GetStaticPagesDeatilsModelInput getStaticPagesDeatilsModelInput, GetStaticPageDetailsListener listener, Context context) {
@@ -82,6 +89,12 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
         Log.v("MUVISDK", "GetUserProfileAsynctask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(GetStaticPagesDeatilsModelInput... params) {

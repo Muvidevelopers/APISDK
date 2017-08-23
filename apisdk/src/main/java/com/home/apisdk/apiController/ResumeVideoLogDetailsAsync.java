@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -58,9 +63,9 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param status
-         * @param message
-         * @param videoLogId
+         * @param status     Response Code from the server
+         * @param message    On Success Message
+         * @param videoLogId For Getting The Video Log Id
          */
 
         void onGetResumeVideoLogDetailsPostExecuteCompleted(int status, String message, String videoLogId);
@@ -69,9 +74,11 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
     /**
      * Constructor to initialise the private data members.
      *
-     * @param resumeVideoLogDetailsInput
-     * @param listener
-     * @param context
+     * @param resumeVideoLogDetailsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                   For Example: to use this API we have to set following attributes:
+     *                                   setAuthToken(),setUser_id() etc.
+     * @param listener                   ResumeVideoLogDetailsListener
+     * @param context                    android.content.Context
      */
 
     public ResumeVideoLogDetailsAsync(ResumeVideoLogDetailsInput resumeVideoLogDetailsInput, ResumeVideoLogDetailsListener listener, Context context) {
@@ -84,6 +91,13 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
 
     @Override
     protected Void doInBackground(ResumeVideoLogDetailsInput... params) {

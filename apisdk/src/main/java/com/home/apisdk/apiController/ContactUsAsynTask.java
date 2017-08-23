@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -58,10 +63,10 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param contactUsOutputModel
-         * @param code
-         * @param message
-         * @param status
+         * @param contactUsOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code                 Response Code From The Server
+         * @param message              On Success Message
+         * @param status               For Getting the status
          */
 
         void onContactUsPostExecuteCompleted(ContactUsOutputModel contactUsOutputModel, int code, String message, String status);
@@ -70,9 +75,11 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
     /**
      * Constructor to initialise the private data members.
      *
-     * @param contactUsInputModel
-     * @param listener
-     * @param context
+     * @param contactUsInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                            For Example: to use this API we have to set following attributes:
+     *                            setAuthToken(),setName() etc.
+     * @param listener            ContactUs Listener
+     * @param context             android.content.Context
      */
 
     public ContactUsAsynTask(ContactUsInputModel contactUsInputModel, ContactUsListener listener, Context context) {
@@ -85,6 +92,12 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
         Log.v("MUVISDK", "GetUserProfileAsynctask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(ContactUsInputModel... params) {
@@ -121,7 +134,7 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
                 myJson = new JSONObject(responseStr);
                 code = Integer.parseInt(myJson.optString("code"));
                 message = myJson.optString("msg");
-                message = myJson.optString("status");
+                status = myJson.optString("status");
             }
 
             if (code == 200) {

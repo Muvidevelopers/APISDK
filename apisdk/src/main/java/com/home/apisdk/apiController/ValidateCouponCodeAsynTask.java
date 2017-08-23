@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -58,9 +63,9 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param validateCouponCodeOutputModel
-         * @param status
-         * @param message
+         * @param validateCouponCodeOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                        Response Code from the server
+         * @param message                       On Success Message
          */
 
         void onValidateCouponCodePostExecuteCompleted(ValidateCouponCodeOutputModel validateCouponCodeOutputModel, int status, String message);
@@ -71,9 +76,11 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
     /**
      * Constructor to initialise the private data members.
      *
-     * @param validateCouponCodeInputModel
-     * @param listener
-     * @param context
+     * @param validateCouponCodeInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                     For Example: to use this API we have to set following attributes:
+     *                                     setAuthToken(),setCouponCode() etc.
+     * @param listener                     ValidateCouponCode LIstener
+     * @param context                      android.content.Context
      */
 
     public ValidateCouponCodeAsynTask(ValidateCouponCodeInputModel validateCouponCodeInputModel, ValidateCouponCodeLIstener listener, Context context) {
@@ -87,6 +94,12 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
         Log.v("MUVISDK", "validate voucher");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(ValidateCouponCodeInputModel... params) {

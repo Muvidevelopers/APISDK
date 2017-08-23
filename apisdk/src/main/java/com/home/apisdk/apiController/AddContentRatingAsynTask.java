@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -20,10 +25,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- *This Class Allows the users to rate their favorite contents. The more is the rating
- *of the content the more users will it attract.
+ * This Class Allows the users to rate their favorite contents. The more is the rating
+ * of the content the more users will it attract.
  *
- *@author MUVI
+ * @author MUVI
  */
 
 public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputModel, Void, Void> {
@@ -54,9 +59,9 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param addContentRatingOutputModel
-         * @param status
-         * @param message
+         * @param addContentRatingOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                      Response Code from the server
+         * @param message                     Holds the Status
          */
         void onAddContentRatingPostExecuteCompleted(AddContentRatingOutputModel addContentRatingOutputModel, int status, String message);
     }
@@ -67,9 +72,11 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
     /**
      * Constructor to initialise the private data members.
      *
-     * @param addContentRatingInputModel
-     * @param listener
-     * @param context
+     * @param addContentRatingInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                   For Example: to use this API we have to set following attributes:
+     *                                   setAuthToken(),setLang_code() etc.
+     * @param listener                   AddContentRating Listener
+     * @param context                    android.content.Context
      */
 
     public AddContentRatingAsynTask(AddContentRatingInputModel addContentRatingInputModel, AddContentRatingListener listener, Context context) {
@@ -83,6 +90,12 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
 
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return Null
+     */
 
     @Override
     protected Void doInBackground(AddContentRatingInputModel... params) {

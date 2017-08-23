@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -57,10 +62,10 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param viewFavouriteOutputModelArray
-         * @param status
-         * @param totalItems
-         * @param message
+         * @param viewFavouriteOutputModelArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                        Response Code from the server
+         * @param totalItems                    For Getting The Total Items
+         * @param message                       On Success Message
          */
 
         void onViewFavouritePostExecuteCompleted(ArrayList<ViewFavouriteOutputModel> viewFavouriteOutputModelArray, int status, int totalItems, String message);
@@ -71,9 +76,11 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
     /**
      * Constructor to initialise the private data members.
      *
-     * @param viewFavouriteInputModel
-     * @param listener
-     * @param context
+     * @param viewFavouriteInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                For Example: to use this API we have to set following attributes:
+     *                                setAuthToken(),setUser_id() etc.
+     * @param listener                ViewFavourite Listener
+     * @param context                 android.content.Context
      */
 
     public ViewFavouriteAsynTask(ViewFavouriteInputModel viewFavouriteInputModel, ViewFavouriteListener listener, Context context) {
@@ -87,6 +94,12 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
         Log.v("MUVISDK", "view favorite data");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(ViewFavouriteInputModel... params) {

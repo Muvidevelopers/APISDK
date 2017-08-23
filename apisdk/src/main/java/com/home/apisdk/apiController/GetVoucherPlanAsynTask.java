@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -53,9 +58,9 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getVoucherPlanOutputModel
-         * @param status
-         * @param message
+         * @param getVoucherPlanOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                    Response Code From The Server
+         * @param message                   On Success Message
          */
 
         void onGetVoucherPlanPostExecuteCompleted(GetVoucherPlanOutputModel getVoucherPlanOutputModel, int status, String message);
@@ -67,9 +72,11 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getVoucherPlanInputModel
-     * @param listener
-     * @param context
+     * @param getVoucherPlanInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                 For Example: to use this API we have to set following attributes:
+     *                                 setAuthToken(),setMovie_id() etc.
+     * @param listener                 GetVoucherPlan Listener
+     * @param context                  android.content.Context
      */
 
     public GetVoucherPlanAsynTask(GetVoucherPlanInputModel getVoucherPlanInputModel, GetVoucherPlanListener listener, Context context) {
@@ -83,6 +90,12 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
         Log.v("MUVISDK", "get voucher plan");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(GetVoucherPlanInputModel... params) {

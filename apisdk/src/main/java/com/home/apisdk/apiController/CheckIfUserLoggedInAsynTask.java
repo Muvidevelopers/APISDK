@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -22,7 +27,7 @@ import java.io.IOException;
 /**
  * This Class checks the login status of an user.
  *
- *@author MUVI
+ * @author MUVI
  */
 public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInInputModel, Void, Void> {
 
@@ -52,9 +57,9 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param checkIfUserLoggedInOutputModel
-         * @param status
-         * @param message
+         * @param checkIfUserLoggedInOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                         Response Code From The Server
+         * @param message                        On Success Message
          */
 
         void onCheckIfUserLogggedInPostExecuteCompleted(CheckIfUserLoggedInOutputModel checkIfUserLoggedInOutputModel, int status, String message);
@@ -66,9 +71,11 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
     /**
      * Constructor to initialise the private data members.
      *
-     * @param checkIfUserLoggedInInputModel
-     * @param listener
-     * @param context
+     * @param checkIfUserLoggedInInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                      For Example: to use this API we have to set following attributes:
+     *                                      setAuthToken(),setUser_id() etc.
+     * @param listener                      CheckIfUserLogggedIn Listener
+     * @param context                       android.content.Context
      */
 
     public CheckIfUserLoggedInAsynTask(CheckIfUserLoggedInInputModel checkIfUserLoggedInInputModel, CheckIfUserLogggedInListener listener, Context context) {
@@ -82,6 +89,12 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
 
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(CheckIfUserLoggedInInputModel... params) {

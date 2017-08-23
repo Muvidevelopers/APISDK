@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -53,9 +58,9 @@ public class RegistrationAsynTask extends AsyncTask<Registration_input, Void, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param registration_output
-         * @param status
-         * @param message
+         * @param registration_output A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status              Response Code from the server
+         * @param message             On Success Message
          */
 
         void onRegistrationDetailsPostExecuteCompleted(Registration_output registration_output, int status, String message);
@@ -66,9 +71,11 @@ public class RegistrationAsynTask extends AsyncTask<Registration_input, Void, Vo
     /**
      * Constructor to initialise the private data members.
      *
-     * @param registration_input
-     * @param listener
-     * @param context
+     * @param registration_input A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                           For Example: to use this API we have to set following attributes:
+     *                           setAuthToken(),setPassword() etc.
+     * @param listener           RegistrationDetails Listener
+     * @param context            android.content.Context
      */
 
     public RegistrationAsynTask(Registration_input registration_input, RegistrationDetailsListener listener, Context context) {
@@ -81,6 +88,13 @@ public class RegistrationAsynTask extends AsyncTask<Registration_input, Void, Vo
         Log.v("MUVISDK", "ResistrationAsynTask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
 
     @Override
     protected Void doInBackground(Registration_input... params) {

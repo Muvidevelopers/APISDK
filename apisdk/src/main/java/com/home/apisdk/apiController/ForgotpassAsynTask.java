@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -55,9 +60,9 @@ public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param forgotpassword_output
-         * @param status
-         * @param message
+         * @param forgotpassword_output A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                Response Code From The Server
+         * @param message               On Success Message
          */
 
         void onForgotpassDetailsPostExecuteCompleted(Forgotpassword_output forgotpassword_output, int status, String message);
@@ -69,9 +74,11 @@ public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Vo
     /**
      * Constructor to initialise the private data members.
      *
-     * @param forgotpassword_input
-     * @param listener
-     * @param context
+     * @param forgotpassword_input A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                             For Example: to use this API we have to set following attributes:
+     *                             setAuthToken(),setEmail() etc.
+     * @param listener             ForgotpassDetails Listener
+     * @param context              android.content.Context
      */
 
     public ForgotpassAsynTask(Forgotpassword_input forgotpassword_input, ForgotpassDetailsListener listener, Context context) {
@@ -84,6 +91,12 @@ public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Vo
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
     }
 
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
     @Override
     protected Void doInBackground(Forgotpassword_input... params) {
 

@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -65,10 +70,10 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param get_video_details_output
-         * @param code
-         * @param status
-         * @param message
+         * @param get_video_details_output A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code                     Response Code from the server
+         * @param status                   For Getting The Status
+         * @param message                  On Success Message
          */
 
         void onVideoDetailsPostExecuteCompleted(Get_Video_Details_Output get_video_details_output, int code, String status, String message);
@@ -77,9 +82,11 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getVideoDetailsInput
-     * @param listener
-     * @param context
+     * @param getVideoDetailsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                             For Example: to use this API we have to set following attributes:
+     *                             setAuthToken(),setContent_uniq_id() etc.
+     * @param listener             VideoDetails Listener
+     * @param context              android.content.Context
      */
 
 
@@ -94,6 +101,12 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
         Log.v("MUVISDK", "VideoDetailsAsynctask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(GetVideoDetailsInput... params) {

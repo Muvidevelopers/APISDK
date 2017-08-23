@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -55,9 +60,9 @@ public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Inp
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param update_userProfile_output
-         * @param code
-         * @param message
+         * @param update_userProfile_output A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code                      Response Code from the server
+         * @param message                   On Success Message
          */
 
         void onUpdateUserProfilePostExecuteCompleted(Update_UserProfile_Output update_userProfile_output, int code, String message);
@@ -66,9 +71,11 @@ public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Inp
     /**
      * Constructor to initialise the private data members.
      *
-     * @param update_userProfile_input
-     * @param listener
-     * @param context
+     * @param update_userProfile_input A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                 For Example: to use this API we have to set following attributes:
+     *                                 setAuthToken(),setPassword() etc.
+     * @param listener                 Update_UserProfile Listenerv
+     * @param context                  android.content.Context
      */
 
     public UpadteUserProfileAsynctask(Update_UserProfile_Input update_userProfile_input, Update_UserProfileListener listener, Context context) {
@@ -82,6 +89,12 @@ public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Inp
         Log.v("MUVISDK", "UpadteUserProfileAsynctask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(Update_UserProfile_Input... params) {

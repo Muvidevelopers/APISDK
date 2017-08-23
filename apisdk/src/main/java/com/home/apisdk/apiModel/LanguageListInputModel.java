@@ -1,27 +1,52 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by MUVI on 1/20/2017.
+ * This Model Class Holds All The Input Attributes For GetTranslateLanguageAsync
+ *
+ * @author MUVI
  */
 
 public class LanguageListInputModel {
 
     String authToken;
 
+    /**
+     * This Method is use to Get the Language Code
+     *
+     * @return langCode
+     */
     public String getLangCode() {
         return langCode;
     }
 
+    /**
+     * This Method is use to Set the Language Code
+     *
+     * @param langCode For Setting The Language Code
+     */
     public void setLangCode(String langCode) {
         this.langCode = langCode;
     }
 
     String langCode;
 
-    public void setAuthToken(String authToken){
+    /**
+     * This Method is use to Set the Auth Token
+     *
+     * @param authToken For Setting The Auth Token
+     */
+
+    public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
-    public String getAuthToken(){
+
+    /**
+     * This Method is use to Get the Auth Token
+     *
+     * @return authToken
+     */
+
+    public String getAuthToken() {
         return authToken;
     }
 

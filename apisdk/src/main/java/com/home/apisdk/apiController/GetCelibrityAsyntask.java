@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -58,9 +63,9 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param celibrityOutputModel
-         * @param code
-         * @param msg
+         * @param celibrityOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code                 Response Code From The Server
+         * @param msg                  On Success Message
          */
 
         void onGetCelibrityPostExecuteCompleted(ArrayList<CelibrityOutputModel> celibrityOutputModel, int code, String msg);
@@ -72,9 +77,11 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
     /**
      * Constructor to initialise the private data members.
      *
-     * @param celibrityInputModel
-     * @param listener
-     * @param context
+     * @param celibrityInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                            For Example: to use this API we have to set following attributes:
+     *                            setAuthToken(),setLang_code() etc.
+     * @param listener            GetCelibrity Listener
+     * @param context             android.content.Context
      */
 
     public GetCelibrityAsyntask(CelibrityInputModel celibrityInputModel, GetCelibrityListener listener, Context context) {
@@ -88,6 +95,12 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
         Log.v("MUVISDK", "getPlanListAsynctask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(CelibrityInputModel... params) {

@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -59,9 +64,9 @@ public class LoadRegisteredDevicesAsync extends AsyncTask<LoadRegisteredDevicesI
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param loadRegisteredDevicesOutputs
-         * @param status
-         * @param message
+         * @param loadRegisteredDevicesOutputs A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                       Response Code from the server
+         * @param message                      On Success Message
          */
 
         void onLoadRegisteredDevicesPostExecuteCompleted(ArrayList<LoadRegisteredDevicesOutput> loadRegisteredDevicesOutputs, int status, String message);
@@ -70,9 +75,11 @@ public class LoadRegisteredDevicesAsync extends AsyncTask<LoadRegisteredDevicesI
     /**
      * Constructor to initialise the private data members.
      *
-     * @param loadRegisteredDevicesInput
-     * @param listener
-     * @param context
+     * @param loadRegisteredDevicesInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                   For Example: to use this API we have to set following attributes:
+     *                                   setAuthToken(),setUser_id() etc.
+     * @param listener                   LoadRegisteredDevices Listener
+     * @param context                    android.content.Context
      */
 
     public LoadRegisteredDevicesAsync(LoadRegisteredDevicesInput loadRegisteredDevicesInput, LoadRegisteredDevicesListener listener, Context context) {
@@ -89,6 +96,11 @@ public class LoadRegisteredDevicesAsync extends AsyncTask<LoadRegisteredDevicesI
 
     ArrayList<LoadRegisteredDevicesOutput> loadRegisteredDevicesOutputArrayList = new ArrayList<LoadRegisteredDevicesOutput>();
 
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(LoadRegisteredDevicesInput... params) {

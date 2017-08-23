@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -22,8 +27,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by User on 12-12-2016.
- * Class to get Menu details.
+ * Class to get the total menu list including sub-menu list.
+ *
+ * @author MUVI
  */
 public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> {
 
@@ -82,9 +88,9 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getMenusOutputModel
-         * @param status
-         * @param message
+         * @param getMenusOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status              Response Code From The Server
+         * @param message             On Success Message
          */
 
         void onGetMenusPostExecuteCompleted(GetMenusOutputModel getMenusOutputModel, int status, String message);
@@ -106,9 +112,11 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getMenusInputModel
-     * @param listener
-     * @param context
+     * @param getMenusInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                           For Example: to use this API we have to set following attributes:
+     *                           setAuthToken(),setLang_code() etc.
+     * @param listener           GetMenus Listener
+     * @param context            android.content.Context
      */
 
     public GetMenusAsynTask(GetMenusInputModel getMenusInputModel, GetMenusListener listener, Context context) {
@@ -120,6 +128,12 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
         Log.v("MUVISDK", "GetMenusAsynTask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(GetMenusInputModel... params) {

@@ -1,9 +1,10 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by MUVI on 1/20/2017.
+ * This Model Class Holds All The Output Attributes For TransactionDetailsAsynctask
+ *
+ * @author MUVI
  */
-
 public class TransactionOutputModel {
 
     String order_number;
@@ -79,8 +80,6 @@ public class TransactionOutputModel {
     public void setOrder_number(String order_number) {
         this.order_number = order_number;
     }
-
-
 
 
 }

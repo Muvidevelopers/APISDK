@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -57,8 +62,8 @@ public class WithouPaymentSubscriptionRegDetailsAsync extends AsyncTask<WithouPa
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param status
-         * @param Response
+         * @param status   Response Code from the server
+         * @param Response For Getting The Response
          */
 
         void onGetWithouPaymentSubscriptionRegDetailsPostExecuteCompleted(int status, String Response);
@@ -67,9 +72,11 @@ public class WithouPaymentSubscriptionRegDetailsAsync extends AsyncTask<WithouPa
     /**
      * Constructor to initialise the private data members.
      *
-     * @param withouPaymentSubscriptionRegDetailsInput
-     * @param listener
-     * @param context
+     * @param withouPaymentSubscriptionRegDetailsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                                 For Example: to use this API we have to set following attributes:
+     *                                                 setAuthToken(),setIs_advance() etc.
+     * @param listener                                 WithouPaymentSubscriptionRegDetails Listener
+     * @param context                                  android.content.Context
      */
 
     public WithouPaymentSubscriptionRegDetailsAsync(WithouPaymentSubscriptionRegDetailsInput withouPaymentSubscriptionRegDetailsInput, WithouPaymentSubscriptionRegDetailsListener listener, Context context) {
@@ -80,6 +87,13 @@ public class WithouPaymentSubscriptionRegDetailsAsync extends AsyncTask<WithouPa
         PACKAGE_NAME = context.getPackageName();
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
 
     @Override
     protected Void doInBackground(WithouPaymentSubscriptionRegDetailsInput... params) {

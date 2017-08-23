@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -57,7 +62,7 @@ public class CheckFbUserDetailsAsyn extends AsyncTask<CheckFbUserDetailsInput, V
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param code
+         * @param code Response Code From The Server
          */
 
         void onCheckFbUserDetailsAsynPostExecuteCompleted(int code);
@@ -66,9 +71,11 @@ public class CheckFbUserDetailsAsyn extends AsyncTask<CheckFbUserDetailsInput, V
     /**
      * Constructor to initialise the private data members.
      *
-     * @param checkFbUserDetailsInput
-     * @param listener
-     * @param context
+     * @param checkFbUserDetailsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                For Example: to use this API we have to set following attributes:
+     *                                setAuthToken(),setFb_userid() etc.
+     * @param listener                CheckFbUserDetails Listener
+     * @param context                 android.content.Context
      */
 
     public CheckFbUserDetailsAsyn(CheckFbUserDetailsInput checkFbUserDetailsInput, CheckFbUserDetailsListener listener, Context context) {
@@ -80,6 +87,13 @@ public class CheckFbUserDetailsAsyn extends AsyncTask<CheckFbUserDetailsInput, V
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "register user payment");
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
 
     @Override
     protected Void doInBackground(CheckFbUserDetailsInput... params) {

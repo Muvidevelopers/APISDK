@@ -1,3 +1,7 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
 package com.home.apisdk;
 
 /**

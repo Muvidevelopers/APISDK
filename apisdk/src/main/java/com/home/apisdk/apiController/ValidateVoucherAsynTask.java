@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -55,9 +60,9 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param validateVoucherOutputModel
-         * @param status
-         * @param message
+         * @param validateVoucherOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                     Response Code from the server
+         * @param message                    On Success Message
          */
 
         void onValidateVoucherPostExecuteCompleted(ValidateVoucherOutputModel validateVoucherOutputModel, int status, String message);
@@ -68,9 +73,11 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
     /**
      * Constructor to initialise the private data members.
      *
-     * @param validateVoucherInputModel
-     * @param listener
-     * @param context
+     * @param validateVoucherInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                  For Example: to use this API we have to set following attributes:
+     *                                  setAuthToken(),setMovie_id() etc.
+     * @param listener                  ValidateVoucher Listener
+     * @param context                   android.content.Context
      */
 
     public ValidateVoucherAsynTask(ValidateVoucherInputModel validateVoucherInputModel, ValidateVoucherListener listener, Context context) {
@@ -84,6 +91,12 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
         Log.v("MUVISDK", "validate voucher");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(ValidateVoucherInputModel... params) {

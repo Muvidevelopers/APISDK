@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -58,10 +63,10 @@ public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param contentListOutputArray
-         * @param status
-         * @param totalItems
-         * @param message
+         * @param contentListOutputArray A Model Class which which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                 Response Code From the Server
+         * @param totalItems             Total Item Present
+         * @param message                On Success Message
          */
 
         void onGetContentListPostExecuteCompleted(ArrayList<ContentListOutput> contentListOutputArray, int status, int totalItems, String message);
@@ -73,9 +78,11 @@ public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Vo
     /**
      * Constructor to initialise the private data members.
      *
-     * @param contentListInput
-     * @param listener
-     * @param context
+     * @param contentListInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                         For Example: to use this API we have to set following attributes:
+     *                         setAuthToken(),setOffset() etc.
+     * @param listener         GetContentList Listener
+     * @param context          android.content.Context
      */
 
     public GetContentListAsynTask(ContentListInput contentListInput, GetContentListListener listener, Context context) {
@@ -89,6 +96,12 @@ public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Vo
         Log.v("MUVISDK", "GetContentListAsynTask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(ContentListInput... params) {

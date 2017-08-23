@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -53,9 +58,9 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getImageForDownloadOutputModel
-         * @param status
-         * @param message
+         * @param getImageForDownloadOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                         Response Code From The Server
+         * @param message                        On Success Message
          */
 
         void onGetImageForDownloadPostExecuteCompleted(GetImageForDownloadOutputModel getImageForDownloadOutputModel, int status, String message);
@@ -67,9 +72,11 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getImageForDownloadInputModel
-     * @param listener
-     * @param context
+     * @param getImageForDownloadInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                      For Example: to use this API we have to set following attributes:
+     *                                      setAuthToken() etc.
+     * @param listener                      GetImageForDownload Listener
+     * @param context                       android.content.Context
      */
 
     public GetImageForDownloadAsynTask(GetImageForDownloadInputModel getImageForDownloadInputModel, GetImageForDownloadListener listener, Context context) {
@@ -83,6 +90,12 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
         Log.v("MUVISDK", "getFeatureContentAsynTask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(GetImageForDownloadInputModel... params) {

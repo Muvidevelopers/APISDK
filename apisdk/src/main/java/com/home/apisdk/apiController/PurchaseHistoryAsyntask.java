@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -56,8 +61,8 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param purchaseHistoryOutputModel
-         * @param status
+         * @param purchaseHistoryOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                     Response Code from the server
          */
 
         void onPurchaseHistoryPostExecuteCompleted(ArrayList<PurchaseHistoryOutputModel> purchaseHistoryOutputModel, int status);
@@ -68,9 +73,11 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
     /**
      * Constructor to initialise the private data members.
      *
-     * @param purchaseHistoryInputModel
-     * @param listener
-     * @param context
+     * @param purchaseHistoryInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                  For Example: to use this API we have to set following attributes:
+     *                                  setAuthToken(),setUser_id() etc.
+     * @param listener                  PurchaseHistory Listener
+     * @param context                   android.content.Context
      */
 
     public PurchaseHistoryAsyntask(PurchaseHistoryInputModel purchaseHistoryInputModel, PurchaseHistoryListener listener, Context context) {
@@ -84,6 +91,12 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
         Log.v("MUVISDK", "getPlanListAsynctask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(PurchaseHistoryInputModel... params) {

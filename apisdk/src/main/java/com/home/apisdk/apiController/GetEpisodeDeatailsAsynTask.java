@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -64,11 +69,10 @@ public class GetEpisodeDeatailsAsynTask extends AsyncTask<Episode_Details_input,
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param episode_details_output
-         * @param status
-         * @param i
-         * @param message
-         * @param movieUniqueId
+         * @param episode_details_output A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                 Response Code From The Server
+         * @param message                On Success Message
+         * @param movieUniqueId          For Movie Unique ID
          */
 
         void onGetEpisodeDetailsPostExecuteCompleted(Episode_Details_output episode_details_output, int status, int i, String message, String movieUniqueId);
@@ -84,9 +88,11 @@ public class GetEpisodeDeatailsAsynTask extends AsyncTask<Episode_Details_input,
     /**
      * Constructor to initialise the private data members.
      *
-     * @param episode_details_input
-     * @param listener
-     * @param context
+     * @param episode_details_input A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                              For Example: to use this API we have to set following attributes:
+     *                              setAuthToken(),setPermalink() etc.
+     * @param listener              GetEpisodeDetails Listener
+     * @param context               android.content.Context
      */
 
     public GetEpisodeDeatailsAsynTask(Episode_Details_input episode_details_input, GetEpisodeDetailsListener listener, Context context) {
@@ -99,6 +105,12 @@ public class GetEpisodeDeatailsAsynTask extends AsyncTask<Episode_Details_input,
         Log.v("MUVISDK", "GetContentListAsynTask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(Episode_Details_input... params) {

@@ -1,12 +1,14 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by Muvi on 9/21/2016.
+ * This Model Class Holds All The Output Attributes For MyLibraryAsynTask
+ *
+ * @author MUVI
  */
 public class MyLibraryOutputModel {
     String movieId,
-            permalink,name,story,releaseDate,
-            contentTypesId,posterUrl,genre,is_episode,muvi_uniq_id,movie_stream_uniq_id;
+            permalink, name, story, releaseDate,
+            contentTypesId, posterUrl, genre, is_episode, muvi_uniq_id, movie_stream_uniq_id;
     int isConverted;
 
     int season_id;
@@ -52,9 +54,6 @@ public class MyLibraryOutputModel {
     public void setSeason_id(int season_id) {
         this.season_id = season_id;
     }
-
-
-
 
 
     public String getMovieId() {

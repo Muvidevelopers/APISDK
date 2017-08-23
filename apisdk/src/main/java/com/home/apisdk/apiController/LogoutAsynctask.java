@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -54,9 +59,9 @@ public class LogoutAsynctask extends AsyncTask<LogoutInput, Void, Void> {
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param code
-         * @param status
-         * @param message
+         * @param code    Response Code from the server
+         * @param status  For Getting The Status
+         * @param message On Success Message
          */
 
         void onLogoutPostExecuteCompleted(int code, String status, String message);
@@ -66,9 +71,11 @@ public class LogoutAsynctask extends AsyncTask<LogoutInput, Void, Void> {
     /**
      * Constructor to initialise the private data members.
      *
-     * @param logoutInput
-     * @param listener
-     * @param context
+     * @param logoutInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                    For Example: to use this API we have to set following attributes:
+     *                    setAuthToken(),setLogin_history_id() etc.
+     * @param listener    LogoutListener
+     * @param context     android.content.Context
      */
 
     public LogoutAsynctask(LogoutInput logoutInput, LogoutListener listener, Context context) {
@@ -82,6 +89,12 @@ public class LogoutAsynctask extends AsyncTask<LogoutInput, Void, Void> {
         Log.v("MUVISDK", "LogoutAsynctask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(LogoutInput... params) {

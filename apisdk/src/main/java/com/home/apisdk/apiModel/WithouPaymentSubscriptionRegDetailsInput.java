@@ -1,7 +1,9 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by MUVI on 7/6/2017.
+ * This Model Class Holds All The Input Attributes For WithouPaymentSubscriptionRegDetailsAsync
+ *
+ * @author MUVI
  */
 
 public class WithouPaymentSubscriptionRegDetailsInput {
@@ -11,10 +13,20 @@ public class WithouPaymentSubscriptionRegDetailsInput {
     String card_name;
     String exp_month;
 
+    /**
+     * This Method is use to Get the Auth Token
+     *
+     * @return authToken
+     */
     public String getAuthToken() {
         return authToken;
     }
 
+    /**
+     * This Method is use to Set the Auth Token
+     *
+     * @param authToken For Setting The Auth Token
+     */
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
@@ -186,5 +198,5 @@ public class WithouPaymentSubscriptionRegDetailsInput {
     String user_id;
     String coupon_code;
     String card_type;
-    String card_last_fourdigit,profile_id,token,cvv,country,season_id,episode_id,currency_id,is_save_this_card,existing_card_id;
+    String card_last_fourdigit, profile_id, token, cvv, country, season_id, episode_id, currency_id, is_save_this_card, existing_card_id;
 }

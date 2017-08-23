@@ -1,7 +1,9 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by MUVI on 7/5/2017.
+ * This Model Class Holds All The Output Attributes For GetLoadVideosAsync
+ *
+ * @author MUVI
  */
 
 public class LoadVideoOutput {

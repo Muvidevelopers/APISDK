@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -52,9 +57,9 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param removeDeviceOutputModel
-         * @param status
-         * @param message
+         * @param removeDeviceOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                  Response Code from the server
+         * @param message                 On Success Message
          */
 
         void onRemoveDevicePostExecuteCompleted(RemoveDeviceOutputModel removeDeviceOutputModel, int status, String message);
@@ -66,9 +71,11 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
     /**
      * Constructor to initialise the private data members.
      *
-     * @param removeDeviceInputModel
-     * @param listener
-     * @param context
+     * @param removeDeviceInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                               For Example: to use this API we have to set following attributes:
+     *                               setAuthToken(),setDevice() etc.
+     * @param listener               RemoveDevice Listener
+     * @param context                android.content.Context
      */
 
     public RemoveDeviceAsynTask(RemoveDeviceInputModel removeDeviceInputModel, RemoveDeviceListener listener, Context context) {
@@ -82,6 +89,12 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
 
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(RemoveDeviceInputModel... params) {

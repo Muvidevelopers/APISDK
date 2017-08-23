@@ -1,7 +1,10 @@
 package com.home.apisdk.apiModel;
 
+
 /**
- * Created by MUVI on 1/20/2017.
+ * This Model Class Holds All The Output Attributes For GetStaticPagesDetailsAsynTask
+ *
+ * @author MUVI
  */
 
 public class GetStaticPagesDeatilsModelInput {
@@ -9,20 +12,39 @@ public class GetStaticPagesDeatilsModelInput {
     String authToken;
     String permalink;
 
-
+    /**
+     * This Method is use to Get the Permalink
+     *
+     * @return permalink
+     */
     public String getPermalink() {
         return permalink;
     }
 
+    /**
+     * This Method is use to Set the Permalink
+     *
+     * @param permalink For Setting The Permalink
+     */
     public void setPermalink(String permalink) {
         this.permalink = permalink;
     }
 
-
-    public void setAuthToken(String authToken){
+    /**
+     * This Method is use to Set the Auth Token
+     *
+     * @param authToken For Setting The Auth Token
+     */
+    public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
-    public String getAuthToken(){
+
+    /**
+     * This Method is use to Get the Auth Token
+     *
+     * @return authToken
+     */
+    public String getAuthToken() {
         return authToken;
     }
 

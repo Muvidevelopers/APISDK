@@ -1,9 +1,12 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by Muvi on 10/4/2016.
+ * This Model Class Holds All The Output Attributes For RegistrationAsynTask
+ *
+ * @author MUVI
  */
-public class Registration_output  {
+
+public class Registration_output {
     String id;
     String email;
     String display_name;

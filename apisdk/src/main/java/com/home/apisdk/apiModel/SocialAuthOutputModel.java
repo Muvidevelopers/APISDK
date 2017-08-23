@@ -1,8 +1,11 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by Muvi on 10/4/2016.
+ * This Model Class Holds All The Output Attributes For SocialAuthAsynTask
+ *
+ * @author MUVI
  */
+
 public class SocialAuthOutputModel {
     String id;
     String email;

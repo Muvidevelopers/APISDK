@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -55,9 +60,9 @@ public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param socialAuthOutputModel
-         * @param status
-         * @param message
+         * @param socialAuthOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                Response Code from the server
+         * @param message               On Success Message
          */
 
         void onSocialAuthPostExecuteCompleted(SocialAuthOutputModel socialAuthOutputModel, int status, String message);
@@ -68,9 +73,11 @@ public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Vo
     /**
      * Constructor to initialise the private data members.
      *
-     * @param socialAuthInputModel
-     * @param listener
-     * @param context
+     * @param socialAuthInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                             For Example: to use this API we have to set following attributes:
+     *                             setAuthToken(),setEmail() etc.
+     * @param listener             SocialAuthListener
+     * @param context              android.content.Context
      */
 
     public SocialAuthAsynTask(SocialAuthInputModel socialAuthInputModel, SocialAuthListener listener, Context context) {
@@ -83,6 +90,13 @@ public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Vo
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
 
     @Override
     protected Void doInBackground(SocialAuthInputModel... params) {

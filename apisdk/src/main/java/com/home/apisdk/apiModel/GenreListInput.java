@@ -1,16 +1,30 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by MUVI on 1/20/2017.
+ * This Model Class Holds All The Input Attributes For GetGenreListAsynctask
+ *
+ * @author MUVI
  */
 
 public class GenreListInput {
 
     String authToken;
-    public void setAuthToken(String authToken){
+
+    /**
+     * This Method is use to Set the Auth Token
+     *
+     * @param authToken For Setting The Auth Token
+     */
+    public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
-    public String getAuthToken(){
+
+    /**
+     * This Method is use to Get the Auth Token
+     *
+     * @return authToken
+     */
+    public String getAuthToken() {
         return authToken;
     }
 

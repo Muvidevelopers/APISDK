@@ -1,3 +1,7 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -23,7 +27,7 @@ import java.io.IOException;
 /**
  * This Class gives a short note about the company/organisation to its users.
  *
- *@author MUVI
+ * @author MUVI
  */
 
 public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
@@ -54,7 +58,8 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
         /**
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
-         * @param about
+         *
+         * @param about Holds content of "About US"
          */
         void onAboutUsPostExecuteCompleted(String about);
     }
@@ -62,9 +67,12 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
 
     /**
      * Constructor to initialise the private data members.
-     * @param contactUsInputModel
-     * @param listener
-     * @param context
+     *
+     * @param contactUsInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                            For Example: to use this API we have to set following attributes:
+     *                            setAuthToken() ,setPermalink() etc.
+     * @param listener            AboutUs Listener
+     * @param context             android.content.Context
      */
     public AboutUsAsync(AboutUsInput contactUsInputModel, AboutUsListener listener, Context context) {
         this.listener = listener;
@@ -76,6 +84,13 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
         Log.v("MUVISDK", "GetUserProfileAsynctask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return Null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
 
     @Override
     protected Void doInBackground(AboutUsInput... params) {
@@ -114,8 +129,7 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
 
 
         }

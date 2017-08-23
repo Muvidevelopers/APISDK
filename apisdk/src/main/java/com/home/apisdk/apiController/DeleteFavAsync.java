@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -56,9 +61,9 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param deleteFavOutputModel
-         * @param status
-         * @param sucessMsg
+         * @param deleteFavOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status               Response Code From The Server
+         * @param sucessMsg            On Success Message
          */
 
         void onDeleteFavPostExecuteCompleted(DeleteFavOutputModel deleteFavOutputModel, int status, String sucessMsg);
@@ -69,9 +74,11 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
     /**
      * Constructor to initialise the private data members.
      *
-     * @param deleteFavInputModel
-     * @param listener
-     * @param context
+     * @param deleteFavInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                            For Example: to use this API we have to set following attributes:
+     *                            setAuthToken(),setMovieUniqueId() etc.
+     * @param listener            DeleteFav Listener
+     * @param context             android.content.Context
      */
 
     public DeleteFavAsync(DeleteFavInputModel deleteFavInputModel, DeleteFavListener listener, Context context) {
@@ -80,6 +87,13 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
         this.context = context;
         PACKAGE_NAME = context.getPackageName();
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
 
 
     @Override

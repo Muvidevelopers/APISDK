@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -57,8 +62,8 @@ public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, 
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param planListOutput
-         * @param status
+         * @param planListOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status         Response Code From The Server
          */
 
         void onGetPlanListPostExecuteCompleted(ArrayList<SubscriptionPlanOutputModel> planListOutput, int status);
@@ -70,9 +75,11 @@ public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param planListInput
-     * @param listener
-     * @param context
+     * @param planListInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                      For Example: to use this API we have to set following attributes:
+     *                      setAuthToken(),setLang() etc.
+     * @param listener      GetStudioPlanLists Listener
+     * @param context       android.content.Context
      */
 
     public GetPlanListAsynctask(SubscriptionPlanInputModel planListInput, GetStudioPlanListsListener listener, Context context) {
@@ -85,6 +92,12 @@ public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, 
         Log.v("MUVISDK", "getPlanListAsynctask");
         Log.v("MUVISDK", "authToken = " + this.planListInput.getAuthToken());
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(SubscriptionPlanInputModel... params) {

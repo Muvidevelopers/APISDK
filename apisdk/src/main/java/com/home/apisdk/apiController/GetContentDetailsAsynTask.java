@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -62,9 +67,9 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param contentDetailsOutput
-         * @param status
-         * @param message
+         * @param contentDetailsOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status               Response Code From The Server
+         * @param message              On Success Message
          */
 
         void onGetContentDetailsPostExecuteCompleted(ContentDetailsOutput contentDetailsOutput, int status, String message);
@@ -76,9 +81,11 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
     /**
      * Constructor to initialise the private data members.
      *
-     * @param contentDetailsInput
-     * @param listener
-     * @param context
+     * @param contentDetailsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                            For Example: to use this API we have to set following attributes:
+     *                            setAuthToken(),setPermalink() etc.
+     * @param listener            GetContentDetails Listener
+     * @param context             android.content.Context
      */
 
     public GetContentDetailsAsynTask(ContentDetailsInput contentDetailsInput, GetContentDetailsListener listener, Context context) {
@@ -95,8 +102,8 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
 
     /**
      * Background thread to execute.
-     * @param params
-     * @return
+     *
+     * @return null
      * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
      */
     @Override
@@ -441,7 +448,6 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
     }
 
     /**
-     *
      * @param result
      */
     @Override

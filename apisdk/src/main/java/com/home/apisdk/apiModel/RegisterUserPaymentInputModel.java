@@ -1,7 +1,9 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by MUVI on 1/20/2017.
+ * This Model Class Holds All The Input Attributes For GetPPVPaymentAsync
+ *
+ * @author MUVI
  */
 
 public class RegisterUserPaymentInputModel {

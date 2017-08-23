@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -53,7 +58,7 @@ public class GetSimultaneousLogoutAsync extends AsyncTask<SimultaneousLogoutInpu
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param code
+         * @param code Response Code From The Server
          */
 
         void onSimultaneousLogoutPostExecuteCompleted(int code);
@@ -62,9 +67,11 @@ public class GetSimultaneousLogoutAsync extends AsyncTask<SimultaneousLogoutInpu
     /**
      * Constructor to initialise the private data members.
      *
-     * @param simultaneousLogoutInput
-     * @param listener
-     * @param context
+     * @param simultaneousLogoutInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                For Example: to use this API we have to set following attributes:
+     *                                setAuthToken(),setDevice_type() etc.
+     * @param listener                SimultaneousLogoutAsync Listener
+     * @param context                 android.content.Context
      */
 
 
@@ -79,6 +86,13 @@ public class GetSimultaneousLogoutAsync extends AsyncTask<SimultaneousLogoutInpu
         Log.v("MUVISDK", "LogoutAsynctask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
 
     @Override
     protected Void doInBackground(SimultaneousLogoutInput... params) {

@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -54,9 +59,9 @@ public class LoginAsynTask extends AsyncTask<Login_input, Void, Void> {
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param login_output
-         * @param status
-         * @param message
+         * @param login_output A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status       Response Code from the server
+         * @param message      On Success Message
          */
 
         void onLoginPostExecuteCompleted(Login_output login_output, int status, String message);
@@ -67,9 +72,11 @@ public class LoginAsynTask extends AsyncTask<Login_input, Void, Void> {
     /**
      * Constructor to initialise the private data members.
      *
-     * @param login_input
-     * @param listener
-     * @param context
+     * @param login_input A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                    For Example: to use this API we have to set following attributes:
+     *                    setAuthToken(),setPassword() etc.
+     * @param listener    LoinDetailsListener
+     * @param context     android.content.Context
      */
 
     public LoginAsynTask(Login_input login_input, LoinDetailsListener listener, Context context) {
@@ -82,6 +89,13 @@ public class LoginAsynTask extends AsyncTask<Login_input, Void, Void> {
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
+     */
 
     @Override
     protected Void doInBackground(Login_input... params) {

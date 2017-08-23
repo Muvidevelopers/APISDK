@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -56,10 +61,10 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param deleteInvoicePdfOutputModel
-         * @param code
-         * @param message
-         * @param status
+         * @param deleteInvoicePdfOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code                        Response Code From The Server
+         * @param message                     On Success Message
+         * @param status                      For Current Status
          */
 
         void onDeleteInvoicePdfPostExecuteCompleted(DeleteInvoicePdfOutputModel deleteInvoicePdfOutputModel, int code, String message, String status);
@@ -68,9 +73,11 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
     /**
      * Constructor to initialise the private data members.
      *
-     * @param deleteInvoicePdfInputModel
-     * @param listener
-     * @param context
+     * @param deleteInvoicePdfInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                   For Example: to use this API we have to set following attributes:
+     *                                   setAuthToken(),setFilepath() etc.
+     * @param listener                   DeleteInvoicePdf Listener
+     * @param context                    android.content.Context
      */
 
     public DeleteInvoicePdfAsynTask(DeleteInvoicePdfInputModel deleteInvoicePdfInputModel, DeleteInvoicePdfListener listener, Context context) {
@@ -83,6 +90,12 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
         Log.v("MUVISDK", "deleteinvoicepdf");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(DeleteInvoicePdfInputModel... params) {

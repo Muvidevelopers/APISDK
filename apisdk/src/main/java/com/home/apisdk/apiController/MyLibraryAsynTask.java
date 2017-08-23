@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -56,10 +61,10 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param myLibraryOutputModelArray
-         * @param status
-         * @param totalItems
-         * @param message
+         * @param myLibraryOutputModelArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                    Response Code from the server
+         * @param totalItems                For Getting The Total Item
+         * @param message                   On Success Message
          */
 
         void onMyLibraryPostExecuteCompleted(ArrayList<MyLibraryOutputModel> myLibraryOutputModelArray, int status, String totalItems, String message);
@@ -70,9 +75,11 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
     /**
      * Constructor to initialise the private data members.
      *
-     * @param myLibraryInputModel
-     * @param listener
-     * @param context
+     * @param myLibraryInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                            For Example: to use this API we have to set following attributes:
+     *                            setAuthToken(),setUser_id() etc.
+     * @param listener            MyLibrary Listener
+     * @param context             android.content.Context
      */
 
     public MyLibraryAsynTask(MyLibraryInputModel myLibraryInputModel, MyLibraryListener listener, Context context) {
@@ -86,6 +93,12 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
         Log.v("MUVISDK", "GetContentListAsynTask");
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(MyLibraryInputModel... params) {

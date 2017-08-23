@@ -1,8 +1,12 @@
 package com.home.apisdk.apiModel;
 
+
 /**
- * Created by Muvi on 10/4/2016.
+ * This Model Class Holds All The Input Attributes For SocialAuthAsynTask
+ *
+ * @author MUVI
  */
+
 public class SocialAuthInputModel {
     String authToken;
     String email;
@@ -11,10 +15,20 @@ public class SocialAuthInputModel {
     String fb_userid;
     String Language;
 
+    /**
+     * This Method  is use to Get the Language
+     *
+     * @return Language
+     */
+
     public String getLanguage() {
         return Language;
     }
-
+    /**
+     * This Method is use to Set the Language
+     *
+     * @param language For Setting The Language
+     */
     public void setLanguage(String language) {
         Language = language;
     }
@@ -35,11 +49,21 @@ public class SocialAuthInputModel {
         this.name = name;
     }
 
-
+    /**
+     * This Method is use to Get the Auth Token
+     *
+     * @return authToken
+     */
 
     public String getAuthToken() {
         return authToken;
     }
+
+    /**
+     * This Method is use to Set the Auth Token
+     *
+     * @param authToken For Setting The Auth Token
+     */
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;

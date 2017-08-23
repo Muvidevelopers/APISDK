@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -61,10 +66,10 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param languageListOutputArray
-         * @param status
-         * @param message
-         * @param defaultLanguage
+         * @param languageListOutputArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                  Response From The Server
+         * @param message                 On Success Message
+         * @param defaultLanguage         For Getting the Default Language
          */
 
         void onGetLanguageListPostExecuteCompleted(ArrayList<LanguageListOutputModel> languageListOutputArray, int status, String message, String defaultLanguage);
@@ -75,9 +80,11 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
     /**
      * Constructor to initialise the private data members.
      *
-     * @param languageListInputModel
-     * @param listener
-     * @param context
+     * @param languageListInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                               For Example: to use this API we have to set following attributes:
+     *                               setAuthToken() etc.
+     * @param listener               GetLanguageList Listener
+     * @param context                android.content.Context
      */
 
     public GetLanguageListAsynTask(LanguageListInputModel languageListInputModel, GetLanguageListListener listener, Context context) {
@@ -89,6 +96,12 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
         PACKAGE_NAME = context.getPackageName();
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(LanguageListInputModel... params) {

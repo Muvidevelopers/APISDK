@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -56,9 +61,9 @@ public class GetLoadVideosAsync extends AsyncTask<LoadVideoInput, Void, Void> {
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param loadVideoOutputs
-         * @param code
-         * @param status
+         * @param loadVideoOutputs A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code             Response Code From The Server
+         * @param status           For Getting the Status
          */
 
         void onLoadVideosAsyncPostExecuteCompleted(ArrayList<LoadVideoOutput> loadVideoOutputs, int code, String status);
@@ -70,9 +75,11 @@ public class GetLoadVideosAsync extends AsyncTask<LoadVideoInput, Void, Void> {
     /**
      * Constructor to initialise the private data members.
      *
-     * @param loadVideoInput
-     * @param listener
-     * @param context
+     * @param loadVideoInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                       For Example: to use this API we have to set following attributes:
+     *                       setAuthToken(),setMovie_uniq_id() etc.
+     * @param listener       LoadVideosAsync Listener
+     * @param context        android.content.Context
      */
 
     public GetLoadVideosAsync(LoadVideoInput loadVideoInput, LoadVideosAsyncListener listener, Context context) {
@@ -85,6 +92,12 @@ public class GetLoadVideosAsync extends AsyncTask<LoadVideoInput, Void, Void> {
         Log.v("MUVISDK", "getLoadVideoAsync");
         Log.v("MUVISDK", "authToken = " + this.loadVideoInput.getAuthToken());
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(LoadVideoInput... params) {

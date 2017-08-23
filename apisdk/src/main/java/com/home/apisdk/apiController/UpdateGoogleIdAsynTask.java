@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -54,9 +59,9 @@ public class UpdateGoogleIdAsynTask extends AsyncTask<UpdateGoogleIdInputModel, 
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param updateGoogleIdOutputModel
-         * @param status
-         * @param message
+         * @param updateGoogleIdOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                    Response Code from the server
+         * @param message                   On Success Message
          */
 
         void onUpdateGoogleIdPostExecuteCompleted(UpdateGoogleIdOutputModel updateGoogleIdOutputModel, int status, String message);
@@ -68,9 +73,11 @@ public class UpdateGoogleIdAsynTask extends AsyncTask<UpdateGoogleIdInputModel, 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param updateGoogleIdInputModel
-     * @param listener
-     * @param context
+     * @param updateGoogleIdInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                 For Example: to use this API we have to set following attributes:
+     *                                 setAuthToken(),setUser_id() etc.
+     * @param listener                 UpdateGoogleIdListener
+     * @param context                  android.content.Context
      */
 
     public UpdateGoogleIdAsynTask(UpdateGoogleIdInputModel updateGoogleIdInputModel, UpdateGoogleIdListener listener, Context context) {
@@ -84,6 +91,12 @@ public class UpdateGoogleIdAsynTask extends AsyncTask<UpdateGoogleIdInputModel, 
 
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(UpdateGoogleIdInputModel... params) {

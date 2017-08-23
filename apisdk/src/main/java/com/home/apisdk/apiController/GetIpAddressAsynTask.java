@@ -1,3 +1,8 @@
+/**
+ * SDK initialization, platform and device information classes.
+ */
+
+
 package com.home.apisdk.apiController;
 
 import android.content.Context;
@@ -54,10 +59,9 @@ public class GetIpAddressAsynTask extends AsyncTask<Void, Void, Void> {
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param message
-         * @param statusCode
-         * @param ipAddressStr
-
+         * @param message      On Success Message
+         * @param statusCode   Response Code From The Server
+         * @param ipAddressStr For getting the IP Address
          */
         void onIPAddressPostExecuteCompleted(String message, int statusCode, String ipAddressStr);
     }
@@ -65,8 +69,8 @@ public class GetIpAddressAsynTask extends AsyncTask<Void, Void, Void> {
     /**
      * Constructor to initialise the private data members.
      *
-     * @param listener
-     * @param context
+     * @param listener IpAddress Listener
+     * @param context  android.content.Context
      */
 
     public GetIpAddressAsynTask(IpAddressListener listener, Context context) {
@@ -76,6 +80,12 @@ public class GetIpAddressAsynTask extends AsyncTask<Void, Void, Void> {
         PACKAGE_NAME = context.getPackageName();
 
     }
+
+    /**
+     * Background thread to execute.
+     *
+     * @return null
+     */
 
     @Override
     protected Void doInBackground(Void... params) {

@@ -1,7 +1,9 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by MUVI on 1/20/2017.
+ * This Model Class Holds All The Input Attributes For GetFFVideoBufferLogDetailsAsync
+ *
+ * @author MUVI
  */
 
 public class VideoBufferLogsInputModel {
@@ -14,10 +16,21 @@ public class VideoBufferLogsInputModel {
     String deviceType;
     String bufferLogId;
 
+    /**
+     * This Method is use to Get the Buffer Log Unique Id
+     *
+     * @return bufferLogUniqueId
+     */
+
     public String getBufferLogUniqueId() {
         return bufferLogUniqueId;
     }
 
+    /**
+     * This Method is use to Set the Buffer Log Unique Id
+     *
+     * @param bufferLogUniqueId For Setting The Buffer Log Unique Id
+     */
     public void setBufferLogUniqueId(String bufferLogUniqueId) {
         this.bufferLogUniqueId = bufferLogUniqueId;
     }
@@ -28,9 +41,21 @@ public class VideoBufferLogsInputModel {
     String bufferEndTime;
     String videoResolution;
 
+    /**
+     * This Method is use to Get the Buffer Log Id
+     *
+     * @return bufferLogId
+     */
+
     public String getBufferLogId() {
         return bufferLogId;
     }
+
+    /**
+     * This Method is use to Set the Buffer Log Id
+     *
+     * @param bufferLogId For Setting The Buffer Log Id
+     */
 
     public void setBufferLogId(String bufferLogId) {
         this.bufferLogId = bufferLogId;
@@ -68,9 +93,20 @@ public class VideoBufferLogsInputModel {
         this.videoResolution = videoResolution;
     }
 
+    /**
+     * This Method is use to Get the Auth Token
+     *
+     * @return authToken
+     */
     public String getAuthToken() {
         return authToken;
     }
+
+    /**
+     * This Method is use to Set the Auth Token
+     *
+     * @param authToken For Setting The Auth Token
+     */
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
@@ -107,7 +143,6 @@ public class VideoBufferLogsInputModel {
     public void setEpisodeStreamUniqueId(String episodeStreamUniqueId) {
         this.episodeStreamUniqueId = episodeStreamUniqueId;
     }
-
 
 
     public String getDeviceType() {
