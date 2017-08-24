@@ -178,8 +178,6 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
             listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message);
         }
 
-        listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message);
-
     }
 
 

@@ -180,7 +180,6 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsModelOutput, code, message, status);
         }
-        listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsModelOutput, code, message, status);
 
     }
 

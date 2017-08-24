@@ -173,7 +173,6 @@ public class CheckGeoBlockCountryAsynTask extends AsyncTask<CheckGeoBlockInputMo
                 listener.onCheckGeoBlockCountryPostExecuteCompleted(checkGeoBlockOutputModel,status,message);
             }
 
-
     }
 
 

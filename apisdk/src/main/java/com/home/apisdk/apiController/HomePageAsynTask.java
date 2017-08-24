@@ -273,7 +273,6 @@ public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> 
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message);
         }
-        listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message);
     }
 
 

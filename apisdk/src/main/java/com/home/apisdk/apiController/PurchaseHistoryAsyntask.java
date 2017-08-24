@@ -205,7 +205,6 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);
         }
-        listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);
 
     }
 

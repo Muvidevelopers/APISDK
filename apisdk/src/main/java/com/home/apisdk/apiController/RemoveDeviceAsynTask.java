@@ -175,8 +175,6 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
             listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutputModel, status, message);
         }
 
-        listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutputModel, status, message);
-
     }
 
 

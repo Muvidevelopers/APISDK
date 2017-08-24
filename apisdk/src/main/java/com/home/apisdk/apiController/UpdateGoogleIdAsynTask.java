@@ -177,8 +177,6 @@ public class UpdateGoogleIdAsynTask extends AsyncTask<UpdateGoogleIdInputModel, 
             listener.onUpdateGoogleIdPostExecuteCompleted(updateGoogleIdOutputModel, status, message);
         }
 
-        listener.onUpdateGoogleIdPostExecuteCompleted(updateGoogleIdOutputModel, status, message);
-
     }
 
 

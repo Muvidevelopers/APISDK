@@ -240,7 +240,6 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message);
         }
-        listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message);
 
     }
 

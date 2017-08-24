@@ -164,7 +164,6 @@ public class GetIpAddressAsynTask extends AsyncTask<Void, Void, Void> {
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onIPAddressPostExecuteCompleted(message, statusCode, ipAddressStr);
         }
-        //listener.onIPAddressPostExecuteCompleted(message,statusCode,ipAddressStr);
 
     }
 

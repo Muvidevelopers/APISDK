@@ -170,7 +170,6 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
             listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message);
         }
 
-
     }
 
 

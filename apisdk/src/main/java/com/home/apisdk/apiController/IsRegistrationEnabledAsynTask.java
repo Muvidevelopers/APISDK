@@ -188,9 +188,8 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel, status, message);
+            return;
         }
-
-        listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel, status, message);
 
     }
 

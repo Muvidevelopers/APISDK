@@ -175,8 +175,6 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
             listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
         }
 
-        listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
-
     }
 
 
