@@ -11,6 +11,15 @@ public class GetVideoDetailsInput {
     String authToken;
     String content_uniq_id;
     String stream_uniq_id;
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    String language;
 
     /**
      * This Method is use to Get the User ID

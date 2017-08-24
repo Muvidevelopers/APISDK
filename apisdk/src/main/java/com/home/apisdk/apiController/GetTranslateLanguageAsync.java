@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.LanguageListInputModel;
 
 import org.apache.http.HttpResponse;
@@ -137,13 +136,13 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {
         super.onPreExecute();
         listener.onGetTranslateLanguagePreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code);

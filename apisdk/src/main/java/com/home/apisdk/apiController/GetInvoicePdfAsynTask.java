@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.GetInvoicePdfInputModel;
 import com.home.apisdk.apiModel.GetInvoicePdfOutputModel;
 
@@ -138,7 +137,12 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
             if (code == 200) {
 
                 getInvoicePdfOutputModel = new GetInvoicePdfOutputModel();
-                getInvoicePdfOutputModel.setSection(myJson.optString("section"));
+                if ((myJson.has("section")) && myJson.optString("section").trim() != null && !myJson.optString("section").trim().isEmpty() && !myJson.optString("section").trim().equals("null") && !myJson.optString("section").trim().matches("")) {
+
+                    getInvoicePdfOutputModel.setSection(myJson.optString("section"));
+
+                }
+
 
             }
         } catch (Exception e) {
@@ -154,13 +158,13 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
         super.onPreExecute();
         listener.onGetInvoicePdfPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);

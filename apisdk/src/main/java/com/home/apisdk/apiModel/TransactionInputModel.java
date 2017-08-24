@@ -6,7 +6,14 @@ package com.home.apisdk.apiModel;
  * @author MUVI
  */
 public class TransactionInputModel {
+    public String getLanguage() {
+        return language;
+    }
 
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+    String language;
     String authToken;
     String user_id;
     String id;

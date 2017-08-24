@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.ContactUsInputModel;
 import com.home.apisdk.apiModel.ContactUsOutputModel;
 
@@ -157,13 +156,13 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
         super.onPreExecute();
         listener.onContactUsPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);

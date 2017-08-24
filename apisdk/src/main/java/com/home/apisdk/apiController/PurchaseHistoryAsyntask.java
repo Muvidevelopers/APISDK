@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.PurchaseHistoryInputModel;
 import com.home.apisdk.apiModel.PurchaseHistoryOutputModel;
 
@@ -195,13 +194,13 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
         super.onPreExecute();
         listener.onPurchaseHistoryPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);

@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.VoucherSubscriptionInputModel;
 import com.home.apisdk.apiModel.VoucherSubscriptionOutputModel;
 
@@ -113,7 +112,7 @@ public class VoucherSubscriptionAsyntask extends AsyncTask<VoucherSubscriptionIn
             httppost.addHeader(HeaderConstants.VOUCHER_CODE, this.voucherSubscriptionInputModel.getVoucher_code());
             httppost.addHeader(HeaderConstants.IS_PREORDER, this.voucherSubscriptionInputModel.getIs_preorder());
             httppost.addHeader(HeaderConstants.SEASON, this.voucherSubscriptionInputModel.getSeason());
-
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.voucherSubscriptionInputModel.getLanguage());
 
             try {
                 HttpResponse response = httpclient.execute(httppost);
@@ -155,12 +154,12 @@ public class VoucherSubscriptionAsyntask extends AsyncTask<VoucherSubscriptionIn
         super.onPreExecute();
         listener.onVoucherSubscriptionPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             listener.onVoucherSubscriptionPostExecuteCompleted(voucherSubscriptionOutputModel, code);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             listener.onVoucherSubscriptionPostExecuteCompleted(voucherSubscriptionOutputModel, code);
         }

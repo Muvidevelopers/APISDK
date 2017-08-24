@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.ResumeVideoLogDetailsInput;
 
 import org.json.JSONException;
@@ -180,13 +179,13 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
         super.onPreExecute();
         listener.onGetResumeVideoLogDetailsPreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status, responseStr, videoLogId);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status, responseStr, videoLogId);

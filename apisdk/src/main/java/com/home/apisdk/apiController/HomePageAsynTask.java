@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.HomePageBannerModel;
 import com.home.apisdk.apiModel.HomePageInputModel;
 import com.home.apisdk.apiModel.HomePageOutputModel;
@@ -263,13 +262,13 @@ public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> 
         super.onPreExecute();
         listener.onHomePagePreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message);

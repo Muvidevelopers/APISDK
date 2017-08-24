@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.LogoutInput;
 
 import org.apache.http.HttpResponse;
@@ -148,13 +147,13 @@ public class LogoutAsynctask extends AsyncTask<LogoutInput, Void, Void> {
         listener.onLogoutPreExecuteStarted();
         code = 0;
         status = "";
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onLogoutPostExecuteCompleted(code, status, message);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onLogoutPostExecuteCompleted(code, status, message);

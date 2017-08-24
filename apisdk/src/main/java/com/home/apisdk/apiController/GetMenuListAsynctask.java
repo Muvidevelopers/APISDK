@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.MenuListInput;
 import com.home.apisdk.apiModel.MenuListOutput;
 
@@ -192,13 +191,13 @@ public class GetMenuListAsynctask extends AsyncTask<MenuListInput, Void, Void> {
         super.onPreExecute();
         listener.onGetMenuListPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetMenuListPostExecuteCompleted(menuListOutput, footermenuListOutput, code, message);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetMenuListPostExecuteCompleted(menuListOutput, footermenuListOutput, code, message);

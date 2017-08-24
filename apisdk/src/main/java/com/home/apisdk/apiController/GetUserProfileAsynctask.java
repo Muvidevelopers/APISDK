@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.Get_UserProfile_Input;
 import com.home.apisdk.apiModel.Get_UserProfile_Output;
 
@@ -176,13 +175,13 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
         super.onPreExecute();
         listener.onGet_UserProfilePreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGet_UserProfilePostExecuteCompleted(get_userProfile_output, code, message, status);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGet_UserProfilePostExecuteCompleted(get_userProfile_output, code, message, status);

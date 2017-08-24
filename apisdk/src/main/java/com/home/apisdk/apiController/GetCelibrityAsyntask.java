@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.CelibrityInputModel;
 import com.home.apisdk.apiModel.CelibrityOutputModel;
 
@@ -154,6 +153,11 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
                         CelibrityOutputModel content = new CelibrityOutputModel();
                         String celebrityName = jsonChildNode.optString("name");
                         String celebrityImage = jsonChildNode.optString("celebrity_image");
+                        String celebrityPermalink = jsonChildNode.optString("permalink");
+                        String celebritySummary = jsonChildNode.optString("summary");
+
+
+
                         String celebrityCastType = jsonChildNode.optString("cast_type");
 
                         celebrityCastType = celebrityCastType.replaceAll("\\[", "");
@@ -173,6 +177,8 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
                         content.setName(celebrityName);
                         content.setCast_type(celebrityCastType);
                         content.setCelebrity_image(celebrityImage);
+                        content.setSummary(celebritySummary);
+                        content.setPermalink(celebrityPermalink);
 
                         celibrityOutputModel.add(content);
                     } catch (Exception e) {
@@ -195,12 +201,12 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
         super.onPreExecute();
         listener.onGetCelibrityPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
         }

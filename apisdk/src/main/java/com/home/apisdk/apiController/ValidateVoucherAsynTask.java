@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.ValidateVoucherInputModel;
 import com.home.apisdk.apiModel.ValidateVoucherOutputModel;
 
@@ -113,7 +112,7 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
             httppost.addHeader(HeaderConstants.SEASON, this.validateVoucherInputModel.getSeason());
             httppost.addHeader(HeaderConstants.VOUCHER_CODE, this.validateVoucherInputModel.getVoucher_code());
             httppost.addHeader(HeaderConstants.USER_ID, this.validateVoucherInputModel.getUser_id());
-
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.validateVoucherInputModel.getLanguage());
 
             // Execute HTTP Post Request
             try {
@@ -159,13 +158,13 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
         listener.onValidateVoucherPreExecuteStarted();
         responseStr = "0";
         status = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message);

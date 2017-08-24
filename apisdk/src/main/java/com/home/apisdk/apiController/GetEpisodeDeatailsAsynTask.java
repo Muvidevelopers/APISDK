@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.APVModel;
 import com.home.apisdk.apiModel.CurrencyModel;
 import com.home.apisdk.apiModel.Episode_Details_input;
@@ -643,13 +642,13 @@ public class GetEpisodeDeatailsAsynTask extends AsyncTask<Episode_Details_input,
         super.onPreExecute();
         listener.onGetEpisodeDetailsPreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getHashKey())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetEpisodeDetailsPostExecuteCompleted(episode_details_output, status, item_count, message, movieUniqueId);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetEpisodeDetailsPostExecuteCompleted(episode_details_output, status, item_count, message, movieUniqueId);

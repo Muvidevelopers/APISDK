@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.GetCastDetailsInput;
 import com.home.apisdk.apiModel.GetCastDetailsOutputModel;
 
@@ -165,6 +164,11 @@ public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void,
                         castDetails = new GetCastDetailsOutputModel().new CastDetails();
 
 
+                        if ((jsonChildNode.has("genre")) && jsonChildNode.optString("genre").trim() != null && !jsonChildNode.optString("genre").trim().isEmpty() && !jsonChildNode.optString("genre").trim().equals("null") && !jsonChildNode.optString("genre").trim().matches("")) {
+                            castDetails.setGenre(jsonChildNode.optString("genre"));
+                        }
+
+
                         if ((jsonChildNode.has("name")) && jsonChildNode.optString("name").trim() != null && !jsonChildNode.optString("name").trim().isEmpty() && !jsonChildNode.optString("name").trim().equals("null") && !jsonChildNode.optString("name").trim().matches("")) {
                             castDetails.setName(jsonChildNode.optString("name"));
                         }
@@ -224,13 +228,13 @@ public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void,
         listener.onGetCastDetailsPreExecuteStarted();
         responseStr = "0";
         status = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetCastDetailsPostExecuteCompleted(getCastDetailsOutputModel, status, totalItems, message);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetCastDetailsPostExecuteCompleted(getCastDetailsOutputModel, status, totalItems, message);

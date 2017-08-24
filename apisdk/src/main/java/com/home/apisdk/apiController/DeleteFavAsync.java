@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
 
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.DeleteFavInputModel;
 import com.home.apisdk.apiModel.DeleteFavOutputModel;
 

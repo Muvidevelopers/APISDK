@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.Forgotpassword_input;
 import com.home.apisdk.apiModel.Forgotpassword_output;
 
@@ -170,13 +169,13 @@ public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Vo
         // String s=forgotpassword_input.getPakagename();
         listener.onForgotpassDetailsPreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message);

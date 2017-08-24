@@ -11,7 +11,6 @@ import android.util.Log;
 
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.GetVideoDetailsInput;
 import com.home.apisdk.apiModel.Get_Video_Details_Output;
 
@@ -121,6 +120,7 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
             httppost.addHeader(HeaderConstants.STREAM_UNIQ_ID, this.getVideoDetailsInput.getStream_uniq_id());
             httppost.addHeader(HeaderConstants.INTERNET_SPEED, this.getVideoDetailsInput.getInternetSpeed());
             httppost.addHeader(HeaderConstants.USER_ID, this.getVideoDetailsInput.getUser_id());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.getVideoDetailsInput.getLanguage());
 
             // Execute HTTP Post Request
             try {
@@ -220,13 +220,13 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
         listener.onVideoDetailsPreExecuteStarted();
         code = 0;
         status = "";
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onVideoDetailsPostExecuteCompleted(get_video_details_output, code, status, message);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onVideoDetailsPostExecuteCompleted(get_video_details_output, code, status, message);

@@ -10,6 +10,16 @@ package com.home.apisdk.apiModel;
 public class GetStaticPagesDeatilsModelInput {
 
     String authToken;
+    String language;
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
     String permalink;
 
     /**

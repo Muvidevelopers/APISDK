@@ -8,6 +8,15 @@ package com.home.apisdk.apiModel;
 public class VoucherSubscriptionInputModel {
 
     String authToken;
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
     String user_id;
     String movie_id;
     String stream_id;
@@ -15,6 +24,7 @@ public class VoucherSubscriptionInputModel {
     String voucher_code;
     String is_preorder;
     String season;
+    String language;
 
     /**
      * This Method is use to Get the Season

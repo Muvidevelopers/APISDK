@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.HeaderConstants;
 import com.home.apisdk.apiModel.FFVideoLogDetailsInput;
 
 import org.json.JSONObject;
@@ -41,6 +40,7 @@ public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput,
     private int code;
     private String PACKAGE_NAME;
     private String videoLogId = "";
+    private String videoLogstreamId="";
     private GetFFVideoLogsListener listener;
     private Context context;
 
@@ -163,6 +163,10 @@ public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput,
                         videoLogId = mainJson.optString("log_id");
                     }
 
+                    if ((mainJson.has("restrict_stream_id")) && mainJson.optString("restrict_stream_id").trim() != null && !mainJson.optString("restrict_stream_id").trim().isEmpty() && !mainJson.optString("restrict_stream_id").trim().equals("null") && !mainJson.optString("restrict_stream_id").trim().matches("")) {
+                        videoLogstreamId = mainJson.optString("restrict_stream_id");
+                    }
+
                 } else {
                     videoLogId = "0";
                 }
@@ -180,13 +184,13 @@ public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput,
         super.onPreExecute();
         listener.onGetFFVideoLogsPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(HeaderConstants.user_Package_Name_At_Api)) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetFFVideoLogsPostExecuteCompleted(code, responseStr, videoLogId);
             return;
         }
-        if (HeaderConstants.hashKey.equals("")) {
+        if (SDKInitializer.getHashKey().equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetFFVideoLogsPostExecuteCompleted(code, responseStr, videoLogId);
