@@ -18,6 +18,8 @@ import java.io.IOException;
 
 /**
  * Created by muvi on 25/7/17.
+ * This class need to initialise first for setiing up API SDK.
+ *
  */
 
 public class SDKInitializer {
@@ -53,8 +55,12 @@ public class SDKInitializer {
     }
 
 
-
-
+    /**
+     * Call this method first to initialise the sdk setup process.
+     * @param sdkInitializerListner
+     * @param context
+     * @param authToken
+     */
     public void init(SDKInitializerListner sdkInitializerListner,
                      Context context,
                      String authToken){
@@ -63,6 +69,12 @@ public class SDKInitializer {
         this.authToken=authToken;
         new InitAsync().execute();
     }
+
+    /**
+     * Call this method first to initialise the sdk setup process.
+     * @param context
+     * @param authToken
+     */
 
     public void init(Context context,
                      String authToken){
@@ -79,8 +91,17 @@ public class SDKInitializer {
     private int status ;
 
 
+    /**
+     * Interface to impliment for oveerideing method to invoke pre & post work.
+     */
     public interface SDKInitializerListner{
+        /**
+         * Ovveride this method to listen pre-work before init API SDk.
+         */
         public void onPreExexuteListner();
+        /**
+         * Ovveride this method to listen post-work after init API SDk.
+         */
         public void onPostExecuteListner();
     }
 
