@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 /**
- * This Class checks whether the registration is enable or not.
+ * This Class is use to get the detail information about all enable features use in app.
  *
  * @author MUVI
  */
