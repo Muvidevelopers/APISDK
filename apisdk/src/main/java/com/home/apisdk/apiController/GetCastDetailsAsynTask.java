@@ -59,13 +59,13 @@ public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void,
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getCastDetailsOutputModelArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param castDetailsOutputModelArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                         Response Code From The Server
          * @param totalItems                     Total Item Present
          * @param message                        On Success Message
          */
 
-        void onGetCastDetailsPostExecuteCompleted(GetCastDetailsOutputModel getCastDetailsOutputModelArray, int status, int totalItems, String message);
+        void onGetCastDetailsPostExecuteCompleted(GetCastDetailsOutputModel castDetailsOutputModelArray, int status, int totalItems, String message);
     }
 
     GetCastDetailsOutputModel getCastDetailsOutputModel;

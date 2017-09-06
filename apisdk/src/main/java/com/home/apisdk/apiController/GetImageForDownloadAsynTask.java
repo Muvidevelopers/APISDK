@@ -57,12 +57,12 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getImageForDownloadOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param imageForDownloadOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                         Response Code From The Server
          * @param message                        On Success Message
          */
 
-        void onGetImageForDownloadPostExecuteCompleted(GetImageForDownloadOutputModel getImageForDownloadOutputModel, int status, String message);
+        void onGetImageForDownloadPostExecuteCompleted(GetImageForDownloadOutputModel imageForDownloadOutputModel, int status, String message);
     }
 
 

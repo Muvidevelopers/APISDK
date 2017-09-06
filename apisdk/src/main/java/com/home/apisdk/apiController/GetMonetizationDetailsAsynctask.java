@@ -59,12 +59,12 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getMonetizationDetailsOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param monetizationDetailsOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                            Response Code From The Server
          * @param message                           On Success Message
          */
 
-        void onGetMonetizationDetailsPostExecuteCompleted(GetMonetizationDetailsOutputModel getMonetizationDetailsOutputModel, int status, String message);
+        void onGetMonetizationDetailsPostExecuteCompleted(GetMonetizationDetailsOutputModel monetizationDetailsOutputModel, int status, String message);
     }
 
 

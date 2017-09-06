@@ -87,12 +87,12 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getMenusOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param menusOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status              Response Code From The Server
          * @param message             On Success Message
          */
 
-        void onGetMenusPostExecuteCompleted(GetMenusOutputModel getMenusOutputModel, int status, String message);
+        void onGetMenusPostExecuteCompleted(GetMenusOutputModel menusOutputModel, int status, String message);
     }
 
 

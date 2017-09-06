@@ -81,7 +81,7 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getVideoDetailsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     * @param videoDetailsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
      *                             For Example: to use this API we have to set following attributes:
      *                             setAuthToken(),setContent_uniq_id() etc.
      * @param listener             VideoDetails Listener
@@ -89,12 +89,12 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
      */
 
 
-    public VideoDetailsAsynctask(GetVideoDetailsInput getVideoDetailsInput, VideoDetailsListener listener, Context context) {
+    public VideoDetailsAsynctask(GetVideoDetailsInput videoDetailsInput, VideoDetailsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.getVideoDetailsInput = getVideoDetailsInput;
+        this.getVideoDetailsInput = videoDetailsInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "VideoDetailsAsynctask");

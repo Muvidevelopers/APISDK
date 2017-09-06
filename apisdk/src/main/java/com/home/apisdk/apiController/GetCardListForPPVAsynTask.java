@@ -60,13 +60,13 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getCardListForPPVOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param cardListForPPVOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                       Response Code From The Server
          * @param totalItems                   Getting the total item
          * @param message                      On Success Message
          */
 
-        void onGetCardListForPPVPostExecuteCompleted(ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutputModel, int status, int totalItems, String message);
+        void onGetCardListForPPVPostExecuteCompleted(ArrayList<GetCardListForPPVOutputModel> cardListForPPVOutputModel, int status, int totalItems, String message);
     }
 
     ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutputModel = new ArrayList<GetCardListForPPVOutputModel>();

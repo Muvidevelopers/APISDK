@@ -58,9 +58,9 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param about Holds content of "About US"
+         * @param aboutUs_response Holds content of "About US"
          */
-        void onAboutUsPostExecuteCompleted(String about);
+        void onAboutUsPostExecuteCompleted(String aboutUs_response);
     }
 
 

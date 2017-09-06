@@ -60,13 +60,13 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param get_userProfile_output A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param userProfileOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param code                   Response Code From The Server
          * @param message                On Success Message
          * @param status                 For Getting The Status
          */
 
-        void onGet_UserProfilePostExecuteCompleted(Get_UserProfile_Output get_userProfile_output, int code, String message, String status);
+        void onGet_UserProfilePostExecuteCompleted(Get_UserProfile_Output userProfileOutput, int code, String message, String status);
     }
 
     /**

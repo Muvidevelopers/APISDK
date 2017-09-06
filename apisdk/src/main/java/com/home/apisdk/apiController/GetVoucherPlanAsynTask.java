@@ -57,12 +57,12 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getVoucherPlanOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param voucherPlanOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                    Response Code From The Server
          * @param message                   On Success Message
          */
 
-        void onGetVoucherPlanPostExecuteCompleted(GetVoucherPlanOutputModel getVoucherPlanOutputModel, int status, String message);
+        void onGetVoucherPlanPostExecuteCompleted(GetVoucherPlanOutputModel voucherPlanOutputModel, int status, String message);
     }
 
 

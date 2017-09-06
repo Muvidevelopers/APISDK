@@ -62,12 +62,12 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param celibrityOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param celibrityOutputModelList A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param code                 Response Code From The Server
          * @param msg                  On Success Message
          */
 
-        void onGetCelibrityPostExecuteCompleted(ArrayList<CelibrityOutputModel> celibrityOutputModel, int code, String msg);
+        void onGetCelibrityPostExecuteCompleted(ArrayList<CelibrityOutputModel> celibrityOutputModelList, int code, String msg);
     }
 
 

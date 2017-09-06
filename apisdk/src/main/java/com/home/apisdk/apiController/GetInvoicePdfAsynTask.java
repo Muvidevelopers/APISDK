@@ -61,13 +61,13 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getInvoicePdfOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param invoicePdfOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param code                     Response Code From The Server
          * @param message                  On Success Message
          * @param status                   For Getting The Current Response
          */
 
-        void onGetInvoicePdfPostExecuteCompleted(GetInvoicePdfOutputModel getInvoicePdfOutputModel, int code, String message, String status);
+        void onGetInvoicePdfPostExecuteCompleted(GetInvoicePdfOutputModel invoicePdfOutputModel, int code, String message, String status);
     }
 
     /**

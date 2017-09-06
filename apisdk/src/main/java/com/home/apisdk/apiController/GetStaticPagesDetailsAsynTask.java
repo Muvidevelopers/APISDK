@@ -59,12 +59,12 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getStaticPageDetailsModelOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param staticPageDetailsModelOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param code                            Response Code From The Server
          * @param message                         On Success Message
          * @param status                          For Getting The Status
          */
-        void onGetStaticPageDetailsPostExecuteCompleted(GetStaticPageDetailsModelOutput getStaticPageDetailsModelOutput, int code, String message, String status);
+        void onGetStaticPageDetailsPostExecuteCompleted(GetStaticPageDetailsModelOutput staticPageDetailsModelOutput, int code, String message, String status);
     }
 
     /**

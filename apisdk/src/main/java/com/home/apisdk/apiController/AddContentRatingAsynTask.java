@@ -58,11 +58,11 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param addContentRatingOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param contentRatingOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                      Response Code from the server
          * @param message                     Holds the Status
          */
-        void onAddContentRatingPostExecuteCompleted(AddContentRatingOutputModel addContentRatingOutputModel, int status, String message);
+        void onAddContentRatingPostExecuteCompleted(AddContentRatingOutputModel contentRatingOutputModel, int status, String message);
     }
 
 

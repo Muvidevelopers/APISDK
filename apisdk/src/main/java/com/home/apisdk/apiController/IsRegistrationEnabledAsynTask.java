@@ -57,12 +57,12 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param isRegistrationEnabledOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param registrationEnabledOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                           Response Code From The Server
          * @param message                          On Success Message
          */
 
-        void onIsRegistrationenabledPostExecuteCompleted(IsRegistrationEnabledOutputModel isRegistrationEnabledOutputModel, int status, String message);
+        void onIsRegistrationenabledPostExecuteCompleted(IsRegistrationEnabledOutputModel registrationEnabledOutputModel, int status, String message);
     }
 
 

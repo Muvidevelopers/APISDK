@@ -58,12 +58,12 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param featureContentOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param featureContentOutputList A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                    Response Code From The Server
          * @param message                   On Success Message
          */
 
-        void onGetFeatureContentPostExecuteCompleted(ArrayList<FeatureContentOutputModel> featureContentOutputModel, int status, String message);
+        void onGetFeatureContentPostExecuteCompleted(ArrayList<FeatureContentOutputModel> featureContentOutputList, int status, String message);
     }
 
 

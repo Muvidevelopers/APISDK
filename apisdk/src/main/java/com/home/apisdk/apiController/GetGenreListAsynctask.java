@@ -60,12 +60,12 @@ public class GetGenreListAsynctask extends AsyncTask<GenreListInput, Void, Void>
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param genreListOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param genreOutputList A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param code            Response From The Server
          * @param status          Fo Getting the Status
          */
 
-        void onGetGenreListPostExecuteCompleted(ArrayList<GenreListOutput> genreListOutput, int code, String status);
+        void onGetGenreListPostExecuteCompleted(ArrayList<GenreListOutput> genreOutputList, int code, String status);
     }
 
 
