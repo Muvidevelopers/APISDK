@@ -87,12 +87,12 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param menusOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param getMenusOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status              Response Code From The Server
          * @param message             On Success Message
          */
 
-        void onGetMenusPostExecuteCompleted(GetMenusOutputModel menusOutputModel, int status, String message);
+        void onGetMenusPostExecuteCompleted(GetMenusOutputModel getMenusOutputModel, int status, String message);
     }
 
 
@@ -342,13 +342,13 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
         super.onPreExecute();
         listener.onGetMenusPreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetMenusPostExecuteCompleted(getMenusOutputModel, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetMenusPostExecuteCompleted(getMenusOutputModel, status, message);

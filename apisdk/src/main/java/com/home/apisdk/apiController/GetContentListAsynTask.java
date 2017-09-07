@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.ContentListInput;
 import com.home.apisdk.apiModel.ContentListOutput;
@@ -216,13 +215,13 @@ public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Vo
         listener.onGetContentListPreExecuteStarted();
         responseStr = "0";
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetContentListPostExecuteCompleted(contentListOutput, status, totalItems, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetContentListPostExecuteCompleted(contentListOutput, status, totalItems, message);

@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GetImageForDownloadInputModel;
 import com.home.apisdk.apiModel.GetImageForDownloadOutputModel;
@@ -57,12 +56,12 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param imageForDownloadOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param getImageForDownloadOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                         Response Code From The Server
          * @param message                        On Success Message
          */
 
-        void onGetImageForDownloadPostExecuteCompleted(GetImageForDownloadOutputModel imageForDownloadOutputModel, int status, String message);
+        void onGetImageForDownloadPostExecuteCompleted(GetImageForDownloadOutputModel getImageForDownloadOutputModel, int status, String message);
     }
 
 
@@ -153,13 +152,13 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
         listener.onGetImageForDownloadPreExecuteStarted();
         responseStr = "0";
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message);

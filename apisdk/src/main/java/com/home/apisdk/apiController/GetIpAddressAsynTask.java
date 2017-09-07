@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 
 import org.json.JSONObject;
@@ -153,13 +152,14 @@ public class GetIpAddressAsynTask extends AsyncTask<Void, Void, Void> {
         listener.onIPAddressPreExecuteStarted();
         statusCode = 0;
         Log.v("BKS1", "ip value==" + ipAddressStr);
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        Log.v("MUVI","packag name in ip=="+SDKInitializer.getUser_Package_Name_At_Api(context));
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onIPAddressPostExecuteCompleted(message, statusCode, ipAddressStr);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onIPAddressPostExecuteCompleted(message, statusCode, ipAddressStr);

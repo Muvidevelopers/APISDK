@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GetInvoicePdfInputModel;
 import com.home.apisdk.apiModel.GetInvoicePdfOutputModel;
@@ -61,13 +60,13 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param invoicePdfOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param getInvoicePdfOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param code                     Response Code From The Server
          * @param message                  On Success Message
          * @param status                   For Getting The Current Response
          */
 
-        void onGetInvoicePdfPostExecuteCompleted(GetInvoicePdfOutputModel invoicePdfOutputModel, int code, String message, String status);
+        void onGetInvoicePdfPostExecuteCompleted(GetInvoicePdfOutputModel getInvoicePdfOutputModel, int code, String message, String status);
     }
 
     /**
@@ -158,13 +157,13 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
         super.onPreExecute();
         listener.onGetInvoicePdfPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);

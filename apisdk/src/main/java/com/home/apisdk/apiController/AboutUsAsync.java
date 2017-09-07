@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.apiModel.*;
+import com.home.apisdk.apiModel.AboutUsInput;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -58,9 +58,9 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param aboutUs_response Holds content of "About US"
+         * @param about Holds content of "About US"
          */
-        void onAboutUsPostExecuteCompleted(String aboutUs_response);
+        void onAboutUsPostExecuteCompleted(String about);
     }
 
 
@@ -141,13 +141,13 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
         super.onPreExecute();
         listener.onAboutUsPreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onAboutUsPostExecuteCompleted(about);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onAboutUsPostExecuteCompleted(about);

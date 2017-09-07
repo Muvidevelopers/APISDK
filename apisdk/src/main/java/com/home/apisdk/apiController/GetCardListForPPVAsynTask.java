@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GetCardListForPPVInputModel;
 import com.home.apisdk.apiModel.GetCardListForPPVOutputModel;
@@ -60,13 +59,13 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param cardListForPPVOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param getCardListForPPVOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                       Response Code From The Server
          * @param totalItems                   Getting the total item
          * @param message                      On Success Message
          */
 
-        void onGetCardListForPPVPostExecuteCompleted(ArrayList<GetCardListForPPVOutputModel> cardListForPPVOutputModel, int status, int totalItems, String message);
+        void onGetCardListForPPVPostExecuteCompleted(ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutputModel, int status, int totalItems, String message);
     }
 
     ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutputModel = new ArrayList<GetCardListForPPVOutputModel>();
@@ -180,13 +179,13 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
         listener.onGetCardListForPPVPreExecuteStarted();
         responseStr = "0";
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getInstance())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutputModel, status, totalItems, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutputModel, status, totalItems, message);

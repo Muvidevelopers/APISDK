@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GetVideoDetailsInput;
 import com.home.apisdk.apiModel.Get_Video_Details_Output;
@@ -39,6 +38,9 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
     private ArrayList<String> SubTitlePath = new ArrayList<>();
     private ArrayList<String> FakeSubTitlePath = new ArrayList<>();
     private ArrayList<String> ResolutionFormat = new ArrayList<>();
+    private ArrayList<String> offline_url= new ArrayList<>();
+    private ArrayList<String> offline_language= new ArrayList<>();
+    private ArrayList<String> SubTitleLanguage= new ArrayList<>();
     private ArrayList<String> ResolutionUrl = new ArrayList<>();
     private String PACKAGE_NAME;
     private String message;
@@ -81,7 +83,7 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
     /**
      * Constructor to initialise the private data members.
      *
-     * @param videoDetailsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     * @param getVideoDetailsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
      *                             For Example: to use this API we have to set following attributes:
      *                             setAuthToken(),setContent_uniq_id() etc.
      * @param listener             VideoDetails Listener
@@ -89,12 +91,12 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
      */
 
 
-    public VideoDetailsAsynctask(GetVideoDetailsInput videoDetailsInput, VideoDetailsListener listener, Context context) {
+    public VideoDetailsAsynctask(GetVideoDetailsInput getVideoDetailsInput, VideoDetailsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.getVideoDetailsInput = videoDetailsInput;
+        this.getVideoDetailsInput = getVideoDetailsInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "VideoDetailsAsynctask");
@@ -161,6 +163,7 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
                     get_video_details_output.setThirdparty_url(myJson.optString("thirdparty_url"));
                     get_video_details_output.setStudio_approved_url(myJson.optString("studio_approved_url"));
                     get_video_details_output.setLicenseUrl(myJson.optString("licenseUrl"));
+                    get_video_details_output.setIs_offline(myJson.optString("is_offline"));
 
                 } catch (Exception e) {
                     code = 0;
@@ -172,12 +175,18 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
                         for (int i = 0; i < SubtitleJosnArray.length(); i++) {
                             SubTitleName.add(SubtitleJosnArray.getJSONObject(i).optString("language").trim());
                             FakeSubTitlePath.add(SubtitleJosnArray.getJSONObject(i).optString("url").trim());
+                            SubTitleLanguage.add(SubtitleJosnArray.getJSONObject(i).optString("code").trim());
+                            offline_url.add(SubtitleJosnArray.getJSONObject(i).optString("url").trim());
+                            offline_language.add(SubtitleJosnArray.getJSONObject(i).optString("language").trim());
 
 
                         }
 
                         get_video_details_output.setSubTitleName(SubTitleName);
                         get_video_details_output.setFakeSubTitlePath(FakeSubTitlePath);
+                        get_video_details_output.setSubTitleLanguage(SubTitleLanguage);
+                        get_video_details_output.setOfflineUrl(offline_url);
+                        get_video_details_output.setOfflineLanguage(offline_language);
                     }
                 }
 
@@ -220,13 +229,13 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
         listener.onVideoDetailsPreExecuteStarted();
         code = 0;
         status = "";
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onVideoDetailsPostExecuteCompleted(get_video_details_output, code, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onVideoDetailsPostExecuteCompleted(get_video_details_output, code, status, message);

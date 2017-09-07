@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.Search_Data_input;
 import com.home.apisdk.apiModel.Search_Data_otput;
@@ -151,7 +150,12 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
                             Search_Data_otput content = new Search_Data_otput();
 
                             if ((jsonChildNode.has("genre")) && jsonChildNode.optString("genre").trim() != null && !jsonChildNode.optString("genre").trim().isEmpty() && !jsonChildNode.optString("genre").trim().equals("null") && !jsonChildNode.optString("genre").trim().matches("")) {
-                                content.setGenre(jsonChildNode.optString("genre"));
+                               String movieTypeStr = jsonChildNode.optString("genre");
+                                movieTypeStr = movieTypeStr.replaceAll("\\[", "");
+                                movieTypeStr = movieTypeStr.replaceAll("\\]","");
+                                movieTypeStr = movieTypeStr.replaceAll(","," , ");
+                                movieTypeStr = movieTypeStr.replaceAll("\"", "");
+                                content.setGenre(movieTypeStr);
 
                             }
                             if ((jsonChildNode.has("name")) && jsonChildNode.optString("name").trim() != null && !jsonChildNode.optString("name").trim().isEmpty() && !jsonChildNode.optString("name").trim().equals("null") && !jsonChildNode.optString("name").trim().matches("")) {
@@ -246,13 +250,13 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
 
         status = 0;
         totalItems = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message);

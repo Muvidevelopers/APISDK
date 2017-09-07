@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GetMonetizationDetailsInputModel;
 import com.home.apisdk.apiModel.GetMonetizationDetailsOutputModel;
@@ -59,12 +58,12 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param monetizationDetailsOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param getMonetizationDetailsOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                            Response Code From The Server
          * @param message                           On Success Message
          */
 
-        void onGetMonetizationDetailsPostExecuteCompleted(GetMonetizationDetailsOutputModel monetizationDetailsOutputModel, int status, String message);
+        void onGetMonetizationDetailsPostExecuteCompleted(GetMonetizationDetailsOutputModel getMonetizationDetailsOutputModel, int status, String message);
     }
 
 
@@ -180,13 +179,13 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
         listener.onGetMonetizationDetailsPreExecuteStarted();
 
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message);

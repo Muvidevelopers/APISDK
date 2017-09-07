@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.CurrencyModel;
 import com.home.apisdk.apiModel.SubscriptionPlanInputModel;
@@ -224,13 +223,13 @@ public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, 
         super.onPreExecute();
         listener.onGetPlanListPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetPlanListPostExecuteCompleted(planListOutput, code);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetPlanListPostExecuteCompleted(planListOutput, code);

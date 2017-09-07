@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GenreListInput;
 import com.home.apisdk.apiModel.GenreListOutput;
@@ -60,12 +59,12 @@ public class GetGenreListAsynctask extends AsyncTask<GenreListInput, Void, Void>
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param genreOutputList A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param genreListOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param code            Response From The Server
          * @param status          Fo Getting the Status
          */
 
-        void onGetGenreListPostExecuteCompleted(ArrayList<GenreListOutput> genreOutputList, int code, String status);
+        void onGetGenreListPostExecuteCompleted(ArrayList<GenreListOutput> genreListOutput, int code, String status);
     }
 
 
@@ -161,13 +160,13 @@ public class GetGenreListAsynctask extends AsyncTask<GenreListInput, Void, Void>
         super.onPreExecute();
         listener.onGetGenreListPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             status = "Package Name Not Matched";
             listener.onGetGenreListPostExecuteCompleted(genreListOutput, code, status);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             status = "Please Initialize The SDK";
             listener.onGetGenreListPostExecuteCompleted(genreListOutput, code, status);

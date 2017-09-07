@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.VideoBufferLogsInputModel;
 import com.home.apisdk.apiModel.VideoBufferLogsOutputModel;
@@ -211,13 +210,13 @@ public class GetVideoBufferLogsAsynTask extends AsyncTask<VideoBufferLogsInputMo
         listener.onGetVideoBufferLogsPreExecuteStarted();
 
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetVideoBufferLogsPostExecuteCompleted(videoBufferLogsOutputModel, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetVideoBufferLogsPostExecuteCompleted(videoBufferLogsOutputModel, status, message);

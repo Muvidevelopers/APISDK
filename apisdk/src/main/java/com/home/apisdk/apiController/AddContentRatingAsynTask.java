@@ -58,11 +58,11 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param contentRatingOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param addContentRatingOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                      Response Code from the server
          * @param message                     Holds the Status
          */
-        void onAddContentRatingPostExecuteCompleted(AddContentRatingOutputModel contentRatingOutputModel, int status, String message);
+        void onAddContentRatingPostExecuteCompleted(AddContentRatingOutputModel addContentRatingOutputModel, int status, String message);
     }
 
 
@@ -166,13 +166,13 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
         listener.onAddContentRatingPreExecuteStarted();
 
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message);

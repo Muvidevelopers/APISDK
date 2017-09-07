@@ -63,10 +63,10 @@ public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {
          * @param sucessMsg           On Success Message
          */
 
-        void onAddToFavPostExecuteCompleted(AddToFavOutputModel addToFavOutputModel, int status, String sucessMsg);
+        void onAddToFavPostExecuteCompleted(com.home.apisdk.apiModel.AddToFavOutputModel addToFavOutputModel, int status, String sucessMsg);
     }
 
-    AddToFavOutputModel AddToFavOutputModel = new AddToFavOutputModel();
+    com.home.apisdk.apiModel.AddToFavOutputModel AddToFavOutputModel = new AddToFavOutputModel();
 
     /**
      * Constructor to initialise the private data members.
@@ -137,13 +137,13 @@ public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {
         super.onPreExecute();
         listener.onAddToFavPreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg);

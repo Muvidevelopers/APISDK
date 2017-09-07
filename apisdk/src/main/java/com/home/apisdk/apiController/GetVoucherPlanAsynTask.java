@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GetVoucherPlanInputModel;
 import com.home.apisdk.apiModel.GetVoucherPlanOutputModel;
@@ -57,12 +56,12 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param voucherPlanOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param getVoucherPlanOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                    Response Code From The Server
          * @param message                   On Success Message
          */
 
-        void onGetVoucherPlanPostExecuteCompleted(GetVoucherPlanOutputModel voucherPlanOutputModel, int status, String message);
+        void onGetVoucherPlanPostExecuteCompleted(GetVoucherPlanOutputModel getVoucherPlanOutputModel, int status, String message);
     }
 
 
@@ -161,13 +160,13 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
         listener.onGetVoucherPlanPreExecuteStarted();
         responseStr = "0";
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);

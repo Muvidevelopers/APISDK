@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.CelibrityInputModel;
 import com.home.apisdk.apiModel.CelibrityOutputModel;
@@ -62,12 +61,12 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param celibrityOutputModelList A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param celibrityOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param code                 Response Code From The Server
          * @param msg                  On Success Message
          */
 
-        void onGetCelibrityPostExecuteCompleted(ArrayList<CelibrityOutputModel> celibrityOutputModelList, int code, String msg);
+        void onGetCelibrityPostExecuteCompleted(ArrayList<CelibrityOutputModel> celibrityOutputModel, int code, String msg);
     }
 
 
@@ -201,12 +200,12 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
         super.onPreExecute();
         listener.onGetCelibrityPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
         }
