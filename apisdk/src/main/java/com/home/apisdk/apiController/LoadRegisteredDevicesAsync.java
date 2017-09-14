@@ -98,7 +98,8 @@ public class LoadRegisteredDevicesAsync extends AsyncTask<LoadRegisteredDevicesI
     /**
      * Background thread to execute.
      *
-     * @return null
+     * @return  null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
     @Override

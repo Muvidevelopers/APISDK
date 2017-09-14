@@ -95,7 +95,8 @@ public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, 
     /**
      * Background thread to execute.
      *
-     * @return null
+     * @return  null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
     @Override

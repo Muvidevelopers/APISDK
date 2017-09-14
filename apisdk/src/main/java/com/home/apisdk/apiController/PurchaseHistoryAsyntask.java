@@ -94,9 +94,9 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
     /**
      * Background thread to execute.
      *
-     * @return null
+     * @return  null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
-
     @Override
     protected Void doInBackground(PurchaseHistoryInputModel... params) {
 

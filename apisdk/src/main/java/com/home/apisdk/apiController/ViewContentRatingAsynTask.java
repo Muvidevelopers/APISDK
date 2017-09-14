@@ -95,6 +95,7 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
      * Background thread to execute.
      *
      * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
     @Override

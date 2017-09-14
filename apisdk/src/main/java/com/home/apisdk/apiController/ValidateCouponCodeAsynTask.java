@@ -98,6 +98,7 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
      * Background thread to execute.
      *
      * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
     @Override

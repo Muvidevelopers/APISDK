@@ -63,9 +63,9 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
          * This method to handle post-execution work.
          *
          * @param contactUsOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param code                 Response Code From The Server
-         * @param message              On Success Message
-         * @param status               For Getting the status
+         * @param code            Response Code From The Server
+         * @param message         On Success Message
+         * @param status          For Getting the status
          */
 
         void onContactUsPostExecuteCompleted(ContactUsOutputModel contactUsOutput, int code, String message, String status);
@@ -75,10 +75,10 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
      * Constructor to initialise the private data members.
      *
      * @param contactUsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                            For Example: to use this API we have to set following attributes:
-     *                            setAuthToken(),setName() etc.
-     * @param listener            ContactUs Listener
-     * @param context             android.content.Context
+     *                       For Example: to use this API we have to set following attributes:
+     *                       setAuthToken(),setName() etc.
+     * @param listener       ContactUs Listener
+     * @param context        android.content.Context
      */
 
     public ContactUsAsynTask(ContactUsInputModel contactUsInput, ContactUsListener listener, Context context) {
@@ -96,6 +96,7 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
      * Background thread to execute.
      *
      * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
     @Override

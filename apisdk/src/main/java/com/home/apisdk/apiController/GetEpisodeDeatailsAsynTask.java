@@ -108,7 +108,8 @@ public class GetEpisodeDeatailsAsynTask extends AsyncTask<Episode_Details_input,
     /**
      * Background thread to execute.
      *
-     * @return null
+     * @return  null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
     @Override

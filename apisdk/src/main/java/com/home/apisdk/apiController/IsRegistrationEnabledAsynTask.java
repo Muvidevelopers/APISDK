@@ -93,7 +93,8 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
     /**
      * Background thread to execute.
      *
-     * @return null
+     * @return  null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
     @Override

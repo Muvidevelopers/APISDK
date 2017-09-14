@@ -86,7 +86,8 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {
     /**
      * Background thread to execute.
      *
-     * @return resultJsonString
+     * @return  null
+     * @throws org.apache.http.conn.ConnectTimeoutException
      */
 
     @Override

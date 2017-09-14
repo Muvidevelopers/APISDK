@@ -93,6 +93,7 @@ public class VoucherSubscriptionAsyntask extends AsyncTask<VoucherSubscriptionIn
      * Background thread to execute.
      *
      * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
     @Override

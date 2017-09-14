@@ -95,6 +95,7 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
      * Background thread to execute.
      *
      * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
     @Override

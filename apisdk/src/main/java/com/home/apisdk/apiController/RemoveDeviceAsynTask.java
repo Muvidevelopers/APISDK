@@ -92,7 +92,8 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
     /**
      * Background thread to execute.
      *
-     * @return null
+     * @return  null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
     @Override

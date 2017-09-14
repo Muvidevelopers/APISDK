@@ -98,6 +98,7 @@ public class CheckDeviceAsyncTask extends AsyncTask<Void, Void, Void> {
      * @return  null
      * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
      */
+
     @Override
     protected Void doInBackground(Void... params) {
 

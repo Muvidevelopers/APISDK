@@ -62,8 +62,8 @@ public class GetFFVideoBufferLogDetailsAsync extends AsyncTask<VideoBufferLogsIn
          * This method to handle post-execution work.
          *
          * @param videoBufferLogsOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                     Response From The Server
-         * @param message                    On Success Message
+         * @param status                Response From The Server
+         * @param message               On Success Message
          */
 
         void onGetFFVideoBufferLogsPostExecuteCompleted(VideoBufferLogsOutputModel videoBufferLogsOutput, int status, String message);
@@ -73,10 +73,10 @@ public class GetFFVideoBufferLogDetailsAsync extends AsyncTask<VideoBufferLogsIn
      * Constructor to initialise the private data members.
      *
      * @param videoBufferLogsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                  For Example: to use this API we have to set following attributes:
-     *                                  setAuthToken(),setUserId() etc.
-     * @param listener                  GetFFVideoBufferLogsListener
-     * @param context                   android.content.Context
+     *                             For Example: to use this API we have to set following attributes:
+     *                             setAuthToken(),setUserId() etc.
+     * @param listener             GetFFVideoBufferLogsListener
+     * @param context              android.content.Context
      */
 
     public GetFFVideoBufferLogDetailsAsync(VideoBufferLogsInputModel videoBufferLogsInput, GetFFVideoBufferLogsListener listener, Context context) {
@@ -97,6 +97,7 @@ public class GetFFVideoBufferLogDetailsAsync extends AsyncTask<VideoBufferLogsIn
      * Background thread to execute.
      *
      * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
     @Override
