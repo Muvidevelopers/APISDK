@@ -61,13 +61,13 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param contentListOutputArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                 Response Code from the server
-         * @param totalItems             For Getting The Total Item
-         * @param message                On Success Message
+         * @param contentListOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status            Response Code from the server
+         * @param totalItems        For Getting The Total Item
+         * @param message           On Success Message
          */
 
-        void onSearchDataPostExecuteCompleted(ArrayList<Search_Data_otput> contentListOutputArray, int status, int totalItems, String message);
+        void onSearchDataPostExecuteCompleted(ArrayList<Search_Data_otput> contentListOutput, int status, int totalItems, String message);
     }
 
     ArrayList<Search_Data_otput> search_data_otputs = new ArrayList<Search_Data_otput>();
@@ -151,7 +151,12 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
                             Search_Data_otput content = new Search_Data_otput();
 
                             if ((jsonChildNode.has("genre")) && jsonChildNode.optString("genre").trim() != null && !jsonChildNode.optString("genre").trim().isEmpty() && !jsonChildNode.optString("genre").trim().equals("null") && !jsonChildNode.optString("genre").trim().matches("")) {
-                                content.setGenre(jsonChildNode.optString("genre"));
+                                String movieTypeStr = jsonChildNode.optString("genre");
+                                movieTypeStr = movieTypeStr.replaceAll("\\[", "");
+                                movieTypeStr = movieTypeStr.replaceAll("\\]", "");
+                                movieTypeStr = movieTypeStr.replaceAll(",", " , ");
+                                movieTypeStr = movieTypeStr.replaceAll("\"", "");
+                                content.setGenre(movieTypeStr);
 
                             }
                             if ((jsonChildNode.has("name")) && jsonChildNode.optString("name").trim() != null && !jsonChildNode.optString("name").trim().isEmpty() && !jsonChildNode.optString("name").trim().equals("null") && !jsonChildNode.optString("name").trim().matches("")) {
@@ -195,10 +200,7 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
                                 content.setEpisode_title(jsonChildNode.optString("episode_title"));
 
                             }
-                            if ((jsonChildNode.has("name")) && jsonChildNode.optString("name").trim() != null && !jsonChildNode.optString("name").trim().isEmpty() && !jsonChildNode.optString("name").trim().equals("null") && !jsonChildNode.optString("name").trim().matches("")) {
-                                content.setName(jsonChildNode.optString("name"));
 
-                            }
                             if ((jsonChildNode.has("display_name")) && jsonChildNode.optString("display_name").trim() != null && !jsonChildNode.optString("display_name").trim().isEmpty() && !jsonChildNode.optString("display_name").trim().equals("null") && !jsonChildNode.optString("display_name").trim().matches("")) {
                                 content.setDisplay_name(jsonChildNode.optString("display_name"));
 
@@ -246,13 +248,13 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
 
         status = 0;
         totalItems = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message);

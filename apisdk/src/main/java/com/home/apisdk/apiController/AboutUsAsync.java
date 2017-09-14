@@ -67,17 +67,17 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
     /**
      * Constructor to initialise the private data members.
      *
-     * @param contactUsInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                            For Example: to use this API we have to set following attributes:
-     *                            setAuthToken() ,setPermalink() etc.
-     * @param listener            AboutUs Listener
-     * @param context             android.content.Context
+     * @param aboutUsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                     For Example: to use this API we have to set following attributes:
+     *                     setAuthToken() ,setPermalink() etc.
+     * @param listener     AboutUs Listener
+     * @param context      android.content.Context
      */
-    public AboutUsAsync(AboutUsInput contactUsInputModel, AboutUsListener listener, Context context) {
+    public AboutUsAsync(AboutUsInput aboutUsInput, AboutUsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.aboutUsInput = contactUsInputModel;
+        this.aboutUsInput = aboutUsInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetUserProfileAsynctask");
@@ -141,13 +141,13 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
         super.onPreExecute();
         listener.onAboutUsPreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onAboutUsPostExecuteCompleted(about);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onAboutUsPostExecuteCompleted(about);

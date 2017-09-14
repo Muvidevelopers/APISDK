@@ -33,7 +33,7 @@ import java.io.IOException;
 
 public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
 
-    private DeleteFavInputModel deleteFavInputModel;
+    private DeleteFavInputModel deleteFavInput;
     private String PACKAGE_NAME;
     private String responseStr;
     private String sucessMsg;
@@ -60,28 +60,28 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param deleteFavOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status               Response Code From The Server
-         * @param sucessMsg            On Success Message
+         * @param deleteFavOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status          Response Code From The Server
+         * @param sucessMsg       On Success Message
          */
 
-        void onDeleteFavPostExecuteCompleted(DeleteFavOutputModel deleteFavOutputModel, int status, String sucessMsg);
+        void onDeleteFavPostExecuteCompleted(DeleteFavOutputModel deleteFavOutput, int status, String sucessMsg);
     }
 
-    DeleteFavOutputModel deleteFavOutputModel = new DeleteFavOutputModel();
+    DeleteFavOutputModel deleteFavOutput = new DeleteFavOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param deleteFavInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                            For Example: to use this API we have to set following attributes:
-     *                            setAuthToken(),setMovieUniqueId() etc.
-     * @param listener            DeleteFav Listener
-     * @param context             android.content.Context
+     * @param deleteFavInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                       For Example: to use this API we have to set following attributes:
+     *                       setAuthToken(),setMovieUniqueId() etc.
+     * @param listener       DeleteFav Listener
+     * @param context        android.content.Context
      */
 
-    public DeleteFavAsync(DeleteFavInputModel deleteFavInputModel, DeleteFavListener listener, Context context) {
-        this.deleteFavInputModel = deleteFavInputModel;
+    public DeleteFavAsync(DeleteFavInputModel deleteFavInput, DeleteFavListener listener, Context context) {
+        this.deleteFavInput = deleteFavInput;
         this.listener = listener;
         this.context = context;
         PACKAGE_NAME = context.getPackageName();
@@ -103,10 +103,10 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getDeleteFavList());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.deleteFavInputModel.getAuthTokenStr().trim());
-            httppost.addHeader(HeaderConstants.MOVIE_UNIQ_ID, this.deleteFavInputModel.getMovieUniqueId());
-            httppost.addHeader(HeaderConstants.CONTENT_TYPE, this.deleteFavInputModel.getIsEpisode());
-            httppost.addHeader(HeaderConstants.USER_ID, this.deleteFavInputModel.getLoggedInStr());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.deleteFavInput.getAuthTokenStr().trim());
+            httppost.addHeader(HeaderConstants.MOVIE_UNIQ_ID, this.deleteFavInput.getMovieUniqueId());
+            httppost.addHeader(HeaderConstants.CONTENT_TYPE, this.deleteFavInput.getIsEpisode());
+            httppost.addHeader(HeaderConstants.USER_ID, this.deleteFavInput.getLoggedInStr());
 
             try {
                 HttpResponse response = httpclient.execute(httppost);
@@ -141,7 +141,7 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onDeleteFavPostExecuteCompleted(deleteFavOutputModel, status, sucessMsg);
+        listener.onDeleteFavPostExecuteCompleted(deleteFavOutput, status, sucessMsg);
     }
 
     @Override

@@ -32,7 +32,7 @@ import java.io.IOException;
  */
 public class CheckGeoBlockCountryAsynTask extends AsyncTask<CheckGeoBlockInputModel, Void, Void> {
 
-    private CheckGeoBlockInputModel checkGeoBlockInputModel;
+    private CheckGeoBlockInputModel checkGeoBlockInput;
     private String responseStr;
     private int status;
     private String message;
@@ -60,32 +60,32 @@ public class CheckGeoBlockCountryAsynTask extends AsyncTask<CheckGeoBlockInputMo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param checkGeoBlockOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param checkGeoBlockOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status Response Code From The Server
          * @param message On Success Message
          */
 
-        void onCheckGeoBlockCountryPostExecuteCompleted(CheckGeoBlockOutputModel checkGeoBlockOutputModel, int status, String message);
+        void onCheckGeoBlockCountryPostExecuteCompleted(CheckGeoBlockOutputModel checkGeoBlockOutput, int status, String message);
     }
 
 
-    CheckGeoBlockOutputModel checkGeoBlockOutputModel = new CheckGeoBlockOutputModel();
+    CheckGeoBlockOutputModel checkGeoBlockOutput = new CheckGeoBlockOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param checkGeoBlockInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     * @param checkGeoBlockInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
      *                                For Example: to use this API we have to set following attributes:
      *                                setAuthToken(),setIp() etc.
      * @param listener                CheckGeoBlockForCountry Listener
      * @param context                 android.content.Context
      */
 
-    public CheckGeoBlockCountryAsynTask(CheckGeoBlockInputModel checkGeoBlockInputModel, CheckGeoBlockForCountryListener listener, Context context) {
+    public CheckGeoBlockCountryAsynTask(CheckGeoBlockInputModel checkGeoBlockInput, CheckGeoBlockForCountryListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.checkGeoBlockInputModel = checkGeoBlockInputModel;
+        this.checkGeoBlockInput = checkGeoBlockInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "getFeatureContentAsynTask");
@@ -108,8 +108,8 @@ public class CheckGeoBlockCountryAsynTask extends AsyncTask<CheckGeoBlockInputMo
             HttpPost httppost = new HttpPost(url);
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.checkGeoBlockInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.IP, this.checkGeoBlockInputModel.getIp());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.checkGeoBlockInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.IP, this.checkGeoBlockInput.getIp());
 
 
             // Execute HTTP Post Request
@@ -137,7 +137,7 @@ public class CheckGeoBlockCountryAsynTask extends AsyncTask<CheckGeoBlockInputMo
                     status = Integer.parseInt(statusStr);
                     if (status == 200) {
                         countryCode = ((JSONObject) json).optString("country");
-                        checkGeoBlockOutputModel.setCountrycode(countryCode);
+                        checkGeoBlockOutput.setCountrycode(countryCode);
                     }
 
                 }
@@ -159,18 +159,18 @@ public class CheckGeoBlockCountryAsynTask extends AsyncTask<CheckGeoBlockInputMo
         listener.onCheckGeoBlockCountryPreExecuteStarted();
         responseStr = "0";
             status = 0;
-            if(!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api()))
+            if(!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context)))
             {
                 this.cancel(true);
                 message = "Packge Name Not Matched";
-                listener.onCheckGeoBlockCountryPostExecuteCompleted(checkGeoBlockOutputModel,status,message);
+                listener.onCheckGeoBlockCountryPostExecuteCompleted(checkGeoBlockOutput,status,message);
                 return;
             }
-            if(SDKInitializer.getHashKey().equals(""))
+            if(SDKInitializer.getHashKey(context).equals(""))
             {
                 this.cancel(true);
                 message = "Hash Key Is Not Available. Please Initialize The SDK";
-                listener.onCheckGeoBlockCountryPostExecuteCompleted(checkGeoBlockOutputModel,status,message);
+                listener.onCheckGeoBlockCountryPostExecuteCompleted(checkGeoBlockOutput,status,message);
             }
 
     }
@@ -178,7 +178,7 @@ public class CheckGeoBlockCountryAsynTask extends AsyncTask<CheckGeoBlockInputMo
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onCheckGeoBlockCountryPostExecuteCompleted(checkGeoBlockOutputModel, status, message);
+        listener.onCheckGeoBlockCountryPostExecuteCompleted(checkGeoBlockOutput, status, message);
 
     }
 

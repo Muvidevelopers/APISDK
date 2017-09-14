@@ -1,7 +1,9 @@
 package com.home.apisdk.apiModel;
 
 /**
- * Created by MUVI on 7/4/2017.
+ * This Model Class Holds All The Output Attributes For CheckDeviceAsyncTask
+ *
+ * @author MUVI
  */
 
 public class CheckDeviceOutput {

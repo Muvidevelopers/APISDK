@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInInputModel, Void, Void> {
 
-    private CheckIfUserLoggedInInputModel checkIfUserLoggedInInputModel;
+    private CheckIfUserLoggedInInputModel checkIfUserLoggedInInput;
     private String responseStr;
     private int status;
     private String message;
@@ -56,32 +56,32 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param checkIfUserLoggedInOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                         Response Code From The Server
-         * @param message                        On Success Message
+         * @param checkIfUserLoggedInOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                    Response Code From The Server
+         * @param message                   On Success Message
          */
 
-        void onCheckIfUserLogggedInPostExecuteCompleted(CheckIfUserLoggedInOutputModel checkIfUserLoggedInOutputModel, int status, String message);
+        void onCheckIfUserLogggedInPostExecuteCompleted(CheckIfUserLoggedInOutputModel checkIfUserLoggedInOutput, int status, String message);
     }
 
 
-    CheckIfUserLoggedInOutputModel checkIfUserLoggedInOutputModel = new CheckIfUserLoggedInOutputModel();
+    CheckIfUserLoggedInOutputModel checkIfUserLoggedInOutput = new CheckIfUserLoggedInOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param checkIfUserLoggedInInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     * @param checkIfUserLoggedInInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
      *                                      For Example: to use this API we have to set following attributes:
      *                                      setAuthToken(),setUser_id() etc.
      * @param listener                      CheckIfUserLogggedIn Listener
      * @param context                       android.content.Context
      */
 
-    public CheckIfUserLoggedInAsynTask(CheckIfUserLoggedInInputModel checkIfUserLoggedInInputModel, CheckIfUserLogggedInListener listener, Context context) {
+    public CheckIfUserLoggedInAsynTask(CheckIfUserLoggedInInputModel checkIfUserLoggedInInput, CheckIfUserLogggedInListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.checkIfUserLoggedInInputModel = checkIfUserLoggedInInputModel;
+        this.checkIfUserLoggedInInput = checkIfUserLoggedInInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetContentListAsynTask");
@@ -102,10 +102,10 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getCheckIfUserLoggedIn());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.checkIfUserLoggedInInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.USER_ID, this.checkIfUserLoggedInInputModel.getUser_id());
-            httppost.addHeader(HeaderConstants.DEVICE_ID, this.checkIfUserLoggedInInputModel.getDevice_id());
-            httppost.addHeader(HeaderConstants.DEVICE_TYPE, this.checkIfUserLoggedInInputModel.getDevice_type());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.checkIfUserLoggedInInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.checkIfUserLoggedInInput.getUser_id());
+            httppost.addHeader(HeaderConstants.DEVICE_ID, this.checkIfUserLoggedInInput.getDevice_id());
+            httppost.addHeader(HeaderConstants.DEVICE_TYPE, this.checkIfUserLoggedInInput.getDevice_type());
 
 
             // Execute HTTP Post Request
@@ -136,7 +136,7 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
             if (status == 200) {
 
                 if ((myJson.has("is_login")) && myJson.optString("is_login").trim() != null && !myJson.optString("is_login").trim().isEmpty() && !myJson.optString("is_login").trim().equals("null") && !myJson.optString("is_login").trim().matches("")) {
-                    checkIfUserLoggedInOutputModel.setIs_login(Integer.parseInt(myJson.optString("is_login")));
+                    checkIfUserLoggedInOutput.setIs_login(Integer.parseInt(myJson.optString("is_login")));
                 }
 
 
@@ -163,16 +163,16 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
         listener.onCheckIfUserLogggedInPreExecuteStarted();
 
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
+            listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutput, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
+            listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutput, status, message);
         }
 
     }
@@ -180,7 +180,7 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
+        listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutput, status, message);
 
     }
 

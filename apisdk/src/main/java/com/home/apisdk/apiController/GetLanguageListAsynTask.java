@@ -38,7 +38,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, Void, Void> {
 
-    private LanguageListInputModel languageListInputModel;
+    private LanguageListInputModel languageListInput;
     private String responseStr;
     private int status;
     private String message;
@@ -65,33 +65,33 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param languageListOutputArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                  Response From The Server
-         * @param message                 On Success Message
-         * @param defaultLanguage         For Getting the Default Language
+         * @param languageListOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status             Response From The Server
+         * @param message            On Success Message
+         * @param defaultLanguage    For Getting the Default Language
          */
 
-        void onGetLanguageListPostExecuteCompleted(ArrayList<LanguageListOutputModel> languageListOutputArray, int status, String message, String defaultLanguage);
+        void onGetLanguageListPostExecuteCompleted(ArrayList<LanguageListOutputModel> languageListOutput, int status, String message, String defaultLanguage);
     }
 
-    ArrayList<LanguageListOutputModel> languageListOutputArray = new ArrayList<LanguageListOutputModel>();
+    ArrayList<LanguageListOutputModel> languageListOutput = new ArrayList<LanguageListOutputModel>();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param languageListInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                               For Example: to use this API we have to set following attributes:
-     *                               setAuthToken() etc.
-     * @param listener               GetLanguageList Listener
-     * @param context                android.content.Context
+     * @param languageListInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                          For Example: to use this API we have to set following attributes:
+     *                          setAuthToken() etc.
+     * @param listener          GetLanguageList Listener
+     * @param context           android.content.Context
      */
 
-    public GetLanguageListAsynTask(LanguageListInputModel languageListInputModel, GetLanguageListListener listener, Context context) {
+    public GetLanguageListAsynTask(LanguageListInputModel languageListInput, GetLanguageListListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.languageListInputModel = languageListInputModel;
+        this.languageListInput = languageListInput;
         PACKAGE_NAME = context.getPackageName();
 
     }
@@ -104,7 +104,7 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
 
     @Override
     protected Void doInBackground(LanguageListInputModel... params) {
-        Log.v("MUVISDK", "this.languageListInputModel.getAuthToken()" + this.languageListInputModel.getAuthToken());
+        Log.v("MUVISDK", "this.languageListInput.getAuthToken()" + this.languageListInput.getAuthToken());
 
         try {
 
@@ -118,7 +118,7 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
                 conn.setDoOutput(true);
 
                 Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter("authToken", this.languageListInputModel.getAuthToken());
+                        .appendQueryParameter("authToken", this.languageListInput.getAuthToken());
                 String query = builder.build().getEncodedQuery();
 
                 OutputStream os = conn.getOutputStream();
@@ -192,7 +192,7 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
                         }
 
 
-                        languageListOutputArray.add(languageListOutputModel);
+                        languageListOutput.add(languageListOutputModel);
                     } catch (Exception e) {
                         status = 0;
                         message = "";
@@ -216,23 +216,23 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
         listener.onGetLanguageListPreExecuteStarted();
         status = 0;
         responseStr = "0";
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage);
+            listener.onGetLanguageListPostExecuteCompleted(languageListOutput, status, message, defaultLanguage);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage);
+            listener.onGetLanguageListPostExecuteCompleted(languageListOutput, status, message, defaultLanguage);
         }
     }
 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage);
+        listener.onGetLanguageListPostExecuteCompleted(languageListOutput, status, message, defaultLanguage);
 
     }
 

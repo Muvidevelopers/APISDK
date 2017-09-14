@@ -37,7 +37,7 @@ import java.util.ArrayList;
  */
 public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> {
 
-    private HomePageInputModel homePageInputModel;
+    private HomePageInputModel homePageInput;
     private String responseStr;
     private int status;
     private String message;
@@ -63,36 +63,36 @@ public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> 
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param homePageOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status              Response Code from the server
-         * @param message             On Success Message
+         * @param homePageOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status         Response Code from the server
+         * @param message        On Success Message
          */
 
-        void onHomePagePostExecuteCompleted(HomePageOutputModel homePageOutputModel, int status, String message);
+        void onHomePagePostExecuteCompleted(HomePageOutputModel homePageOutput, int status, String message);
     }
 
-    HomePageOutputModel homePageOutputModel = new HomePageOutputModel();
-    ArrayList<HomePageSectionModel> homePageSectionModelArrayList = new ArrayList<HomePageSectionModel>();
-    ArrayList<HomePageBannerModel> homePageBannerModelArrayList = new ArrayList<HomePageBannerModel>();
+    HomePageOutputModel homePageOutput = new HomePageOutputModel();
+    ArrayList<HomePageSectionModel> homePageSectionArrayList = new ArrayList<HomePageSectionModel>();
+    ArrayList<HomePageBannerModel> homePageBannerArrayList = new ArrayList<HomePageBannerModel>();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param homePageInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                           For Example: to use this API we have to set following attributes:
-     *                           setAuthToken(),setLang_code() etc.
-     * @param listener           HomePage Listener
-     * @param context            android.content.Context
+     * @param homePageInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                      For Example: to use this API we have to set following attributes:
+     *                      setAuthToken(),setLang_code() etc.
+     * @param listener      HomePage Listener
+     * @param context       android.content.Context
      */
 
-    public HomePageAsynTask(HomePageInputModel homePageInputModel, HomePageListener listener, Context context) {
+    public HomePageAsynTask(HomePageInputModel homePageInput, HomePageListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.homePageInputModel = homePageInputModel;
+        this.homePageInput = homePageInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "getPlanListAsynctask");
-        Log.v("MUVISDK", "authToken = " + this.homePageInputModel.getAuthToken());
+        Log.v("MUVISDK", "authToken = " + this.homePageInput.getAuthToken());
 
 
     }
@@ -111,10 +111,10 @@ public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> 
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getHomepageUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.homePageInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.homePageInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.homePageInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.homePageInput.getLang_code());
 
-            Log.v("MUVISDK", "authToken = " + this.homePageInputModel.getAuthToken());
+            Log.v("MUVISDK", "authToken = " + this.homePageInput.getAuthToken());
 
             // Execute HTTP Post Request
             try {
@@ -162,7 +162,7 @@ public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> 
                                     HomePageBannerModel homePageBannerModel = new HomePageBannerModel();
                                     homePageBannerModel.setMobile_view(jsonBannerImageNode.getJSONObject(i).optString("mobile_view"));
                                     homePageBannerModel.setOriginal(jsonBannerImageNode.getJSONObject(i).optString("original"));
-                                    homePageBannerModelArrayList.add(homePageBannerModel);
+                                    homePageBannerArrayList.add(homePageBannerModel);
 
                                 }
                             }
@@ -210,7 +210,7 @@ public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> 
 
                                 Log.v("MUVISDK", "section_id = " + sectionModel.getSection_id());
 
-                                homePageSectionModelArrayList.add(sectionModel);
+                                homePageSectionArrayList.add(sectionModel);
                             } catch (Exception e) {
                                 responseStr = "0";
                                 // TODO Auto-generated catch block
@@ -225,9 +225,9 @@ public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> 
 
                 }
 
-                homePageOutputModel.setHomePageBannerModel(homePageBannerModelArrayList);
-                homePageOutputModel.setHomePageSectionModel(homePageSectionModelArrayList);
-                homePageOutputModel.setHomePageTextModel(homePageTextModel);
+                homePageOutput.setHomePageBannerModel(homePageBannerArrayList);
+                homePageOutput.setHomePageSectionModel(homePageSectionArrayList);
+                homePageOutput.setHomePageTextModel(homePageTextModel);
 
 
             }
@@ -262,23 +262,23 @@ public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> 
         super.onPreExecute();
         listener.onHomePagePreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message);
+            listener.onHomePagePostExecuteCompleted(homePageOutput, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message);
+            listener.onHomePagePostExecuteCompleted(homePageOutput, status, message);
         }
     }
 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message);
+        listener.onHomePagePostExecuteCompleted(homePageOutput, status, message);
 
     }
 

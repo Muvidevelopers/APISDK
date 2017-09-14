@@ -32,7 +32,7 @@ import java.io.IOException;
 
 public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputModel, Void, Void> {
 
-    private AddContentRatingInputModel addContentRatingInputModel;
+    private AddContentRatingInputModel addContentRatingInput;
     private String responseStr;
     private int status;
     private String message;
@@ -58,31 +58,31 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param addContentRatingOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param addContentRatingOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                      Response Code from the server
          * @param message                     Holds the Status
          */
-        void onAddContentRatingPostExecuteCompleted(AddContentRatingOutputModel addContentRatingOutputModel, int status, String message);
+        void onAddContentRatingPostExecuteCompleted(AddContentRatingOutputModel addContentRatingOutput, int status, String message);
     }
 
 
-    AddContentRatingOutputModel addContentRatingOutputModel = new AddContentRatingOutputModel();
+    AddContentRatingOutputModel addContentRatingOutput = new AddContentRatingOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param addContentRatingInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     * @param addContentRatingInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
      *                                   For Example: to use this API we have to set following attributes:
      *                                   setAuthToken(),setLang_code() etc.
      * @param listener                   AddContentRating Listener
      * @param context                    android.content.Context
      */
 
-    public AddContentRatingAsynTask(AddContentRatingInputModel addContentRatingInputModel, AddContentRatingListener listener, Context context) {
+    public AddContentRatingAsynTask(AddContentRatingInputModel addContentRatingInput, AddContentRatingListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.addContentRatingInputModel = addContentRatingInputModel;
+        this.addContentRatingInput = addContentRatingInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetContentListAsynTask");
@@ -103,12 +103,12 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getAddContentRating());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.addContentRatingInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.addContentRatingInputModel.getLang_code());
-            httppost.addHeader(HeaderConstants.CONTENT_ID, this.addContentRatingInputModel.getContent_id());
-            httppost.addHeader(HeaderConstants.USER_ID, this.addContentRatingInputModel.getUser_id());
-            httppost.addHeader(HeaderConstants.RATING, this.addContentRatingInputModel.getRating());
-            httppost.addHeader(HeaderConstants.REVIEW, this.addContentRatingInputModel.getReview());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.addContentRatingInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.addContentRatingInput.getLang_code());
+            httppost.addHeader(HeaderConstants.CONTENT_ID, this.addContentRatingInput.getContent_id());
+            httppost.addHeader(HeaderConstants.USER_ID, this.addContentRatingInput.getUser_id());
+            httppost.addHeader(HeaderConstants.RATING, this.addContentRatingInput.getRating());
+            httppost.addHeader(HeaderConstants.REVIEW, this.addContentRatingInput.getReview());
 
 
             // Execute HTTP Post Request
@@ -139,7 +139,7 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
             if (status == 200) {
 
                 if ((myJson.has("msg")) && myJson.optString("msg").trim() != null && !myJson.optString("msg").trim().isEmpty() && !myJson.optString("msg").trim().equals("null") && !myJson.optString("msg").trim().matches("")) {
-                    addContentRatingOutputModel.setMsg(myJson.optString("msg"));
+                    addContentRatingOutput.setMsg(myJson.optString("msg"));
                 }
 
 
@@ -166,16 +166,16 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
         listener.onAddContentRatingPreExecuteStarted();
 
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message);
+            listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutput, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message);
+            listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutput, status, message);
         }
 
     }
@@ -183,7 +183,7 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message);
+        listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutput, status, message);
 
     }
 

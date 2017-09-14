@@ -33,7 +33,7 @@ import java.util.ArrayList;
  */
 public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputModel, Void, Void> {
 
-    private GetCardListForPPVInputModel getCardListForPPVInputModel;
+    private GetCardListForPPVInputModel getCardListForPPVInput;
     private String responseStr;
     private int status;
     private int totalItems;
@@ -60,33 +60,33 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getCardListForPPVOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                       Response Code From The Server
-         * @param totalItems                   Getting the total item
-         * @param message                      On Success Message
+         * @param getCardListForPPVOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                  Response Code From The Server
+         * @param totalItems              Getting the total item
+         * @param message                 On Success Message
          */
 
-        void onGetCardListForPPVPostExecuteCompleted(ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutputModel, int status, int totalItems, String message);
+        void onGetCardListForPPVPostExecuteCompleted(ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutput, int status, int totalItems, String message);
     }
 
-    ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutputModel = new ArrayList<GetCardListForPPVOutputModel>();
+    ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutput = new ArrayList<GetCardListForPPVOutputModel>();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getCardListForPPVInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                    For Example: to use this API we have to set following attributes:
-     *                                    setAuthToken(),setUser_id() etc.
-     * @param listener                    GetCardListForPPV Listener
-     * @param context                     android.content.Context
+     * @param getCardListForPPVInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                               For Example: to use this API we have to set following attributes:
+     *                               setAuthToken(),setUser_id() etc.
+     * @param listener               GetCardListForPPV Listener
+     * @param context                android.content.Context
      */
 
-    public GetCardListForPPVAsynTask(GetCardListForPPVInputModel getCardListForPPVInputModel, GetCardListForPPVListener listener, Context context) {
+    public GetCardListForPPVAsynTask(GetCardListForPPVInputModel getCardListForPPVInput, GetCardListForPPVListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.getCardListForPPVInputModel = getCardListForPPVInputModel;
+        this.getCardListForPPVInput = getCardListForPPVInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetContentListAsynTask");
@@ -107,8 +107,8 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetCardListForPpvUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getCardListForPPVInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.USER_ID, this.getCardListForPPVInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getCardListForPPVInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.getCardListForPPVInput.getUser_id());
 
 
             // Execute HTTP Post Request
@@ -156,7 +156,7 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
                             content.setCard_id(jsonChildNode.optString("card_id"));
                         }
 
-                        getCardListForPPVOutputModel.add(content);
+                        getCardListForPPVOutput.add(content);
                     } catch (Exception e) {
                         status = 0;
 
@@ -180,16 +180,16 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
         listener.onGetCardListForPPVPreExecuteStarted();
         responseStr = "0";
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getInstance())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutputModel, status, totalItems, message);
+            listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutputModel, status, totalItems, message);
+            listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
         }
 
     }
@@ -197,7 +197,7 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutputModel, status, totalItems, message);
+        listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
 
     }
 

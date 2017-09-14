@@ -33,7 +33,7 @@ import java.util.ArrayList;
  */
 public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void> {
 
-    private MyLibraryInputModel myLibraryInputModel;
+    private MyLibraryInputModel myLibraryInput;
     private String responseStr;
     private int status;
     private String totalItems;
@@ -60,33 +60,33 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param myLibraryOutputModelArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                    Response Code from the server
-         * @param totalItems                For Getting The Total Item
-         * @param message                   On Success Message
+         * @param myLibraryOutputArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status               Response Code from the server
+         * @param totalItems           For Getting The Total Item
+         * @param message              On Success Message
          */
 
-        void onMyLibraryPostExecuteCompleted(ArrayList<MyLibraryOutputModel> myLibraryOutputModelArray, int status, String totalItems, String message);
+        void onMyLibraryPostExecuteCompleted(ArrayList<MyLibraryOutputModel> myLibraryOutputArray, int status, String totalItems, String message);
     }
 
-    ArrayList<MyLibraryOutputModel> myLibraryOutputModel = new ArrayList<MyLibraryOutputModel>();
+    ArrayList<MyLibraryOutputModel> myLibraryOutput = new ArrayList<MyLibraryOutputModel>();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param myLibraryInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                            For Example: to use this API we have to set following attributes:
-     *                            setAuthToken(),setUser_id() etc.
-     * @param listener            MyLibrary Listener
-     * @param context             android.content.Context
+     * @param myLibraryInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                       For Example: to use this API we have to set following attributes:
+     *                       setAuthToken(),setUser_id() etc.
+     * @param listener       MyLibrary Listener
+     * @param context        android.content.Context
      */
 
-    public MyLibraryAsynTask(MyLibraryInputModel myLibraryInputModel, MyLibraryListener listener, Context context) {
+    public MyLibraryAsynTask(MyLibraryInputModel myLibraryInput, MyLibraryListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.myLibraryInputModel = myLibraryInputModel;
+        this.myLibraryInput = myLibraryInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetContentListAsynTask");
@@ -107,12 +107,12 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
             HttpPost httppost = new HttpPost(APIUrlConstant.getMylibraryUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.myLibraryInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.USER_ID, this.myLibraryInputModel.getUser_id());
-            httppost.addHeader(HeaderConstants.LIMIT, this.myLibraryInputModel.getLimit());
-            httppost.addHeader(HeaderConstants.OFFSET, this.myLibraryInputModel.getOffset());
-            httppost.addHeader(HeaderConstants.COUNTRY, this.myLibraryInputModel.getCountry());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.myLibraryInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.myLibraryInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.myLibraryInput.getUser_id());
+            httppost.addHeader(HeaderConstants.LIMIT, this.myLibraryInput.getLimit());
+            httppost.addHeader(HeaderConstants.OFFSET, this.myLibraryInput.getOffset());
+            httppost.addHeader(HeaderConstants.COUNTRY, this.myLibraryInput.getCountry());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.myLibraryInput.getLang_code());
 
 
             // Execute HTTP Post Request
@@ -196,7 +196,7 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
                             content.setContentTypesId(jsonChildNode.optString("is_episode"));
 
                         }
-                        myLibraryOutputModel.add(content);
+                        myLibraryOutput.add(content);
                     } catch (Exception e) {
                         status = 0;
                         message = "";
@@ -219,16 +219,16 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
         listener.onMyLibraryPreExecuteStarted();
         responseStr = "0";
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, responseStr);
+            listener.onMyLibraryPostExecuteCompleted(myLibraryOutput, status, totalItems, responseStr);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, responseStr);
+            listener.onMyLibraryPostExecuteCompleted(myLibraryOutput, status, totalItems, responseStr);
         }
 
     }
@@ -236,7 +236,7 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, responseStr);
+        listener.onMyLibraryPostExecuteCompleted(myLibraryOutput, status, totalItems, responseStr);
 
     }
 

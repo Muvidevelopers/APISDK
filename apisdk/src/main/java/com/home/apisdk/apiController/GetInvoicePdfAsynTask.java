@@ -33,13 +33,13 @@ import java.io.IOException;
 
 public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Void, Void> {
 
-    private GetInvoicePdfInputModel getInvoicePdfInputModel;
+    private GetInvoicePdfInputModel getInvoicePdfInput;
     private String PACKAGE_NAME;
     private String message;
     private String responseStr;
     private String status;
     private int code;
-    private GetInvoicePdfOutputModel getInvoicePdfOutputModel;
+    private GetInvoicePdfOutputModel getInvoicePdfOutput;
     private GetInvoicePdfListener listener;
     private Context context;
 
@@ -61,30 +61,30 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getInvoicePdfOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param code                     Response Code From The Server
-         * @param message                  On Success Message
-         * @param status                   For Getting The Current Response
+         * @param getInvoicePdfOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code                Response Code From The Server
+         * @param message             On Success Message
+         * @param status              For Getting The Current Response
          */
 
-        void onGetInvoicePdfPostExecuteCompleted(GetInvoicePdfOutputModel getInvoicePdfOutputModel, int code, String message, String status);
+        void onGetInvoicePdfPostExecuteCompleted(GetInvoicePdfOutputModel getInvoicePdfOutput, int code, String message, String status);
     }
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getInvoicePdfInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                For Example: to use this API we have to set following attributes:
-     *                                setAuthToken(),setUser_id() etc.
-     * @param listener                GetInvoicePdf Listener
-     * @param context                 android.content.Context
+     * @param getInvoicePdfInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                           For Example: to use this API we have to set following attributes:
+     *                           setAuthToken(),setUser_id() etc.
+     * @param listener           GetInvoicePdf Listener
+     * @param context            android.content.Context
      */
 
-    public GetInvoicePdfAsynTask(GetInvoicePdfInputModel getInvoicePdfInputModel, GetInvoicePdfListener listener, Context context) {
+    public GetInvoicePdfAsynTask(GetInvoicePdfInputModel getInvoicePdfInput, GetInvoicePdfListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.getInvoicePdfInputModel = getInvoicePdfInputModel;
+        this.getInvoicePdfInput = getInvoicePdfInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "getinvoicepdf");
@@ -105,11 +105,11 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetInvoicePdfUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getInvoicePdfInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.ID, this.getInvoicePdfInputModel.getId());
-            httppost.addHeader(HeaderConstants.USER_ID, this.getInvoicePdfInputModel.getUser_id());
-            httppost.addHeader(HeaderConstants.DEVICE_TYPE, this.getInvoicePdfInputModel.getDevice_type());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.getInvoicePdfInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getInvoicePdfInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.ID, this.getInvoicePdfInput.getId());
+            httppost.addHeader(HeaderConstants.USER_ID, this.getInvoicePdfInput.getUser_id());
+            httppost.addHeader(HeaderConstants.DEVICE_TYPE, this.getInvoicePdfInput.getDevice_type());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.getInvoicePdfInput.getLang_code());
             // Execute HTTP Post Request
             try {
                 HttpResponse response = httpclient.execute(httppost);
@@ -136,10 +136,10 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
 
             if (code == 200) {
 
-                getInvoicePdfOutputModel = new GetInvoicePdfOutputModel();
+                getInvoicePdfOutput = new GetInvoicePdfOutputModel();
                 if ((myJson.has("section")) && myJson.optString("section").trim() != null && !myJson.optString("section").trim().isEmpty() && !myJson.optString("section").trim().equals("null") && !myJson.optString("section").trim().matches("")) {
 
-                    getInvoicePdfOutputModel.setSection(myJson.optString("section"));
+                    getInvoicePdfOutput.setSection(myJson.optString("section"));
 
                 }
 
@@ -158,16 +158,16 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
         super.onPreExecute();
         listener.onGetInvoicePdfPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);
+            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutput, code, message, status);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);
+            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutput, code, message, status);
         }
 
 
@@ -175,6 +175,6 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);
+        listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutput, code, message, status);
     }
 }

@@ -31,7 +31,7 @@ import java.io.IOException;
  */
 public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabledInputModel, Void, Void> {
 
-    private IsRegistrationEnabledInputModel isRegistrationEnabledInputModel;
+    private IsRegistrationEnabledInputModel isRegistrationEnabledInput;
     private String responseStr;
     private int status;
     private String message;
@@ -57,32 +57,32 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param isRegistrationEnabledOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                           Response Code From The Server
-         * @param message                          On Success Message
+         * @param isRegistrationEnabledOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                      Response Code From The Server
+         * @param message                     On Success Message
          */
 
-        void onIsRegistrationenabledPostExecuteCompleted(IsRegistrationEnabledOutputModel isRegistrationEnabledOutputModel, int status, String message);
+        void onIsRegistrationenabledPostExecuteCompleted(IsRegistrationEnabledOutputModel isRegistrationEnabledOutput, int status, String message);
     }
 
 
-    IsRegistrationEnabledOutputModel isRegistrationEnabledOutputModel = new IsRegistrationEnabledOutputModel();
+    IsRegistrationEnabledOutputModel isRegistrationEnabledOutput = new IsRegistrationEnabledOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param isRegistrationEnabledInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                        For Example: to use this API we have to set following attributes:
-     *                                        setAuthToken() etc.
-     * @param listener                        IsRegistrationenabled Listener
-     * @param context                         android.content.Context
+     * @param isRegistrationEnabledInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                   For Example: to use this API we have to set following attributes:
+     *                                   setAuthToken() etc.
+     * @param listener                   IsRegistrationenabled Listener
+     * @param context                    android.content.Context
      */
 
-    public IsRegistrationEnabledAsynTask(IsRegistrationEnabledInputModel isRegistrationEnabledInputModel, IsRegistrationenabledListener listener, Context context) {
+    public IsRegistrationEnabledAsynTask(IsRegistrationEnabledInputModel isRegistrationEnabledInput, IsRegistrationenabledListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.isRegistrationEnabledInputModel = isRegistrationEnabledInputModel;
+        this.isRegistrationEnabledInput = isRegistrationEnabledInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetContentListAsynTask");
@@ -103,7 +103,7 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getIsRegistrationenabledUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.isRegistrationEnabledInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.isRegistrationEnabledInput.getAuthToken());
 
 
             // Execute HTTP Post Request
@@ -134,24 +134,38 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
             if (status == 200) {
 
                 if ((myJson.has("is_login")) && myJson.optString("is_login").trim() != null && !myJson.optString("is_login").trim().isEmpty() && !myJson.optString("is_login").trim().equals("null") && !myJson.optString("is_login").trim().matches("")) {
-                    isRegistrationEnabledOutputModel.setIs_login(Integer.parseInt(myJson.optString("is_login")));
+                    isRegistrationEnabledOutput.setIs_login(Integer.parseInt(myJson.optString("is_login")));
                 }
                 if ((myJson.has("isMylibrary")) && myJson.optString("isMylibrary").trim() != null && !myJson.optString("isMylibrary").trim().isEmpty() && !myJson.optString("isMylibrary").trim().equals("null") && !myJson.optString("isMylibrary").trim().matches("")) {
-                    isRegistrationEnabledOutputModel.setIsMylibrary(Integer.parseInt(myJson.optString("isMylibrary")));
+                    isRegistrationEnabledOutput.setIsMylibrary(Integer.parseInt(myJson.optString("isMylibrary")));
                 }
                 if ((myJson.has("signup_step")) && myJson.optString("signup_step").trim() != null && !myJson.optString("signup_step").trim().isEmpty() && !myJson.optString("signup_step").trim().equals("null") && !myJson.optString("signup_step").trim().matches("")) {
-                    isRegistrationEnabledOutputModel.setSignup_step(Integer.parseInt(myJson.optString("signup_step")));
+                    isRegistrationEnabledOutput.setSignup_step(Integer.parseInt(myJson.optString("signup_step")));
                 }
                 if ((myJson.has("has_favourite")) && myJson.optString("has_favourite").trim() != null && !myJson.optString("has_favourite").trim().isEmpty() && !myJson.optString("has_favourite").trim().equals("null") && !myJson.optString("has_favourite").trim().matches("")) {
-                    isRegistrationEnabledOutputModel.setHas_favourite(Integer.parseInt(myJson.optString("has_favourite")));
+                    isRegistrationEnabledOutput.setHas_favourite(Integer.parseInt(myJson.optString("has_favourite")));
                 }
                 if ((myJson.has("isRating")) && myJson.optString("isRating").trim() != null && !myJson.optString("isRating").trim().isEmpty() && !myJson.optString("isRating").trim().equals("null") && !myJson.optString("isRating").trim().matches("")) {
-                    isRegistrationEnabledOutputModel.setHas_favourite(Integer.parseInt(myJson.optString("isRating")));
+                    isRegistrationEnabledOutput.setRating(Integer.parseInt(myJson.optString("isRating")));
                 }
 
                 if ((myJson.has("isRestrictDevice")) && myJson.optString("isRestrictDevice").trim() != null && !myJson.optString("isRestrictDevice").trim().isEmpty()
                         && !myJson.optString("isRestrictDevice").trim().equals("null") && !myJson.optString("isRestrictDevice").trim().matches("")) {
-                    isRegistrationEnabledOutputModel.setIsRestrictDevice(myJson.optString("isRestrictDevice"));
+                    isRegistrationEnabledOutput.setIsRestrictDevice(Integer.parseInt(myJson.optString("isRestrictDevice")));
+                }
+
+                if ((myJson.has("chromecast")) && myJson.optString("chromecast").trim() != null && !myJson.optString("chromecast").trim().isEmpty()
+                        && !myJson.optString("chromecast").trim().equals("null") && !myJson.optString("chromecast").trim().matches("")) {
+                    isRegistrationEnabledOutput.setChromecast(Integer.parseInt(myJson.optString("chromecast")));
+                }
+                if ((myJson.has("is_streaming_restriction")) && myJson.optString("is_streaming_restriction").trim() != null && !myJson.optString("is_streaming_restriction").trim().isEmpty()
+                        && !myJson.optString("is_streaming_restriction").trim().equals("null") && !myJson.optString("is_streaming_restriction").trim().matches("")) {
+                    isRegistrationEnabledOutput.setIs_streaming_restriction(Integer.parseInt(myJson.optString("is_streaming_restriction")));
+                    ;
+                }
+                if ((myJson.has("is_offline")) && myJson.optString("is_offline").trim() != null && !myJson.optString("is_offline").trim().isEmpty()
+                        && !myJson.optString("is_offline").trim().equals("null") && !myJson.optString("is_offline").trim().matches("")) {
+                    isRegistrationEnabledOutput.setIs_offline(Integer.parseInt(myJson.optString("is_offline")));
                 }
 
 
@@ -178,16 +192,16 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
         listener.onIsRegistrationenabledPreExecuteStarted();
 
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel, status, message);
+            listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutput, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel, status, message);
+            listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutput, status, message);
             return;
         }
 
@@ -196,7 +210,7 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutputModel, status, message);
+        listener.onIsRegistrationenabledPostExecuteCompleted(isRegistrationEnabledOutput, status, message);
 
     }
 

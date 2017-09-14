@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> {
 
-    private GetMenusInputModel getMenusInputModel;
+    private GetMenusInputModel getMenusInput;
     private String responseStr;
     private int status;
     private String message;
@@ -87,16 +87,16 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getMenusOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status              Response Code From The Server
-         * @param message             On Success Message
+         * @param getMenusOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status         Response Code From The Server
+         * @param message        On Success Message
          */
 
-        void onGetMenusPostExecuteCompleted(GetMenusOutputModel getMenusOutputModel, int status, String message);
+        void onGetMenusPostExecuteCompleted(GetMenusOutputModel getMenusOutput, int status, String message);
     }
 
 
-    GetMenusOutputModel getMenusOutputModel;
+    GetMenusOutputModel getMenusOutput;
     GetMenusOutputModel.MainMenu mainMenu;
     GetMenusOutputModel.UserMenu userMenu;
     GetMenusOutputModel.FooterMenu footerMenu;
@@ -111,17 +111,17 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getMenusInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                           For Example: to use this API we have to set following attributes:
-     *                           setAuthToken(),setLang_code() etc.
-     * @param listener           GetMenus Listener
-     * @param context            android.content.Context
+     * @param getMenusInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                      For Example: to use this API we have to set following attributes:
+     *                      setAuthToken(),setLang_code() etc.
+     * @param listener      GetMenus Listener
+     * @param context       android.content.Context
      */
 
-    public GetMenusAsynTask(GetMenusInputModel getMenusInputModel, GetMenusListener listener, Context context) {
+    public GetMenusAsynTask(GetMenusInputModel getMenusInput, GetMenusListener listener, Context context) {
         this.listener = listener;
         this.context = context;
-        this.getMenusInputModel = getMenusInputModel;
+        this.getMenusInput = getMenusInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetMenusAsynTask");
@@ -142,8 +142,8 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetMenusUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getMenusInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.getMenusInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getMenusInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.getMenusInput.getLang_code());
 
 
             // Execute HTTP Post Request
@@ -173,10 +173,10 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
             if (status > 0) {
 
                 if (status == 200) {
-                    getMenusOutputModel = new GetMenusOutputModel();
+                    getMenusOutput = new GetMenusOutputModel();
 
                     if ((myJson.has("msg")) && myJson.optString("msg").trim() != null && !myJson.optString("msg").trim().isEmpty() && !myJson.optString("msg").trim().equals("null") && !myJson.optString("msg").trim().matches("")) {
-                        getMenusOutputModel.setMsg(myJson.optString("msg"));
+                        getMenusOutput.setMsg(myJson.optString("msg"));
 
                     }
 
@@ -232,7 +232,7 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
                         }
 
 
-                        getMenusOutputModel.setMainMenuModel(mainMenuArrayList);
+                        getMenusOutput.setMainMenuModel(mainMenuArrayList);
 
 
                         JSONArray jsonUserMenu = jsonMain.optJSONArray("usermenu");
@@ -285,7 +285,7 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
                             }
 
 
-                            getMenusOutputModel.setUserMenuModel(userMenuArrayList);
+                            getMenusOutput.setUserMenuModel(userMenuArrayList);
                         } catch (Exception e) {
                         }
 
@@ -313,7 +313,7 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
                             }
 
 
-                            getMenusOutputModel.setFooterMenuModel(footerMenuArrayList);
+                            getMenusOutput.setFooterMenuModel(footerMenuArrayList);
                         } catch (Exception e) {
                         }
 
@@ -342,16 +342,16 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
         super.onPreExecute();
         listener.onGetMenusPreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetMenusPostExecuteCompleted(getMenusOutputModel, status, message);
+            listener.onGetMenusPostExecuteCompleted(getMenusOutput, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetMenusPostExecuteCompleted(getMenusOutputModel, status, message);
+            listener.onGetMenusPostExecuteCompleted(getMenusOutput, status, message);
         }
 
     }
@@ -359,7 +359,7 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetMenusPostExecuteCompleted(getMenusOutputModel, status, message);
+        listener.onGetMenusPostExecuteCompleted(getMenusOutput, status, message);
 
     }
 

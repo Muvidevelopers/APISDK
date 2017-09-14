@@ -32,13 +32,13 @@ import java.io.IOException;
 
 public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputModel, Void, Void> {
 
-    private DeleteInvoicePdfInputModel deleteInvoicePdfInputModel;
+    private DeleteInvoicePdfInputModel deleteInvoicePdfInput;
     private String PACKAGE_NAME;
     private String message;
     private String responseStr;
     private String status;
     private int code;
-    private DeleteInvoicePdfOutputModel deleteInvoicePdfOutputModel;
+    private DeleteInvoicePdfOutputModel deleteInvoicePdfOutput;
     private DeleteInvoicePdfListener listener;
     private Context context;
 
@@ -60,30 +60,30 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param deleteInvoicePdfOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param code                        Response Code From The Server
-         * @param message                     On Success Message
-         * @param status                      For Current Status
+         * @param deleteInvoicePdfOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code                   Response Code From The Server
+         * @param message                On Success Message
+         * @param status                 For Current Status
          */
 
-        void onDeleteInvoicePdfPostExecuteCompleted(DeleteInvoicePdfOutputModel deleteInvoicePdfOutputModel, int code, String message, String status);
+        void onDeleteInvoicePdfPostExecuteCompleted(DeleteInvoicePdfOutputModel deleteInvoicePdfOutput, int code, String message, String status);
     }
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param deleteInvoicePdfInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                   For Example: to use this API we have to set following attributes:
-     *                                   setAuthToken(),setFilepath() etc.
-     * @param listener                   DeleteInvoicePdf Listener
-     * @param context                    android.content.Context
+     * @param deleteInvoicePdfInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                              For Example: to use this API we have to set following attributes:
+     *                              setAuthToken(),setFilepath() etc.
+     * @param listener              DeleteInvoicePdf Listener
+     * @param context               android.content.Context
      */
 
-    public DeleteInvoicePdfAsynTask(DeleteInvoicePdfInputModel deleteInvoicePdfInputModel, DeleteInvoicePdfListener listener, Context context) {
+    public DeleteInvoicePdfAsynTask(DeleteInvoicePdfInputModel deleteInvoicePdfInput, DeleteInvoicePdfListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.deleteInvoicePdfInputModel = deleteInvoicePdfInputModel;
+        this.deleteInvoicePdfInput = deleteInvoicePdfInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "deleteinvoicepdf");
@@ -103,11 +103,9 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getDeleteInvoicePdfUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.deleteInvoicePdfInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.FILE_PATH, this.deleteInvoicePdfInputModel.getFilepath());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.deleteInvoicePdfInputModel.getLanguage_code());
-
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.deleteInvoicePdfInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.FILE_PATH, this.deleteInvoicePdfInput.getFilepath());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.deleteInvoicePdfInput.getLanguage_code());
 
             // Execute HTTP Post Request
             try {
@@ -135,8 +133,8 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
 
             if (code == 200) {
 
-                deleteInvoicePdfOutputModel = new DeleteInvoicePdfOutputModel();
-                deleteInvoicePdfOutputModel.setMsg(myJson.optString("msg"));
+                deleteInvoicePdfOutput = new DeleteInvoicePdfOutputModel();
+                deleteInvoicePdfOutput.setMsg(myJson.optString("msg"));
 
             }
         } catch (Exception e) {
@@ -152,23 +150,22 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
         super.onPreExecute();
         listener.onDeleteInvoicePdfPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status);
+            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutput, code, message, status);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status);
+            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutput, code, message, status);
         }
-
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status);
+        listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutput, code, message, status);
     }
 }

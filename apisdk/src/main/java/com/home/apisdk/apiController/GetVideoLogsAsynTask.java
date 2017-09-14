@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.VideoLogsInputModel;
+import com.home.apisdk.apiModel.Video_Log_Output_Model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,13 +35,14 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, Void> {
 
-    private VideoLogsInputModel videoLogsInputModel;
+    private VideoLogsInputModel videoLogsInput;
     private String responseStr;
     private int status;
     private String message;
     private String PACKAGE_NAME;
     private String videoLogId = "";
     private GetVideoLogsListener listener;
+    private Video_Log_Output_Model video_log_output;
     private Context context;
 
     /**
@@ -61,29 +63,29 @@ public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, V
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param status     Response Code From The Server
-         * @param message    On Success Message
-         * @param videoLogId For Getting the Video Log Id
+         * @param video_log_output A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status           Response Code From The Server
+         * @param message          On Success Message
          */
 
-        void onGetVideoLogsPostExecuteCompleted(int status, String message, String videoLogId);
+        void onGetVideoLogsPostExecuteCompleted(Video_Log_Output_Model video_log_output, int status, String message);
     }
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param videoLogsInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                            For Example: to use this API we have to set following attributes:
-     *                            setAuthToken(),setUserId() etc.
-     * @param listener            GetVideoLogs Listener
-     * @param context             android.content.Context
+     * @param videoLogsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                       For Example: to use this API we have to set following attributes:
+     *                       setAuthToken(),setUserId() etc.
+     * @param listener       GetVideoLogs Listener
+     * @param context        android.content.Context
      */
 
-    public GetVideoLogsAsynTask(VideoLogsInputModel videoLogsInputModel, GetVideoLogsListener listener, Context context) {
+    public GetVideoLogsAsynTask(VideoLogsInputModel videoLogsInput, GetVideoLogsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.videoLogsInputModel = videoLogsInputModel;
+        this.videoLogsInput = videoLogsInput;
         Log.v("MUVISDK", "LoginAsynTask");
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
@@ -114,15 +116,17 @@ public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, V
                 conn.setDoOutput(true);
 
                 Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.videoLogsInputModel.getAuthToken())
-                        .appendQueryParameter(HeaderConstants.USER_ID, this.videoLogsInputModel.getUserId())
-                        .appendQueryParameter(HeaderConstants.IP_ADDRESS, this.videoLogsInputModel.getIpAddress())
-                        .appendQueryParameter(HeaderConstants.MOVIE_ID, this.videoLogsInputModel.getMuviUniqueId())
-                        .appendQueryParameter(HeaderConstants.EPISODE_ID, this.videoLogsInputModel.getEpisodeStreamUniqueId())
-                        .appendQueryParameter(HeaderConstants.PLAYED_LENGTH, this.videoLogsInputModel.getPlayedLength())
-                        .appendQueryParameter(HeaderConstants.WATCH_STATUS, this.videoLogsInputModel.getWatchStatus())
-                        .appendQueryParameter(HeaderConstants.DEVICE_TYPE, this.videoLogsInputModel.getDeviceType())
-                        .appendQueryParameter(HeaderConstants.LOG_ID, this.videoLogsInputModel.getVideoLogId());
+                        .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.videoLogsInput.getAuthToken())
+                        .appendQueryParameter(HeaderConstants.USER_ID, this.videoLogsInput.getUserId())
+                        .appendQueryParameter(HeaderConstants.IP_ADDRESS, this.videoLogsInput.getIpAddress())
+                        .appendQueryParameter(HeaderConstants.MOVIE_ID, this.videoLogsInput.getMuviUniqueId())
+                        .appendQueryParameter(HeaderConstants.EPISODE_ID, this.videoLogsInput.getEpisodeStreamUniqueId())
+                        .appendQueryParameter(HeaderConstants.PLAYED_LENGTH, this.videoLogsInput.getPlayedLength())
+                        .appendQueryParameter(HeaderConstants.WATCH_STATUS, this.videoLogsInput.getWatchStatus())
+                        .appendQueryParameter(HeaderConstants.DEVICE_TYPE, this.videoLogsInput.getDeviceType())
+                        .appendQueryParameter(HeaderConstants.LOG_ID, this.videoLogsInput.getVideoLogId())
+                        .appendQueryParameter(HeaderConstants.IS_STREAMING_RESTRICTION, this.videoLogsInput.getIs_streaming_restriction())
+                        .appendQueryParameter(HeaderConstants.RESTRICT_STREAM_ID, this.videoLogsInput.getRestrict_stream_id());
                 String query = builder.build().getEncodedQuery();
 
                 OutputStream os = conn.getOutputStream();
@@ -159,15 +163,15 @@ public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, V
                 message = "Error";
             }
 
-            JSONObject mainJson = null;
             if (responseStr != null) {
-                mainJson = new JSONObject(responseStr);
+                JSONObject mainJson = new JSONObject(responseStr);
                 status = Integer.parseInt(mainJson.optString("code"));
 
+                if (status == 200) {
 
-                if ((mainJson.has("log_id")) && mainJson.optString("log_id").trim() != null && !mainJson.optString("log_id").trim().isEmpty() && !mainJson.optString("log_id").trim().equals("null") && !mainJson.optString("log_id").trim().matches("")) {
-                    ;
-                    videoLogId = mainJson.optString("log_id");
+                    video_log_output.setRestrict_stream_id(mainJson.optString("restrict_stream_id"));
+                    video_log_output.setVideoLogId(mainJson.optString("log_id"));
+
                 }
 
             } else {
@@ -197,16 +201,16 @@ public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, V
         listener.onGetVideoLogsPreExecuteStarted();
 
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetVideoLogsPostExecuteCompleted(status, message, videoLogId);
+            listener.onGetVideoLogsPostExecuteCompleted(video_log_output, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetVideoLogsPostExecuteCompleted(status, message, videoLogId);
+            listener.onGetVideoLogsPostExecuteCompleted(video_log_output, status, message);
         }
 
     }
@@ -214,7 +218,7 @@ public class GetVideoLogsAsynTask extends AsyncTask<VideoLogsInputModel, Void, V
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetVideoLogsPostExecuteCompleted(status, message, videoLogId);
+        listener.onGetVideoLogsPostExecuteCompleted(video_log_output, status, message);
 
     }
 

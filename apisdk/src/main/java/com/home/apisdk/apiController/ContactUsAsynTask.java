@@ -33,13 +33,13 @@ import java.io.IOException;
 
 public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void> {
 
-    private ContactUsInputModel contactUsInputModel;
+    private ContactUsInputModel contactUsInput;
     private String PACKAGE_NAME;
     private String message;
     private String responseStr;
     private String status;
     private int code;
-    private ContactUsOutputModel contactUsOutputModel;
+    private ContactUsOutputModel contactUsOutput;
     private ContactUsListener listener;
     private Context context;
 
@@ -62,30 +62,30 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param contactUsOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param contactUsOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param code                 Response Code From The Server
          * @param message              On Success Message
          * @param status               For Getting the status
          */
 
-        void onContactUsPostExecuteCompleted(ContactUsOutputModel contactUsOutputModel, int code, String message, String status);
+        void onContactUsPostExecuteCompleted(ContactUsOutputModel contactUsOutput, int code, String message, String status);
     }
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param contactUsInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     * @param contactUsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
      *                            For Example: to use this API we have to set following attributes:
      *                            setAuthToken(),setName() etc.
      * @param listener            ContactUs Listener
      * @param context             android.content.Context
      */
 
-    public ContactUsAsynTask(ContactUsInputModel contactUsInputModel, ContactUsListener listener, Context context) {
+    public ContactUsAsynTask(ContactUsInputModel contactUsInput, ContactUsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.contactUsInputModel = contactUsInputModel;
+        this.contactUsInput = contactUsInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetUserProfileAsynctask");
@@ -106,11 +106,11 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
             HttpPost httppost = new HttpPost(APIUrlConstant.getContactUsUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.contactUsInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.EMAIL, this.contactUsInputModel.getEmail());
-            httppost.addHeader(HeaderConstants.NAME, this.contactUsInputModel.getName());
-            httppost.addHeader(HeaderConstants.MESSAGE, this.contactUsInputModel.getMessage());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.contactUsInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.contactUsInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.EMAIL, this.contactUsInput.getEmail());
+            httppost.addHeader(HeaderConstants.NAME, this.contactUsInput.getName());
+            httppost.addHeader(HeaderConstants.MESSAGE, this.contactUsInput.getMessage());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.contactUsInput.getLang_code());
 
             // Execute HTTP Post Request
             try {
@@ -138,9 +138,9 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
 
             if (code == 200) {
 
-                contactUsOutputModel = new ContactUsOutputModel();
-                contactUsOutputModel.setSuccess_msg(myJson.optString("success_msg"));
-                contactUsOutputModel.setError_msg(myJson.optString("error_msg"));
+                contactUsOutput = new ContactUsOutputModel();
+                contactUsOutput.setSuccess_msg(myJson.optString("success_msg"));
+                contactUsOutput.setError_msg(myJson.optString("error_msg"));
 
             }
         } catch (Exception e) {
@@ -156,16 +156,16 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
         super.onPreExecute();
         listener.onContactUsPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);
+            listener.onContactUsPostExecuteCompleted(contactUsOutput, code, message, status);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);
+            listener.onContactUsPostExecuteCompleted(contactUsOutput, code, message, status);
         }
 
 
@@ -173,6 +173,6 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);
+        listener.onContactUsPostExecuteCompleted(contactUsOutput, code, message, status);
     }
 }

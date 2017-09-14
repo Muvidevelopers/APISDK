@@ -59,16 +59,16 @@ public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void,
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getCastDetailsOutputModelArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                         Response Code From The Server
-         * @param totalItems                     Total Item Present
-         * @param message                        On Success Message
+         * @param getCastDetailsOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status               Response Code From The Server
+         * @param totalItems           Total Item Present
+         * @param message              On Success Message
          */
 
-        void onGetCastDetailsPostExecuteCompleted(GetCastDetailsOutputModel getCastDetailsOutputModelArray, int status, int totalItems, String message);
+        void onGetCastDetailsPostExecuteCompleted(GetCastDetailsOutputModel getCastDetailsOutput, int status, int totalItems, String message);
     }
 
-    GetCastDetailsOutputModel getCastDetailsOutputModel;
+    GetCastDetailsOutputModel getCastDetailsOutput;
     GetCastDetailsOutputModel.CastDetails castDetails;
     ArrayList<GetCastDetailsOutputModel.CastDetails> castDetailsArrayList;
 
@@ -142,20 +142,20 @@ public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void,
 
 
             if (status == 200) {
-                getCastDetailsOutputModel = new GetCastDetailsOutputModel();
+                getCastDetailsOutput = new GetCastDetailsOutputModel();
                 if ((myJson.has("name")) && myJson.getString("name").trim() != null && !myJson.getString("name").trim().isEmpty() && !myJson.getString("name").trim().equals("null") && !myJson.getString("name").trim().matches("")) {
-                    getCastDetailsOutputModel.setName(myJson.getString("name"));
+                    getCastDetailsOutput.setName(myJson.getString("name"));
 
                 }
                 if ((myJson.has("summary")) && myJson.getString("summary").trim() != null && !myJson.getString("summary").trim().isEmpty() && !myJson.getString("summary").trim().equals("null") && !myJson.getString("summary").trim().matches("")) {
-                    getCastDetailsOutputModel.setSummary(myJson.getString("summary"));
+                    getCastDetailsOutput.setSummary(myJson.getString("summary"));
 
                 }
                 if ((myJson.has("cast_image")) && myJson.getString("cast_image").trim() != null && !myJson.getString("cast_image").trim().isEmpty() && !myJson.getString("cast_image").trim().equals("null") && !myJson.getString("cast_image").trim().matches("")) {
-                    getCastDetailsOutputModel.setCastImage(myJson.getString("cast_image"));
+                    getCastDetailsOutput.setCastImage(myJson.getString("cast_image"));
                 }
                 JSONArray jsonMainNode = myJson.getJSONArray("movieList");
-
+                castDetailsArrayList = new ArrayList<>();
                 int lengthJsonArr = jsonMainNode.length();
                 for (int i = 0; i < lengthJsonArr; i++) {
                     JSONObject jsonChildNode;
@@ -202,13 +202,14 @@ public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void,
                         }
                         castDetailsArrayList.add(castDetails);
                     } catch (Exception e) {
-                        status = 0;
+                        /*status = 0;
                         totalItems = 0;
-                        message = "";
+                        message = "";*/
                     }
+
                 }
 
-                getCastDetailsOutputModel.setCastdetails(castDetailsArrayList);
+                getCastDetailsOutput.setCastdetails(castDetailsArrayList);
 
 
             }
@@ -228,16 +229,16 @@ public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void,
         listener.onGetCastDetailsPreExecuteStarted();
         responseStr = "0";
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetCastDetailsPostExecuteCompleted(getCastDetailsOutputModel, status, totalItems, message);
+            listener.onGetCastDetailsPostExecuteCompleted(getCastDetailsOutput, status, totalItems, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetCastDetailsPostExecuteCompleted(getCastDetailsOutputModel, status, totalItems, message);
+            listener.onGetCastDetailsPostExecuteCompleted(getCastDetailsOutput, status, totalItems, message);
         }
 
     }
@@ -245,7 +246,7 @@ public class GetCastDetailsAsynTask extends AsyncTask<GetCastDetailsInput, Void,
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetCastDetailsPostExecuteCompleted(getCastDetailsOutputModel, status, totalItems, message);
+        listener.onGetCastDetailsPostExecuteCompleted(getCastDetailsOutput, status, totalItems, message);
 
     }
 

@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, Void> {
 
-    private CelibrityInputModel celibrityInputModel;
+    private CelibrityInputModel celibrityInput;
     private String PACKAGE_NAME;
     private String message;
     private String responseStr;
@@ -62,33 +62,33 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param celibrityOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param code                 Response Code From The Server
-         * @param msg                  On Success Message
+         * @param celibrityOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code            Response Code From The Server
+         * @param msg             On Success Message
          */
 
-        void onGetCelibrityPostExecuteCompleted(ArrayList<CelibrityOutputModel> celibrityOutputModel, int code, String msg);
+        void onGetCelibrityPostExecuteCompleted(ArrayList<CelibrityOutputModel> celibrityOutput, int code, String msg);
     }
 
 
-    ArrayList<CelibrityOutputModel> celibrityOutputModel = new ArrayList<CelibrityOutputModel>();
+    ArrayList<CelibrityOutputModel> celibrityOutput = new ArrayList<CelibrityOutputModel>();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param celibrityInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                            For Example: to use this API we have to set following attributes:
-     *                            setAuthToken(),setLang_code() etc.
-     * @param listener            GetCelibrity Listener
-     * @param context             android.content.Context
+     * @param celibrityInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                       For Example: to use this API we have to set following attributes:
+     *                       setAuthToken(),setLang_code() etc.
+     * @param listener       GetCelibrity Listener
+     * @param context        android.content.Context
      */
 
-    public GetCelibrityAsyntask(CelibrityInputModel celibrityInputModel, GetCelibrityListener listener, Context context) {
+    public GetCelibrityAsyntask(CelibrityInputModel celibrityInput, GetCelibrityListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.celibrityInputModel = celibrityInputModel;
+        this.celibrityInput = celibrityInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "getPlanListAsynctask");
@@ -110,13 +110,13 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetCelibrityUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.celibrityInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.MOVIE_ID, this.celibrityInputModel.getMovie_id());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.celibrityInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.celibrityInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.MOVIE_ID, this.celibrityInput.getMovie_id());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.celibrityInput.getLang_code());
 
-            Log.v("MUVISDK", "lang_code = " + this.celibrityInputModel.getLang_code());
-            Log.v("MUVISDK", "authToken = " + this.celibrityInputModel.getAuthToken());
-            Log.v("MUVISDK", "movie id = " + this.celibrityInputModel.getMovie_id());
+            Log.v("MUVISDK", "lang_code = " + this.celibrityInput.getLang_code());
+            Log.v("MUVISDK", "authToken = " + this.celibrityInput.getAuthToken());
+            Log.v("MUVISDK", "movie id = " + this.celibrityInput.getMovie_id());
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 responseStr = EntityUtils.toString(response.getEntity());
@@ -157,7 +157,6 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
                         String celebritySummary = jsonChildNode.optString("summary");
 
 
-
                         String celebrityCastType = jsonChildNode.optString("cast_type");
 
                         celebrityCastType = celebrityCastType.replaceAll("\\[", "");
@@ -180,7 +179,7 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
                         content.setSummary(celebritySummary);
                         content.setPermalink(celebrityPermalink);
 
-                        celibrityOutputModel.add(content);
+                        celibrityOutput.add(content);
                     } catch (Exception e) {
                         code = 0;
                         message = "";
@@ -201,20 +200,20 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
         super.onPreExecute();
         listener.onGetCelibrityPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
-            listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
+            listener.onGetCelibrityPostExecuteCompleted(celibrityOutput, code, msg);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
-            listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
+            listener.onGetCelibrityPostExecuteCompleted(celibrityOutput, code, msg);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
+        listener.onGetCelibrityPostExecuteCompleted(celibrityOutput, code, msg);
     }
 }

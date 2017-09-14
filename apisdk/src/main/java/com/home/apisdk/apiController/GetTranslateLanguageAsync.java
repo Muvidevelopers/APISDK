@@ -30,7 +30,7 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {
 
     private GetTranslateLanguageInfoListener listener;
     private Context context;
-    private LanguageListInputModel languageListInputModel;
+    private LanguageListInputModel languageListInput;
     private String PACKAGE_NAME;
     private String message = "";
     private String responseStr;
@@ -65,18 +65,18 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {
     /**
      * Constructor to initialise the private data members.
      *
-     * @param languageListInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     * @param languageListInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
      *                               For Example: to use this API we have to set following attributes:
      *                               setAuthToken(),setLangCode() etc.
      * @param listener               GetTranslateLanguageInfo Listener
      * @param context                android.content.Context
      */
 
-    public GetTranslateLanguageAsync(LanguageListInputModel languageListInputModel,
+    public GetTranslateLanguageAsync(LanguageListInputModel languageListInput,
                                      GetTranslateLanguageInfoListener listener, Context context) {
         this.listener = listener;
         this.context = context;
-        this.languageListInputModel = languageListInputModel;
+        this.languageListInput = languageListInput;
 
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
@@ -97,8 +97,8 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(urlRouteList);
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, languageListInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.LANG_CODE, languageListInputModel.getLangCode());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, languageListInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.LANG_CODE, languageListInput.getLangCode());
 
 
             // Execute HTTP Post Request
@@ -136,13 +136,13 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {
         super.onPreExecute();
         listener.onGetTranslateLanguagePreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code);

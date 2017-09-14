@@ -4,6 +4,8 @@
 
 package com.home.apisdk;
 
+import java.util.Date;
+
 /**
  * Created by MUVI on 1/18/2017.
  * Class contains all the APIs end points
@@ -11,7 +13,7 @@ package com.home.apisdk;
 
 public class APIUrlConstant {
 
-    public static String BASE_URl;
+    public static final String BASE_URl = "https://www.muvi.com/rest/";
     /**
      * endpoint to initialize SDK API
      */
@@ -247,7 +249,7 @@ public class APIUrlConstant {
     /**
      * endpoint to get Video Logs Details API
      */
-    public static String VIDEO_LOGS_URL = "videoLogs";
+    public static String VIDEO_LOGS_URL = "VideoLogNew";
     /**
      * endpoint to get Remove Device Details API
      */

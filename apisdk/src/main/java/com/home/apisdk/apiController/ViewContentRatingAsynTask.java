@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputModel, Void, Void> {
 
-    private ViewContentRatingInputModel viewContentRatingInputModel;
+    private ViewContentRatingInputModel viewContentRatingInput;
     private String responseStr, movieUniqueId;
     private int status;
     private String message;
@@ -59,32 +59,32 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param viewContentRatingOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                       Response Code from the server
-         * @param message                      On Success Message
+         * @param viewContentRatingOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                  Response Code from the server
+         * @param message                 On Success Message
          */
 
-        void onViewContentRatingPostExecuteCompleted(ViewContentRatingOutputModel viewContentRatingOutputModel, int status, String message);
+        void onViewContentRatingPostExecuteCompleted(ViewContentRatingOutputModel viewContentRatingOutput, int status, String message);
     }
 
-    ViewContentRatingOutputModel viewContentRatingOutputModel;
+    ViewContentRatingOutputModel viewContentRatingOutput;
     ViewContentRatingOutputModel.Rating rating;
     ArrayList<ViewContentRatingOutputModel.Rating> ratingArrayList;
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param viewContentRatingInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                    For Example: to use this API we have to set following attributes:
-     *                                    setAuthToken(),setUser_id() etc.
-     * @param listener                    ViewContentRating Listener
-     * @param context                     android.content.Context
+     * @param viewContentRatingInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                               For Example: to use this API we have to set following attributes:
+     *                               setAuthToken(),setUser_id() etc.
+     * @param listener               ViewContentRating Listener
+     * @param context                android.content.Context
      */
 
-    public ViewContentRatingAsynTask(ViewContentRatingInputModel viewContentRatingInputModel, ViewContentRatingListener listener, Context context) {
+    public ViewContentRatingAsynTask(ViewContentRatingInputModel viewContentRatingInput, ViewContentRatingListener listener, Context context) {
         this.listener = listener;
         this.context = context;
-        this.viewContentRatingInputModel = viewContentRatingInputModel;
+        this.viewContentRatingInput = viewContentRatingInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetContentListAsynTask");
@@ -105,10 +105,10 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getViewContentRating());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.viewContentRatingInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.USER_ID, this.viewContentRatingInputModel.getUser_id());
-            httppost.addHeader(HeaderConstants.CONTENT_ID, this.viewContentRatingInputModel.getContent_id());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.viewContentRatingInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.viewContentRatingInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.viewContentRatingInput.getUser_id());
+            httppost.addHeader(HeaderConstants.CONTENT_ID, this.viewContentRatingInput.getContent_id());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.viewContentRatingInput.getLang_code());
 
 
             // Execute HTTP Post Request
@@ -139,10 +139,10 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
             if (status > 0) {
 
                 if (status == 200) {
-                    viewContentRatingOutputModel = new ViewContentRatingOutputModel();
+                    viewContentRatingOutput = new ViewContentRatingOutputModel();
 
                     if ((myJson.has("showrating")) && myJson.optString("showrating").trim() != null && !myJson.optString("showrating").trim().isEmpty() && !myJson.optString("showrating").trim().equals("null") && !myJson.optString("showrating").trim().matches("")) {
-                        viewContentRatingOutputModel.setShowrating(Integer.parseInt(myJson.optString("showrating")));
+                        viewContentRatingOutput.setShowrating(Integer.parseInt(myJson.optString("showrating")));
 
                     }
                     JSONArray jsonMainNode = myJson.getJSONArray("rating");
@@ -179,7 +179,7 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
                         }
                     }
 
-                    viewContentRatingOutputModel.setRatingValue(ratingArrayList);
+                    viewContentRatingOutput.setRatingValue(ratingArrayList);
                 } else {
                     responseStr = "0";
                     status = 0;
@@ -201,18 +201,16 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
         super.onPreExecute();
         listener.onViewContentRatingPreExecuteStarted();
         status = 0;
-        if(!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api()))
-        {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutputModel, status, message);
+            listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutput, status, message);
             return;
         }
-        if(SDKInitializer.getHashKey().equals(""))
-        {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutputModel, status,message);
+            listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutput, status, message);
         }
 
     }
@@ -220,7 +218,7 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutputModel, status, message);
+        listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutput, status, message);
 
     }
 

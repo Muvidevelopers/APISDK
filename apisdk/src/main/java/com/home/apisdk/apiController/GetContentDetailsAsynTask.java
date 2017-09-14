@@ -115,6 +115,8 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
             httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.contentDetailsInput.getAuthToken());
             httppost.addHeader(HeaderConstants.PERMALINK, this.contentDetailsInput.getPermalink());
             httppost.addHeader(HeaderConstants.USER_ID, this.contentDetailsInput.getUser_id());
+            httppost.addHeader("country", this.contentDetailsInput.getCountry());
+            httppost.addHeader("lang_code",this.contentDetailsInput.getLanguage());
 
             // Execute HTTP Post Request
             try {
@@ -156,11 +158,11 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
 
             if ((myJson.has("epDetails")) && myJson.getString("epDetails").trim() != null && !myJson.getString("epDetails").trim().isEmpty() && !myJson.getString("epDetails").trim().equals("null") && !myJson.getString("epDetails").trim().matches("")) {
                 JSONObject epDetailsJson = myJson.getJSONObject("epDetails");
-                Log.v("SUBHA", "epDetailsJson====== " + epDetailsJson.getString("series_number").split(","));
+                Log.v("MUVI", "epDetailsJson====== " + epDetailsJson.getString("series_number").split(","));
 
                 if ((epDetailsJson.has("series_number")) && epDetailsJson.getString("series_number").trim() != null && !epDetailsJson.getString("series_number").trim().isEmpty() && !epDetailsJson.getString("series_number").trim().equals("null") && !epDetailsJson.getString("series_number").trim().matches("") && !epDetailsJson.getString("series_number").trim().matches("0")) {
                     String s[] = epDetailsJson.getString("series_number").split(",");
-                    Log.v("SUBHA", "s====== " + s.length);
+                    Log.v("MUVI", "s====== " + s.length);
 
                     Arrays.sort(s);
                     contentDetailsOutput.setSeason(s);
@@ -189,11 +191,10 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
                     if ((mainJson.has("genre")) && mainJson.optString("genre").trim() != null && !mainJson.optString("genre").trim().isEmpty() && !mainJson.optString("genre").trim().equals("null") && !mainJson.optString("genre").trim().matches("")) {
                         movieTypeStr = mainJson.getString("genre");
                         movieTypeStr = movieTypeStr.replaceAll("\\[", "");
-                        movieTypeStr = movieTypeStr.replaceAll("\\]", "");
-                        movieTypeStr = movieTypeStr.replaceAll(",", " , ");
+                        movieTypeStr = movieTypeStr.replaceAll("\\]","");
+                        movieTypeStr = movieTypeStr.replaceAll(","," , ");
                         movieTypeStr = movieTypeStr.replaceAll("\"", "");
-
-                        contentDetailsOutput.setGenre(mainJson.optString(movieTypeStr));
+                        contentDetailsOutput.setGenre(movieTypeStr);
 
                     } else {
                         contentDetailsOutput.setGenre("");
@@ -214,7 +215,12 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
 
                     }
                     if ((mainJson.has("censor_rating")) && mainJson.optString("censor_rating").trim() != null && !mainJson.optString("censor_rating").trim().isEmpty() && !mainJson.optString("censor_rating").trim().equals("null") && !mainJson.optString("censor_rating").trim().matches("")) {
-                        contentDetailsOutput.setCensorRating(mainJson.optString("censor_rating"));
+                        String  censorRatingStr = mainJson.getString("censor_rating");
+                        censorRatingStr = censorRatingStr.replaceAll("\\[", "");
+                        censorRatingStr = censorRatingStr.replaceAll("\\]","");
+                        censorRatingStr = censorRatingStr.replaceAll(","," ");
+                        censorRatingStr = censorRatingStr.replaceAll("\"", "");
+                        contentDetailsOutput.setCensorRating(censorRatingStr);
 
 
                     } else {
@@ -323,7 +329,11 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
                     if (mainJson.has("cast_detail") && mainJson.has("cast_detail") != false && mainJson.getString("cast_detail").trim() != null && !mainJson.getString("cast_detail").trim().isEmpty() && !mainJson.getString("cast_detail").trim().equals("null") && !mainJson.getString("cast_detail").trim().equals("false")) {
                         contentDetailsOutput.setCastStr(true);
 
+                    } else {
+                        contentDetailsOutput.setCastStr(false);
+
                     }
+
                     if (contentDetailsOutput.getIsPpv() == 1) {
                         JSONObject ppvJson = null;
                         if ((myJson.has("ppv_pricing"))) {
@@ -431,13 +441,13 @@ public class GetContentDetailsAsynTask extends AsyncTask<ContentDetailsInput, Vo
         listener.onGetContentDetailsPreExecuteStarted();
 
         status = 0;
-       if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+       if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
             listener.onGetContentDetailsPostExecuteCompleted(contentDetailsOutput, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onGetContentDetailsPostExecuteCompleted(contentDetailsOutput, status, message);

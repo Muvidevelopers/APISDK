@@ -31,7 +31,7 @@ import java.io.IOException;
 
 public class GetPPVPaymentAsync extends AsyncTask<RegisterUserPaymentInputModel, Void, Void> {
 
-    private RegisterUserPaymentInputModel registerUserPaymentInputModel;
+    private RegisterUserPaymentInputModel registerUserPaymentInput;
     private String PACKAGE_NAME;
     private String message;
     private String responseStr;
@@ -57,31 +57,31 @@ public class GetPPVPaymentAsync extends AsyncTask<RegisterUserPaymentInputModel,
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param registerUserPaymentOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                         Response Code From The Server
+         * @param registerUserPaymentOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                    Response Code From The Server
          */
 
-        void onGetPPVPaymentPostExecuteCompleted(RegisterUserPaymentOutputModel registerUserPaymentOutputModel, int status, String response);
+        void onGetPPVPaymentPostExecuteCompleted(RegisterUserPaymentOutputModel registerUserPaymentOutput, int status, String response);
     }
 
-    RegisterUserPaymentOutputModel registerUserPaymentOutputModel = new RegisterUserPaymentOutputModel();
+    RegisterUserPaymentOutputModel registerUserPaymentOutput = new RegisterUserPaymentOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param registerUserPaymentInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                      For Example: to use this API we have to set following attributes:
-     *                                      setAuthToken(),setUser_id() etc.
-     * @param listener                      GetPPVPayment Listener
-     * @param context                       android.content.Context
+     * @param registerUserPaymentInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                 For Example: to use this API we have to set following attributes:
+     *                                 setAuthToken(),setUser_id() etc.
+     * @param listener                 GetPPVPayment Listener
+     * @param context                  android.content.Context
      */
 
-    public GetPPVPaymentAsync(RegisterUserPaymentInputModel registerUserPaymentInputModel, GetPPVPaymentListener listener, Context context) {
+    public GetPPVPaymentAsync(RegisterUserPaymentInputModel registerUserPaymentInput, GetPPVPaymentListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.registerUserPaymentInputModel = registerUserPaymentInputModel;
+        this.registerUserPaymentInput = registerUserPaymentInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "register user payment");
@@ -102,26 +102,26 @@ public class GetPPVPaymentAsync extends AsyncTask<RegisterUserPaymentInputModel,
             HttpPost httppost = new HttpPost(APIUrlConstant.getAddSubscriptionUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.registerUserPaymentInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.USER_ID, this.registerUserPaymentInputModel.getUser_id());
-            httppost.addHeader(HeaderConstants.CARD_LAST_FOUR_DIGIT, this.registerUserPaymentInputModel.getCard_last_fourdigit());
-            httppost.addHeader(HeaderConstants.CARD_NAME, this.registerUserPaymentInputModel.getCard_name());
-            httppost.addHeader(HeaderConstants.CARD_NUMBER, this.registerUserPaymentInputModel.getCard_number());
-            httppost.addHeader(HeaderConstants.CARD_TYPE, this.registerUserPaymentInputModel.getCard_type());
-            httppost.addHeader(HeaderConstants.COUNTRY, this.registerUserPaymentInputModel.getCountry());
-            httppost.addHeader(HeaderConstants.CURRENCY_ID, this.registerUserPaymentInputModel.getCurrency_id());
-            httppost.addHeader(HeaderConstants.CVV, this.registerUserPaymentInputModel.getCvv());
-            httppost.addHeader(HeaderConstants.EMAIL, this.registerUserPaymentInputModel.getEmail());
-            httppost.addHeader(HeaderConstants.EPISODE_ID, this.registerUserPaymentInputModel.getEpisode_id());
-            httppost.addHeader(HeaderConstants.EXP_MONTH, this.registerUserPaymentInputModel.getExp_month());
-            httppost.addHeader(HeaderConstants.EXP_YEAR, this.registerUserPaymentInputModel.getExp_year());
-            httppost.addHeader(HeaderConstants.SEASON_ID, this.registerUserPaymentInputModel.getSeason_id());
-            httppost.addHeader(HeaderConstants.PROFILE_ID, this.registerUserPaymentInputModel.getProfile_id());
-            httppost.addHeader(HeaderConstants.TOKEN, this.registerUserPaymentInputModel.getToken());
-            httppost.addHeader(HeaderConstants.COUPAN_CODE, this.registerUserPaymentInputModel.getCouponCode());
-            httppost.addHeader(HeaderConstants.IS_SAVE_THIS_CARD, this.registerUserPaymentInputModel.getIs_save_this_card());
-            httppost.addHeader(HeaderConstants.IS_ADVANCE, this.registerUserPaymentInputModel.getIs_advance());
-            httppost.addHeader(HeaderConstants.MOVIE_ID, this.registerUserPaymentInputModel.getMovie_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.registerUserPaymentInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.registerUserPaymentInput.getUser_id());
+            httppost.addHeader(HeaderConstants.CARD_LAST_FOUR_DIGIT, this.registerUserPaymentInput.getCard_last_fourdigit());
+            httppost.addHeader(HeaderConstants.CARD_NAME, this.registerUserPaymentInput.getCard_name());
+            httppost.addHeader(HeaderConstants.CARD_NUMBER, this.registerUserPaymentInput.getCard_number());
+            httppost.addHeader(HeaderConstants.CARD_TYPE, this.registerUserPaymentInput.getCard_type());
+            httppost.addHeader(HeaderConstants.COUNTRY, this.registerUserPaymentInput.getCountry());
+            httppost.addHeader(HeaderConstants.CURRENCY_ID, this.registerUserPaymentInput.getCurrency_id());
+            httppost.addHeader(HeaderConstants.CVV, this.registerUserPaymentInput.getCvv());
+            httppost.addHeader(HeaderConstants.EMAIL, this.registerUserPaymentInput.getEmail());
+            httppost.addHeader(HeaderConstants.EPISODE_ID, this.registerUserPaymentInput.getEpisode_id());
+            httppost.addHeader(HeaderConstants.EXP_MONTH, this.registerUserPaymentInput.getExp_month());
+            httppost.addHeader(HeaderConstants.EXP_YEAR, this.registerUserPaymentInput.getExp_year());
+            httppost.addHeader(HeaderConstants.SEASON_ID, this.registerUserPaymentInput.getSeason_id());
+            httppost.addHeader(HeaderConstants.PROFILE_ID, this.registerUserPaymentInput.getProfile_id());
+            httppost.addHeader(HeaderConstants.TOKEN, this.registerUserPaymentInput.getToken());
+            httppost.addHeader(HeaderConstants.COUPAN_CODE, this.registerUserPaymentInput.getCouponCode());
+            httppost.addHeader(HeaderConstants.IS_SAVE_THIS_CARD, this.registerUserPaymentInput.getIs_save_this_card());
+            httppost.addHeader(HeaderConstants.IS_ADVANCE, this.registerUserPaymentInput.getIs_advance());
+            httppost.addHeader(HeaderConstants.MOVIE_ID, this.registerUserPaymentInput.getMovie_id());
 
 
             try {
@@ -148,7 +148,7 @@ public class GetPPVPaymentAsync extends AsyncTask<RegisterUserPaymentInputModel,
 
 //            if (code == 200) {
 //                if ((myJson.has("msg")) && myJson.optString("msg").trim() != null && !myJson.optString("msg").trim().isEmpty() && !myJson.optString("msg").trim().equals("null") && !myJson.optString("msg").trim().matches("")) {
-//                    registerUserPaymentOutputModel.setMsg(myJson.optString("msg"));
+//                    registerUserPaymentOutput.setMsg(myJson.optString("msg"));
 //                }
 //
 //            }
@@ -166,23 +166,23 @@ public class GetPPVPaymentAsync extends AsyncTask<RegisterUserPaymentInputModel,
         super.onPreExecute();
         listener.onGetPPVPaymentPreExecuteStarted();
         code = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetPPVPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code, responseStr);
+            listener.onGetPPVPaymentPostExecuteCompleted(registerUserPaymentOutput, code, responseStr);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetPPVPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code, responseStr);
+            listener.onGetPPVPaymentPostExecuteCompleted(registerUserPaymentOutput, code, responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onGetPPVPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code, responseStr);
+        listener.onGetPPVPaymentPostExecuteCompleted(registerUserPaymentOutput, code, responseStr);
     }
 }
 

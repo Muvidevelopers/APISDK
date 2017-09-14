@@ -31,7 +31,7 @@ import java.io.IOException;
  */
 
 public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {
-    private AddToFavInputModel addToFavInputModel;
+    private AddToFavInputModel addToFavInput;
     private String PACKAGE_NAME;
     private String responseStr;
     private String sucessMsg;
@@ -66,22 +66,22 @@ public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {
         void onAddToFavPostExecuteCompleted(AddToFavOutputModel addToFavOutputModel, int status, String sucessMsg);
     }
 
-    AddToFavOutputModel AddToFavOutputModel = new AddToFavOutputModel();
+    AddToFavOutputModel AddToFavOutput = new AddToFavOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param addToFavInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     * @param addToFavInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
      *                           For Example: to use this API we have to set following attributes:
      *                           setAuthToken(),setMovie_uniq_id() etc.
      * @param listener           AddToFavorite Listener
      * @param context            android.content.Context
      */
 
-    public AddToFavAsync(AddToFavInputModel addToFavInputModel, AddToFavListener listener, Context context) {
+    public AddToFavAsync(AddToFavInputModel addToFavInput, AddToFavListener listener, Context context) {
         this.listener = listener;
         this.context = context;
-        this.addToFavInputModel = addToFavInputModel;
+        this.addToFavInput = addToFavInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetUserProfileAsynctask");
@@ -101,10 +101,10 @@ public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getAddtoFavlist());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.addToFavInputModel.getAuthToken().trim());
-            httppost.addHeader(HeaderConstants.MOVIE_UNIQ_ID, this.addToFavInputModel.getMovie_uniq_id());
-            httppost.addHeader(HeaderConstants.CONTENT_TYPE, this.addToFavInputModel.getIsEpisodeStr());
-            httppost.addHeader(HeaderConstants.USER_ID, this.addToFavInputModel.getLoggedInStr());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.addToFavInput.getAuthToken().trim());
+            httppost.addHeader(HeaderConstants.MOVIE_UNIQ_ID, this.addToFavInput.getMovie_uniq_id());
+            httppost.addHeader(HeaderConstants.CONTENT_TYPE, this.addToFavInput.getIsEpisodeStr());
+            httppost.addHeader(HeaderConstants.USER_ID, this.addToFavInput.getLoggedInStr());
 
             try {
                 HttpResponse response = httpclient.execute(httppost);
@@ -137,22 +137,22 @@ public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {
         super.onPreExecute();
         listener.onAddToFavPreExecuteStarted();
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg);
+            listener.onAddToFavPostExecuteCompleted(AddToFavOutput, status, sucessMsg);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg);
+            listener.onAddToFavPostExecuteCompleted(AddToFavOutput, status, sucessMsg);
         }
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg);
+        listener.onAddToFavPostExecuteCompleted(AddToFavOutput, status, sucessMsg);
     }
 }

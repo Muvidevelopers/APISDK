@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void, Void> {
 
-    private RemoveDeviceInputModel removeDeviceInputModel;
+    private RemoveDeviceInputModel removeDeviceInput;
     private String responseStr;
     private int status;
     private String message;
@@ -56,32 +56,32 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param removeDeviceOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                  Response Code from the server
-         * @param message                 On Success Message
+         * @param removeDeviceOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status             Response Code from the server
+         * @param message            On Success Message
          */
 
-        void onRemoveDevicePostExecuteCompleted(RemoveDeviceOutputModel removeDeviceOutputModel, int status, String message);
+        void onRemoveDevicePostExecuteCompleted(RemoveDeviceOutputModel removeDeviceOutput, int status, String message);
     }
 
 
-    RemoveDeviceOutputModel removeDeviceOutputModel = new RemoveDeviceOutputModel();
+    RemoveDeviceOutputModel removeDeviceOutput = new RemoveDeviceOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param removeDeviceInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                               For Example: to use this API we have to set following attributes:
-     *                               setAuthToken(),setDevice() etc.
-     * @param listener               RemoveDevice Listener
-     * @param context                android.content.Context
+     * @param removeDeviceInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                          For Example: to use this API we have to set following attributes:
+     *                          setAuthToken(),setDevice() etc.
+     * @param listener          RemoveDevice Listener
+     * @param context           android.content.Context
      */
 
-    public RemoveDeviceAsynTask(RemoveDeviceInputModel removeDeviceInputModel, RemoveDeviceListener listener, Context context) {
+    public RemoveDeviceAsynTask(RemoveDeviceInputModel removeDeviceInput, RemoveDeviceListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.removeDeviceInputModel = removeDeviceInputModel;
+        this.removeDeviceInput = removeDeviceInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetContentListAsynTask");
@@ -102,10 +102,10 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getRemoveDevice());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.removeDeviceInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.removeDeviceInputModel.getLang_code());
-            httppost.addHeader(HeaderConstants.DEVICE_ID, this.removeDeviceInputModel.getDevice());
-            httppost.addHeader(HeaderConstants.USER_ID, this.removeDeviceInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.removeDeviceInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.removeDeviceInput.getLang_code());
+            httppost.addHeader(HeaderConstants.DEVICE_ID, this.removeDeviceInput.getDevice());
+            httppost.addHeader(HeaderConstants.USER_ID, this.removeDeviceInput.getUser_id());
 
 
             // Execute HTTP Post Request
@@ -136,7 +136,7 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
             if (status == 200) {
 
                 if ((myJson.has("msg")) && myJson.optString("msg").trim() != null && !myJson.optString("msg").trim().isEmpty() && !myJson.optString("msg").trim().equals("null") && !myJson.optString("msg").trim().matches("")) {
-                    removeDeviceOutputModel.setMsg(myJson.optString("msg"));
+                    removeDeviceOutput.setMsg(myJson.optString("msg"));
                 }
 
 
@@ -163,16 +163,16 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
         listener.onRemoveDevicePreExecuteStarted();
 
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutputModel, status, message);
+            listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutput, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutputModel, status, message);
+            listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutput, status, message);
         }
 
     }
@@ -180,7 +180,7 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutputModel, status, message);
+        listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutput, status, message);
 
     }
 

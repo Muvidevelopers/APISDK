@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputModel, Void, Void> {
 
-    private FeatureContentInputModel featureContentInputModel;
+    private FeatureContentInputModel featureContentInput;
     private String responseStr;
     private int status;
     private String message;
@@ -58,33 +58,33 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param featureContentOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                    Response Code From The Server
-         * @param message                   On Success Message
+         * @param featureContentOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status               Response Code From The Server
+         * @param message              On Success Message
          */
 
-        void onGetFeatureContentPostExecuteCompleted(ArrayList<FeatureContentOutputModel> featureContentOutputModel, int status, String message);
+        void onGetFeatureContentPostExecuteCompleted(ArrayList<FeatureContentOutputModel> featureContentOutput, int status, String message);
     }
 
 
-    ArrayList<FeatureContentOutputModel> featureContentOutputModel = new ArrayList<FeatureContentOutputModel>();
+    ArrayList<FeatureContentOutputModel> featureContentOutput = new ArrayList<FeatureContentOutputModel>();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param featureContentInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                 For Example: to use this API we have to set following attributes:
-     *                                 setAuthToken(),setPermalink() etc.
-     * @param listener                 GetFeatureContentListener
-     * @param context                  android.content.Context
+     * @param featureContentInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                            For Example: to use this API we have to set following attributes:
+     *                            setAuthToken(),setPermalink() etc.
+     * @param listener            GetFeatureContentListener
+     * @param context             android.content.Context
      */
 
-    public GetFeatureContentAsynTask(FeatureContentInputModel featureContentInputModel, GetFeatureContentListener listener, Context context) {
+    public GetFeatureContentAsynTask(FeatureContentInputModel featureContentInput, GetFeatureContentListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.featureContentInputModel = featureContentInputModel;
+        this.featureContentInput = featureContentInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "getFeatureContentAsynTask");
@@ -105,16 +105,16 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetFeatureContentUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.featureContentInputModel.getAuthToken());
-            httppost.addHeader(HeaderConstants.SECTION_ID, this.featureContentInputModel.getSection_id());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.featureContentInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.featureContentInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.SECTION_ID, this.featureContentInput.getSection_id());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.featureContentInput.getLang_code());
 
-            Log.v("MuviSDK", "authToken = " + this.featureContentInputModel.getAuthToken());
-            Log.v("MuviSDK", "section_id = " + this.featureContentInputModel.getSection_id());
-            Log.v("MuviSDK  ", "lang_code = " + this.featureContentInputModel.getLang_code());
-//            httppost.addHeader("limit",this.featureContentInputModel.getLimit());
-//            httppost.addHeader("offset",this.featureContentInputModel.getOffset());
-//            httppost.addHeader("orderby",this.featureContentInputModel.getOrderby());
+            Log.v("MuviSDK", "authToken = " + this.featureContentInput.getAuthToken());
+            Log.v("MuviSDK", "section_id = " + this.featureContentInput.getSection_id());
+            Log.v("MuviSDK  ", "lang_code = " + this.featureContentInput.getLang_code());
+//            httppost.addHeader("limit",this.featureContentInput.getLimit());
+//            httppost.addHeader("offset",this.featureContentInput.getOffset());
+//            httppost.addHeader("orderby",this.featureContentInput.getOrderby());
 
 
             // Execute HTTP Post Request
@@ -187,7 +187,7 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
                             content.setIs_episode(jsonChildNode.optString("is_episode"));
 
                         }
-                        featureContentOutputModel.add(content);
+                        featureContentOutput.add(content);
                     } catch (Exception e) {
                         status = 0;
                         message = "";
@@ -209,16 +209,16 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
         listener.onGetFeatureContentPreExecuteStarted();
         responseStr = "0";
         status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api())) {
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel, status, message);
+            listener.onGetFeatureContentPostExecuteCompleted(featureContentOutput, status, message);
             return;
         }
-        if (SDKInitializer.getHashKey().equals("")) {
+        if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel, status, message);
+            listener.onGetFeatureContentPostExecuteCompleted(featureContentOutput, status, message);
         }
 
 
@@ -227,7 +227,7 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel, status, message);
+        listener.onGetFeatureContentPostExecuteCompleted(featureContentOutput, status, message);
 
     }
 
