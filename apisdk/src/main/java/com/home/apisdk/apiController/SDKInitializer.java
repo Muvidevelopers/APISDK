@@ -75,7 +75,6 @@ public class SDKInitializer {
     }
 
     /**
-     *
      * @param sdkInitializerListner
      * @param context
      * @param authToken
@@ -92,7 +91,6 @@ public class SDKInitializer {
     }
 
     /**
-     *
      * @param context
      * @param authToken
      */
@@ -117,7 +115,7 @@ public class SDKInitializer {
                 e.printStackTrace();
             }
             Date today = new Date();
-            long differenceInDays = (int)calculateDays(loggedInDate, today);
+            long differenceInDays = (int) calculateDays(loggedInDate, today);
             if (differenceInDays >= 1) {
 
                 sdkInitializerPreference.clearSDKPref();
@@ -229,7 +227,7 @@ public class SDKInitializer {
     public static long calculateDays(Date dateEarly, Date dateLater) {
         return (dateLater.getTime() - dateEarly.getTime()) / (24 * 60 * 60 * 1000);
     }
-
 }
+
 
 

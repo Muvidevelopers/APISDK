@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GetMonetizationDetailsInputModel;
 import com.home.apisdk.apiModel.GetMonetizationDetailsOutputModel;

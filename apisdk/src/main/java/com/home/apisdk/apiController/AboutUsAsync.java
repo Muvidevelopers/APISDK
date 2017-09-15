@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
-import com.home.apisdk.apiModel.*;
+import com.home.apisdk.apiModel.AboutUsInput;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;

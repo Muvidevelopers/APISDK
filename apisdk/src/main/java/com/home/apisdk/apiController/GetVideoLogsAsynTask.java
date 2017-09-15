@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.VideoLogsInputModel;
 import com.home.apisdk.apiModel.Video_Log_Output_Model;
