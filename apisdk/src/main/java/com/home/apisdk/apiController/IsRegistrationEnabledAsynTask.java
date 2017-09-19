@@ -84,7 +84,7 @@ public class IsRegistrationEnabledAsynTask extends AsyncTask<IsRegistrationEnabl
         this.isRegistrationEnabledInput = isRegistrationEnabledInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
-        Log.v("MUVISDK", "GetContentListAsynTask");
+        Log.v("MUVISDK", "GetContentListAsyn");
 
 
     }

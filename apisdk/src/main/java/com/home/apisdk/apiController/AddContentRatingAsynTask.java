@@ -85,7 +85,7 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
         this.addContentRatingInput = addContentRatingInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
-        Log.v("MUVISDK", "GetContentListAsynTask");
+        Log.v("MUVISDK", "GetContentListAsyn");
 
 
     }

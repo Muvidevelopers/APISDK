@@ -38,7 +38,7 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
     private int totalItems;
     private String message;
     private String PACKAGE_NAME;
-    private GetCardListForPPVListener listener;
+    private CardListForPPVListener listener;
     private Context context;
 
     /**
@@ -46,14 +46,14 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
      * responses.
      */
 
-    public interface GetCardListForPPVListener {
+    public interface CardListForPPVListener {
 
         /**
          * This method will be invoked before controller start execution.
          * This method to handle pre-execution work.
          */
 
-        void onGetCardListForPPVPreExecuteStarted();
+        void onCardListForPPVPreExecuteStarted();
 
         /**
          * This method will be invoked after controller complete execution.
@@ -65,7 +65,7 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
          * @param message                 On Success Message
          */
 
-        void onGetCardListForPPVPostExecuteCompleted(ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutput, int status, int totalItems, String message);
+        void onCardListForPPVPostExecuteCompleted(ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutput, int status, int totalItems, String message);
     }
 
     ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutput = new ArrayList<GetCardListForPPVOutputModel>();
@@ -80,7 +80,7 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
      * @param context                android.content.Context
      */
 
-    public GetCardListForPPVAsynTask(GetCardListForPPVInputModel getCardListForPPVInput, GetCardListForPPVListener listener, Context context) {
+    public GetCardListForPPVAsynTask(GetCardListForPPVInputModel getCardListForPPVInput, CardListForPPVListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -88,7 +88,7 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
         this.getCardListForPPVInput = getCardListForPPVInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
-        Log.v("MUVISDK", "GetContentListAsynTask");
+        Log.v("MUVISDK", "GetContentListAsyn");
 
     }
 
@@ -177,19 +177,19 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        listener.onGetCardListForPPVPreExecuteStarted();
+        listener.onCardListForPPVPreExecuteStarted();
         responseStr = "0";
         status = 0;
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
+            listener.onCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
+            listener.onCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
         }
 
     }
@@ -197,7 +197,7 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
+        listener.onCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
 
     }
 

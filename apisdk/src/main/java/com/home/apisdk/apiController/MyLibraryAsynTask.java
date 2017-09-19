@@ -88,7 +88,7 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
         this.myLibraryInput = myLibraryInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
-        Log.v("MUVISDK", "GetContentListAsynTask");
+        Log.v("MUVISDK", "GetContentListAsyn");
 
     }
 

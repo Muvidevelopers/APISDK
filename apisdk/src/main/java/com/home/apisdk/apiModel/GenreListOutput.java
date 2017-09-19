@@ -1,7 +1,7 @@
 package com.home.apisdk.apiModel;
 
 /**
- * This Model Class Holds All The Output Attributes For GetGenreListAsynctask
+ * This Model Class Holds All The Output Attributes For GetGenreListAsync
  *
  * @author MUVI
  */

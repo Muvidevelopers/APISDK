@@ -86,7 +86,7 @@ public class UpdateGoogleIdAsynTask extends AsyncTask<UpdateGoogleIdInputModel, 
         this.updateGoogleIdInput = updateGoogleIdInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
-        Log.v("MUVISDK", "GetContentListAsynTask");
+        Log.v("MUVISDK", "GetContentListAsyn");
 
 
     }

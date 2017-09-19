@@ -1,7 +1,7 @@
 package com.home.apisdk.apiModel;
 
 /**
- * This Model Class Holds All The Input Attributes For GetContentListAsynTask
+ * This Model Class Holds All The Input Attributes For GetContentListAsyn
  *
  * @author MUVI
  */

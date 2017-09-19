@@ -1,7 +1,7 @@
 package com.home.apisdk.apiModel;
 
 /**
- * This Model Class Holds All The Input Attributes For GetSimultaneousLogoutAsync
+ * This Model Class Holds All The Input Attributes For LogoutAllAsync
  *
  * @author MUVI
  */

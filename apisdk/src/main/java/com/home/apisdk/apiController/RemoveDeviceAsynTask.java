@@ -84,7 +84,7 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
         this.removeDeviceInput = removeDeviceInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
-        Log.v("MUVISDK", "GetContentListAsynTask");
+        Log.v("MUVISDK", "GetContentListAsyn");
 
 
     }
