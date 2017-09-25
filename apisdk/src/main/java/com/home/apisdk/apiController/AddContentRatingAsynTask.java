@@ -59,8 +59,8 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
          * This method to handle post-execution work.
          *
          * @param addContentRatingOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                      Response Code from the server
-         * @param message                     Holds the Status
+         * @param status                 Response Code from the server
+         * @param message                Holds the Status
          */
         void onAddContentRatingPostExecuteCompleted(AddContentRatingOutputModel addContentRatingOutput, int status, String message);
     }
@@ -72,10 +72,10 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
      * Constructor to initialise the private data members.
      *
      * @param addContentRatingInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                   For Example: to use this API we have to set following attributes:
-     *                                   setAuthToken(),setLang_code() etc.
-     * @param listener                   AddContentRating Listener
-     * @param context                    android.content.Context
+     *                              For Example: to use this API we have to set following attributes:
+     *                              setAuthToken(),setLang_code() etc.
+     * @param listener              AddContentRating Listener
+     * @param context               android.content.Context
      */
 
     public AddContentRatingAsynTask(AddContentRatingInputModel addContentRatingInput, AddContentRatingListener listener, Context context) {

@@ -259,6 +259,15 @@ public class APIUrlConstant {
      */
     public static final String CheckIfUserLoggedIn = "CheckIfUserLoggedIn";
 
+    /**
+     * endpoint to get Gmail Registration Details API
+     */
+
+    public static String GmailRegUrl = "socialAuth";
+
+    public static String getGmailRegUrl() {
+        return BASE_URl + GmailRegUrl;
+    }
 
     public static String getRemoveDevice() {
         return BASE_URl + RemoveDevice;
