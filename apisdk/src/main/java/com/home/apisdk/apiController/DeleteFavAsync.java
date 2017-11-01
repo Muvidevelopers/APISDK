@@ -113,7 +113,8 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
 
 
             } catch (org.apache.http.conn.ConnectTimeoutException e) {
-
+                status = 0;
+                sucessMsg = "";
             }
         } catch (IOException e) {
 
@@ -125,6 +126,7 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
                 myJson = new JSONObject(responseStr);
             } catch (JSONException e) {
                 e.printStackTrace();
+
             }
             status = Integer.parseInt(myJson.optString("code"));
             sucessMsg = myJson.optString("msg");
