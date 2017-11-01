@@ -154,14 +154,26 @@ public class FcmNotificationcountAsynTask extends AsyncTask<FcmNotificationcount
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        listener.onFcmNotificationcountPostExecuteCompleted(fcmNotificationcountOutputModel, code);
-    }
-
-    @Override
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onFcmNotificationcountPreExecuteStarted();
+        code = 0;
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
+            this.cancel(true);
+            sucessMsg = "Packge Name Not Matched";
+            listener.onFcmNotificationcountPostExecuteCompleted(fcmNotificationcountOutputModel, code);
+            return;
+        }
+        if (SDKInitializer.getHashKey(context).equals("")) {
+            this.cancel(true);
+            sucessMsg="Packge Name Not Matched";
+            listener.onFcmNotificationcountPostExecuteCompleted(fcmNotificationcountOutputModel, code);
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        listener.onFcmNotificationcountPostExecuteCompleted(fcmNotificationcountOutputModel,code);
     }
 }

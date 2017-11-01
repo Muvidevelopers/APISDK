@@ -141,6 +141,19 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         listener.onDeleteFavPostExecuteCompleted(deleteFavOutputModel, status, sucessMsg);
+        status = 0;
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
+            this.cancel(true);
+            sucessMsg = "Packge Name Not Matched";
+            listener.onDeleteFavPreExecuteStarted();
+            return;
+        }
+
+        if (SDKInitializer.getHashKey(context).equals("")) {
+            this.cancel(true);
+            sucessMsg = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onDeleteFavPreExecuteStarted();
+        }
     }
 
     @Override

@@ -154,14 +154,26 @@ public class FcmRegistrationDetailsAsynTask extends AsyncTask<FcmRegistrationDet
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        listener.onFcmRegistrationDetailsPostExecuteCompleted(fcmRegistrationDetailsOutputModel, message, code);
-    }
-
-    @Override
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onFcmRegistrationDetailsPreExecuteStarted();
+        code = 0;
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
+            this.cancel(true);
+            message = "Packge Name Not Matched";
+            listener.onFcmRegistrationDetailsPostExecuteCompleted(fcmRegistrationDetailsOutputModel, message, code);
+            return;
+        }
+        if (SDKInitializer.getHashKey(context).equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onFcmRegistrationDetailsPostExecuteCompleted(fcmRegistrationDetailsOutputModel, message, code);
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        listener.onFcmRegistrationDetailsPostExecuteCompleted(fcmRegistrationDetailsOutputModel, message, code);
     }
 }

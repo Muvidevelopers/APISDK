@@ -174,14 +174,26 @@ public class FcmNotificationreadAsynTask extends AsyncTask<FcmNotificationreadIn
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        listener.onFcmNotificationreadPostExecuteCompleted(fcmNotificationreadOutputModel, message, code);
-    }
-
-    @Override
     protected void onPreExecute() {
         super.onPreExecute();
         listener.onFcmNotificationreadPreExecuteStarted();
+        code=0;
+        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
+            this.cancel(true);
+            message="Packge Name Not Matched";
+            listener.onFcmNotificationreadPostExecuteCompleted(fcmNotificationreadOutputModel,message,code);
+            return;
+        }
+        if (SDKInitializer.getHashKey(context).equals("")) {
+            this.cancel(true);
+            message = "Hash Key Is Not Available. Please Initialize The SDK";
+            listener.onFcmNotificationreadPostExecuteCompleted(fcmNotificationreadOutputModel,message,code);
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Void avoid) {
+        super.onPostExecute(avoid);
+        listener.onFcmNotificationreadPostExecuteCompleted(fcmNotificationreadOutputModel, message, code);
     }
 }
