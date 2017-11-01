@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ import java.io.IOException;
 
 public class RegisterUserPaymentAsyntask extends AsyncTask<RegisterUserPaymentInputModel, Void, Void> {
 
-    private RegisterUserPaymentInputModel registerUserPaymentInput;
+    private RegisterUserPaymentInputModel registerUserPaymentInputModel;
     private String PACKAGE_NAME;
     private String message;
     private String responseStr;
@@ -57,32 +58,32 @@ public class RegisterUserPaymentAsyntask extends AsyncTask<RegisterUserPaymentIn
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param registerUserPaymentOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                    Response Code from the server
+         * @param registerUserPaymentOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                         Response Code from the server
          */
 
-        void onRegisterUserPaymentPostExecuteCompleted(RegisterUserPaymentOutputModel registerUserPaymentOutput, int status);
+        void onRegisterUserPaymentPostExecuteCompleted(RegisterUserPaymentOutputModel registerUserPaymentOutputModel, int status);
     }
 
 
-    RegisterUserPaymentOutputModel registerUserPaymentOutput = new RegisterUserPaymentOutputModel();
+    RegisterUserPaymentOutputModel registerUserPaymentOutputModel = new RegisterUserPaymentOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param registerUserPaymentInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                 For Example: to use this API we have to set following attributes:
-     *                                 setAuthToken(),setCard_name() etc.
-     * @param listener                 RegisterUserPayment Listener
-     * @param context                  android.content.Context
+     * @param registerUserPaymentInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                      For Example: to use this API we have to set following attributes:
+     *                                      setAuthToken(),setCard_name() etc.
+     * @param listener                      RegisterUserPayment Listener
+     * @param context                       android.content.Context
      */
 
-    public RegisterUserPaymentAsyntask(RegisterUserPaymentInputModel registerUserPaymentInput, RegisterUserPaymentListener listener, Context context) {
+    public RegisterUserPaymentAsyntask(RegisterUserPaymentInputModel registerUserPaymentInputModel, RegisterUserPaymentListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.registerUserPaymentInput = registerUserPaymentInput;
+        this.registerUserPaymentInputModel = registerUserPaymentInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "register user payment");
@@ -92,8 +93,8 @@ public class RegisterUserPaymentAsyntask extends AsyncTask<RegisterUserPaymentIn
     /**
      * Background thread to execute.
      *
-     * @return  null
-     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
      */
 
     @Override
@@ -105,25 +106,25 @@ public class RegisterUserPaymentAsyntask extends AsyncTask<RegisterUserPaymentIn
             HttpPost httppost = new HttpPost(APIUrlConstant.getRegisterUserPaymentUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.registerUserPaymentInput.getAuthToken());
-            httppost.addHeader(HeaderConstants.USER_ID, this.registerUserPaymentInput.getUser_id());
-            httppost.addHeader(HeaderConstants.CARD_LAST_FOUR_DIGIT, this.registerUserPaymentInput.getCard_last_fourdigit());
-            httppost.addHeader(HeaderConstants.CARD_NAME, this.registerUserPaymentInput.getCard_name());
-            httppost.addHeader(HeaderConstants.CARD_NUMBER, this.registerUserPaymentInput.getCard_number());
-            httppost.addHeader(HeaderConstants.CARD_TYPE, this.registerUserPaymentInput.getCard_type());
-            httppost.addHeader(HeaderConstants.COUNTRY, this.registerUserPaymentInput.getCountry());
-            httppost.addHeader(HeaderConstants.CURRENCY_ID, this.registerUserPaymentInput.getCurrency_id());
-            httppost.addHeader(HeaderConstants.CVV, this.registerUserPaymentInput.getCvv());
-            httppost.addHeader(HeaderConstants.EMAIL, this.registerUserPaymentInput.getEmail());
-            httppost.addHeader(HeaderConstants.EPISODE_ID, this.registerUserPaymentInput.getEpisode_id());
-            httppost.addHeader(HeaderConstants.EXP_MONTH, this.registerUserPaymentInput.getExp_month());
-            httppost.addHeader(HeaderConstants.EXP_YEAR, this.registerUserPaymentInput.getExp_year());
-            httppost.addHeader(HeaderConstants.NAME, this.registerUserPaymentInput.getName());
-            httppost.addHeader(HeaderConstants.PLAN_ID, this.registerUserPaymentInput.getPlan_id());
-            httppost.addHeader(HeaderConstants.SEASON_ID, this.registerUserPaymentInput.getSeason_id());
-            httppost.addHeader(HeaderConstants.PROFILE_ID, this.registerUserPaymentInput.getProfile_id());
-            httppost.addHeader(HeaderConstants.TOKEN, this.registerUserPaymentInput.getToken());
-            httppost.addHeader(HeaderConstants.COUPAN_CODE, this.registerUserPaymentInput.getCouponCode());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.registerUserPaymentInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.registerUserPaymentInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.CARD_LAST_FOUR_DIGIT, this.registerUserPaymentInputModel.getCard_last_fourdigit());
+            httppost.addHeader(HeaderConstants.CARD_NAME, this.registerUserPaymentInputModel.getCard_name());
+            httppost.addHeader(HeaderConstants.CARD_NUMBER, this.registerUserPaymentInputModel.getCard_number());
+            httppost.addHeader(HeaderConstants.CARD_TYPE, this.registerUserPaymentInputModel.getCard_type());
+            httppost.addHeader(HeaderConstants.COUNTRY, this.registerUserPaymentInputModel.getCountry());
+            httppost.addHeader(HeaderConstants.CURRENCY_ID, this.registerUserPaymentInputModel.getCurrency_id());
+            httppost.addHeader(HeaderConstants.CVV, this.registerUserPaymentInputModel.getCvv());
+            httppost.addHeader(HeaderConstants.EMAIL, this.registerUserPaymentInputModel.getEmail());
+            httppost.addHeader(HeaderConstants.EPISODE_ID, this.registerUserPaymentInputModel.getEpisode_id());
+            httppost.addHeader(HeaderConstants.EXP_MONTH, this.registerUserPaymentInputModel.getExp_month());
+            httppost.addHeader(HeaderConstants.EXP_YEAR, this.registerUserPaymentInputModel.getExp_year());
+            httppost.addHeader(HeaderConstants.NAME, this.registerUserPaymentInputModel.getName());
+            httppost.addHeader(HeaderConstants.PLAN_ID, this.registerUserPaymentInputModel.getPlan_id());
+            httppost.addHeader(HeaderConstants.SEASON_ID, this.registerUserPaymentInputModel.getSeason_id());
+            httppost.addHeader(HeaderConstants.PROFILE_ID, this.registerUserPaymentInputModel.getProfile_id());
+            httppost.addHeader(HeaderConstants.TOKEN, this.registerUserPaymentInputModel.getToken());
+            httppost.addHeader(HeaderConstants.COUPAN_CODE, this.registerUserPaymentInputModel.getCouponCode());
 
 
             try {
@@ -150,7 +151,7 @@ public class RegisterUserPaymentAsyntask extends AsyncTask<RegisterUserPaymentIn
 
 //            if (code == 200) {
 //                if ((myJson.has("msg")) && myJson.optString("msg").trim() != null && !myJson.optString("msg").trim().isEmpty() && !myJson.optString("msg").trim().equals("null") && !myJson.optString("msg").trim().matches("")) {
-//                    registerUserPaymentOutput.setMsg(myJson.optString("msg"));
+//                    registerUserPaymentOutputModel.setMsg(myJson.optString("msg"));
 //                }
 //
 //            }
@@ -172,19 +173,19 @@ public class RegisterUserPaymentAsyntask extends AsyncTask<RegisterUserPaymentIn
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutput, code);
+            listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutput, code);
+            listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutput, code);
+        listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code);
     }
 }

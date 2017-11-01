@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ import java.io.IOException;
 
 public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInputModel, Void, Void> {
 
-    private ValidateCouponCodeInputModel validateCouponCodeInput;
+    private ValidateCouponCodeInputModel validateCouponCodeInputModel;
     private String responseStr;
     private int status;
     private float planPrice = 0.0f;
@@ -61,32 +62,32 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param validateCouponCodeOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                   Response Code from the server
-         * @param message                  On Success Message
+         * @param validateCouponCodeOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                        Response Code from the server
+         * @param message                       On Success Message
          */
 
-        void onValidateCouponCodePostExecuteCompleted(ValidateCouponCodeOutputModel validateCouponCodeOutput, int status, String message);
+        void onValidateCouponCodePostExecuteCompleted(ValidateCouponCodeOutputModel validateCouponCodeOutputModel, int status, String message);
     }
 
-    ValidateCouponCodeOutputModel validateCouponCodeOutput = new ValidateCouponCodeOutputModel();
+    ValidateCouponCodeOutputModel validateCouponCodeOutputModel = new ValidateCouponCodeOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param validateCouponCodeInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                For Example: to use this API we have to set following attributes:
-     *                                setAuthToken(),setCouponCode() etc.
-     * @param listener                ValidateCouponCode LIstener
-     * @param context                 android.content.Context
+     * @param validateCouponCodeInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                     For Example: to use this API we have to set following attributes:
+     *                                     setAuthToken(),setCouponCode() etc.
+     * @param listener                     ValidateCouponCode LIstener
+     * @param context                      android.content.Context
      */
 
-    public ValidateCouponCodeAsynTask(ValidateCouponCodeInputModel validateCouponCodeInput, ValidateCouponCodeLIstener listener, Context context) {
+    public ValidateCouponCodeAsynTask(ValidateCouponCodeInputModel validateCouponCodeInputModel, ValidateCouponCodeLIstener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.validateCouponCodeInput = validateCouponCodeInput;
+        this.validateCouponCodeInputModel = validateCouponCodeInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "validate voucher");
@@ -97,7 +98,7 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
      * Background thread to execute.
      *
      * @return null
-     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
      */
 
     @Override
@@ -108,11 +109,11 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
             HttpPost httppost = new HttpPost(APIUrlConstant.getValidateCouponCodeUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.validateCouponCodeInput.getAuthToken().trim());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.validateCouponCodeInputModel.getAuthToken().trim());
 
-            httppost.addHeader(HeaderConstants.USER_ID, this.validateCouponCodeInput.getUser_id().trim());
-            httppost.addHeader(HeaderConstants.COUPAN_CODE, this.validateCouponCodeInput.getCouponCode().trim());
-            httppost.addHeader(HeaderConstants.CURRENCY_ID, this.validateCouponCodeInput.getCurrencyId().trim());
+            httppost.addHeader(HeaderConstants.USER_ID, this.validateCouponCodeInputModel.getUser_id().trim());
+            httppost.addHeader(HeaderConstants.COUPAN_CODE, this.validateCouponCodeInputModel.getCouponCode().trim());
+            httppost.addHeader(HeaderConstants.CURRENCY_ID, this.validateCouponCodeInputModel.getCurrencyId().trim());
 
 
             // Execute HTTP Post Request
@@ -145,11 +146,11 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
                     !myJson.optString("discount_type").trim().matches("")) {
 
                 String discountTypeStr = myJson.optString("discount_type").trim();
-                validateCouponCodeOutput.setDiscount_type(myJson.optString("discount_type").trim());
+                validateCouponCodeOutputModel.setDiscount_type(myJson.optString("discount_type").trim());
 
                 if ((myJson.has("discount")) && myJson.optString("discount").trim() != null && !myJson.optString("discount").trim().isEmpty() && !myJson.optString("discount").trim().equals("null") && !myJson.optString("discount").trim().matches("")) {
 
-                    validateCouponCodeOutput.setDiscount(myJson.optString("discount").trim());
+                    validateCouponCodeOutputModel.setDiscount(myJson.optString("discount").trim());
                 }
             }
 
@@ -171,13 +172,13 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutput, status, responseStr);
+            listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutput, status, responseStr);
+            listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, responseStr);
         }
 
 
@@ -186,7 +187,7 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutput, status, message);
+        listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, message);
 
     }
 

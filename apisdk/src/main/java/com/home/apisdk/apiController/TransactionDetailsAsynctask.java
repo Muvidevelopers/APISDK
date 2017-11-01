@@ -33,7 +33,7 @@ import java.io.IOException;
 
 public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel, Void, Void> {
 
-    private TransactionInputModel transactionInput;
+    private TransactionInputModel transactionInputModel;
     private String responseStr;
     private int status;
     private String message;
@@ -59,32 +59,32 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param transactionOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status            Response Code from the server
-         * @param message           On Success Message
+         * @param transactionOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                 Response Code from the server
+         * @param message                On Success Message
          */
 
-        void onTransactionPostExecuteCompleted(TransactionOutputModel transactionOutput, int status, String message);
+        void onTransactionPostExecuteCompleted(TransactionOutputModel transactionOutputModel, int status, String message);
     }
 
 
-    TransactionOutputModel transactionOutput = new TransactionOutputModel();
+    TransactionOutputModel transactionOutputModel = new TransactionOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param transactionInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                         For Example: to use this API we have to set following attributes:
-     *                         setAuthToken(),setId() etc.
-     * @param listener         Transaction Listener
-     * @param context          android.content.Context
+     * @param transactionInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                              For Example: to use this API we have to set following attributes:
+     *                              setAuthToken(),setId() etc.
+     * @param listener              Transaction Listener
+     * @param context               android.content.Context
      */
 
-    public TransactionDetailsAsynctask(TransactionInputModel transactionInput, TransactionListener listener, Context context) {
+    public TransactionDetailsAsynctask(TransactionInputModel transactionInputModel, TransactionListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.transactionInput = transactionInput;
+        this.transactionInputModel = transactionInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "transaction");
@@ -106,10 +106,10 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getTransactionUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.transactionInput.getAuthToken());
-            httppost.addHeader(HeaderConstants.USER_ID, this.transactionInput.getUser_id());
-            httppost.addHeader(HeaderConstants.ID, this.transactionInput.getId());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.transactionInput.getLanguage());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.transactionInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.transactionInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.ID, this.transactionInputModel.getId());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.transactionInputModel.getLanguage());
 
             // Execute HTTP Post Request
             try {
@@ -141,63 +141,69 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
 
                     JSONObject mainJson = myJson.getJSONObject("section");
                     if ((mainJson.has("order_number")) && mainJson.optString("order_number").trim() != null && !mainJson.optString("order_number").trim().isEmpty() && !mainJson.optString("order_number").trim().equals("null") && !mainJson.optString("order_number").trim().matches("")) {
-                        transactionOutput.setOrder_number(mainJson.optString("order_number"));
+                        transactionOutputModel.setOrder_number(mainJson.optString("order_number"));
                     } else {
-                        transactionOutput.setOrder_number("");
+                        transactionOutputModel.setOrder_number("");
 
                     }
                     if ((mainJson.has("movie_id")) && mainJson.optString("movie_id").trim() != null && !mainJson.optString("movie_id").trim().isEmpty() && !mainJson.optString("movie_id").trim().equals("null") && !mainJson.optString("movie_id").trim().matches("")) {
-                        transactionOutput.setMovie_id(mainJson.optString("movie_id"));
+                        transactionOutputModel.setMovie_id(mainJson.optString("movie_id"));
 
 
                     } else {
-                        transactionOutput.setMovie_id("");
+                        transactionOutputModel.setMovie_id("");
 
                     }
                     if ((mainJson.has("transaction_date")) && mainJson.optString("transaction_date").trim() != null && !mainJson.optString("transaction_date").trim().isEmpty() && !mainJson.optString("transaction_date").trim().equals("null") && !mainJson.optString("transaction_date").trim().matches("")) {
-                        transactionOutput.setTransaction_date(mainJson.optString("transaction_date"));
+                        transactionOutputModel.setTransaction_date(mainJson.optString("transaction_date"));
 
 
                     } else {
-                        transactionOutput.setTransaction_date("");
+                        transactionOutputModel.setTransaction_date("");
 
                     }
                     if ((mainJson.has("transaction_status")) && mainJson.optString("transaction_status").trim() != null && !mainJson.optString("transaction_status").trim().isEmpty() && !mainJson.optString("transaction_status").trim().equals("null") && !mainJson.optString("transaction_status").trim().matches("")) {
-                        transactionOutput.setTransaction_status(mainJson.optString("transaction_status"));
+                        transactionOutputModel.setTransaction_status(mainJson.optString("transaction_status"));
                     } else {
-                        transactionOutput.setTransaction_status("");
+                        transactionOutputModel.setTransaction_status("");
 
                     }
                     if ((mainJson.has("plan_name")) && mainJson.optString("plan_name").trim() != null && !mainJson.optString("plan_name").trim().isEmpty() && !mainJson.optString("plan_name").trim().equals("null") && !mainJson.optString("plan_name").trim().matches("")) {
-                        transactionOutput.setPlan_name(mainJson.optString("plan_name"));
+                        transactionOutputModel.setPlan_name(mainJson.optString("plan_name"));
                     } else {
-                        transactionOutput.setPlan_name("");
+                        transactionOutputModel.setPlan_name("");
 
                     }
 
                     if ((mainJson.has("currency_symbol")) && mainJson.optString("currency_symbol").trim() != null && !mainJson.optString("currency_symbol").trim().isEmpty() && !mainJson.optString("currency_symbol").trim().equals("null") && !mainJson.optString("currency_symbol").trim().matches("")) {
-                        transactionOutput.setCurrency_symbol(mainJson.optString("currency_symbol"));
+                        transactionOutputModel.setCurrency_symbol(mainJson.optString("currency_symbol"));
 
                     } else {
-                        transactionOutput.setCurrency_symbol("");
+                        transactionOutputModel.setCurrency_symbol("");
 
                     }
 
                     if ((mainJson.has("currency_code")) && mainJson.optString("currency_code").trim() != null && !mainJson.optString("currency_code").trim().isEmpty() && !mainJson.optString("currency_code").trim().equals("null") && !mainJson.optString("currency_code").trim().matches("")) {
-                        transactionOutput.setCurrency_code(mainJson.optString("currency_code"));
+                        transactionOutputModel.setCurrency_code(mainJson.optString("currency_code"));
                     } else {
-                        transactionOutput.setCurrency_code("");
+                        transactionOutputModel.setCurrency_code("");
 
                     }
 
                     if ((mainJson.has("amount")) && mainJson.optString("amount").trim() != null && !mainJson.optString("amount").trim().isEmpty() && !mainJson.optString("amount").trim().equals("null") && !mainJson.optString("amount").trim().matches("")) {
-                        transactionOutput.setAmount(mainJson.optString("amount"));
+                        transactionOutputModel.setAmount(mainJson.optString("amount"));
 
                     } else {
-                        transactionOutput.setAmount("");
+                        transactionOutputModel.setAmount("");
 
                     }
+                    if ((mainJson.has("invoice_id")) && mainJson.optString("invoice_id").trim() != null && !mainJson.optString("invoice_id").trim().isEmpty() && !mainJson.optString("invoice_id").trim().equals("null") && !mainJson.optString("invoice_id").trim().matches("")) {
+                        transactionOutputModel.setInvoice_id(mainJson.optString("invoice_id"));
 
+                    } else {
+                        transactionOutputModel.setInvoice_id("");
+
+                    }
 
                 }
             } else {
@@ -231,13 +237,13 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onTransactionPostExecuteCompleted(transactionOutput, status, message);
+            listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onTransactionPostExecuteCompleted(transactionOutput, status, message);
+            listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message);
         }
 
     }
@@ -245,7 +251,7 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onTransactionPostExecuteCompleted(transactionOutput, status, message);
+        listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message);
 
     }
 

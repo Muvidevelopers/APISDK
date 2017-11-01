@@ -20,6 +20,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
  */
 public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Void, Void> {
 
-    private ViewFavouriteInputModel viewFavouriteInput;
+    private ViewFavouriteInputModel viewFavouriteInputModel;
     private String responseStr;
     private int status;
     private int totalItems;
@@ -60,33 +61,33 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param viewFavouriteOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status              Response Code from the server
-         * @param totalItems          For Getting The Total Items
-         * @param message             On Success Message
+         * @param viewFavouriteOutputModelArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                        Response Code from the server
+         * @param totalItems                    For Getting The Total Items
+         * @param message                       On Success Message
          */
 
-        void onViewFavouritePostExecuteCompleted(ArrayList<ViewFavouriteOutputModel> viewFavouriteOutput, int status, int totalItems, String message);
+        void onViewFavouritePostExecuteCompleted(ArrayList<ViewFavouriteOutputModel> viewFavouriteOutputModelArray, int status, int totalItems, String message);
     }
 
-    ArrayList<ViewFavouriteOutputModel> viewFavouriteOutput = new ArrayList<ViewFavouriteOutputModel>();
+    ArrayList<ViewFavouriteOutputModel> viewFavouriteOutputModel = new ArrayList<ViewFavouriteOutputModel>();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param viewFavouriteInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                           For Example: to use this API we have to set following attributes:
-     *                           setAuthToken(),setUser_id() etc.
-     * @param listener           ViewFavourite Listener
-     * @param context            android.content.Context
+     * @param viewFavouriteInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                For Example: to use this API we have to set following attributes:
+     *                                setAuthToken(),setUser_id() etc.
+     * @param listener                ViewFavourite Listener
+     * @param context                 android.content.Context
      */
 
-    public ViewFavouriteAsynTask(ViewFavouriteInputModel viewFavouriteInput, ViewFavouriteListener listener, Context context) {
+    public ViewFavouriteAsynTask(ViewFavouriteInputModel viewFavouriteInputModel, ViewFavouriteListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.viewFavouriteInput = viewFavouriteInput;
+        this.viewFavouriteInputModel = viewFavouriteInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "view favorite data");
@@ -97,7 +98,7 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
      * Background thread to execute.
      *
      * @return null
-     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
      */
 
     @Override
@@ -108,13 +109,13 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
             HttpPost httppost = new HttpPost(APIUrlConstant.getViewFavorite());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.viewFavouriteInput.getAuthToken());
-            httppost.addHeader(HeaderConstants.USER_ID, this.viewFavouriteInput.getUser_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.viewFavouriteInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.viewFavouriteInputModel.getUser_id());
 
             Log.v("SUBHA", "AUTH_TOKEN" + HeaderConstants.AUTH_TOKEN);
             Log.v("SUBHA", "USER_ID" + HeaderConstants.USER_ID);
-            Log.v("SUBHA", "authtoken" + this.viewFavouriteInput.getAuthToken());
-            Log.v("SUBHA", "user id" + this.viewFavouriteInput.getUser_id());
+            Log.v("SUBHA", "authtoken" + this.viewFavouriteInputModel.getAuthToken());
+            Log.v("SUBHA", "user id" + this.viewFavouriteInputModel.getUser_id());
             // Execute HTTP Post Request
             try {
                 HttpResponse response = httpclient.execute(httppost);
@@ -186,7 +187,7 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
                         }
 
                         Log.v("SUBHA", "is_episode " + jsonChildNode.optString("is_episode"));
-                        viewFavouriteOutput.add(content);
+                        viewFavouriteOutputModel.add(content);
                     } catch (Exception e) {
                         status = 0;
                         totalItems = 0;
@@ -213,13 +214,13 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutput, status, totalItems, message);
+            listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutputModel, status, totalItems, message);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutput, status, totalItems, message);
+            listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutputModel, status, totalItems, message);
         }
 
     }
@@ -227,7 +228,7 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutput, status, totalItems, message);
+        listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutputModel, status, totalItems, message);
 
     }
 

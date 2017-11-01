@@ -40,7 +40,7 @@ public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput,
     private int code;
     private String PACKAGE_NAME;
     private String videoLogId = "";
-    private String videoLogstreamId = "";
+    private String videoLogstreamId="";
     private GetFFVideoLogsListener listener;
     private Context context;
 
@@ -72,14 +72,14 @@ public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput,
     /**
      * Constructor to initialise the private data members.
      *
-     * @param ffVideoLogDetailsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                               For Example: to use this API we have to set following attributes:
-     *                               setAuthToken(),setUser_id() etc.
-     * @param listener               GetFFVideoLogs Listener
-     * @param context                android.content.Context
+     * @param videoBufferLogsInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                  For Example: to use this API we have to set following attributes:
+     *                                  setAuthToken(),setUser_id() etc.
+     * @param listener                  GetFFVideoLogs Listener
+     * @param context                   android.content.Context
      */
 
-    public GetFFVideoLogDetailsAsync(FFVideoLogDetailsInput ffVideoLogDetailsInput, GetFFVideoLogsListener listener, Context context) {
+    public GetFFVideoLogDetailsAsync(FFVideoLogDetailsInput videoBufferLogsInputModel, GetFFVideoLogsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
@@ -93,7 +93,7 @@ public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput,
     /**
      * Background thread to execute.
      *
-     * @return  null
+     * @return null
      * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 

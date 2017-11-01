@@ -12,10 +12,18 @@ public class HeaderConstants {
      * Constant for Auth Token Header used in API Call
      */
     public static final String AUTH_TOKEN = "authToken";
+
+
+    /**
+     * Constant for VLINK Header used in API Call
+     */
+    public static final String VLINK = "vlink";
+
     /**
      * Constant for Permalink Header used in API Call
      */
     public static final String PERMALINK = "permalink";
+
     /**
      * Constant for Language Code Header used in API Call
      */
@@ -157,6 +165,18 @@ public class HeaderConstants {
      */
     public static final String WATCH_STATUS = "watch_status";
     /**
+     * Constant for Log Temporary Id Header used in API Call
+     */
+    public static final String LOG_TEMP_ID = "log_temp_id";
+    /**
+     * Constant for Resume Time Header used in API Call
+     */
+    public static final String RESUME_TIME = "resume_time";
+    /**
+     * Constant for Content Type Id Header used in API Call
+     */
+    public static final String CONTENT_TYPE_ID = "content_type";
+    /**
      * Constant for ID Header used in API Call
      */
     public static final String ID = "id";
@@ -168,6 +188,17 @@ public class HeaderConstants {
      * Constant for Stream ID Header used in API Call
      */
     public static final String STREAM_ID = "stream_id";
+
+    /**
+     * Constant for Content Stream ID Header used in API Call
+     */
+    public static final String LANGUAGE_CODE = "language_code";
+
+    /**
+     * Constant for Content Stream ID Header used in API Call
+     */
+    public static final String CONTENT_STREAM_ID = "content_stream_id";
+
     /**
      * Constant for Card Last Four Digit Header used in API Call
      */
@@ -183,7 +214,7 @@ public class HeaderConstants {
     /**
      * Constant for Currency ID Header used in API Call
      */
-    public static final String CURRENCY_ID = "currency_id";
+    public static final String CURRENCY_ID = "currencyId";
     /**
      * Constant for Expiry Month Header used in API Call
      */
@@ -240,6 +271,7 @@ public class HeaderConstants {
      * Constant for Device ID Header used in API Call
      */
     public static final String DEVICE_ID = "device_id";
+
     /**
      * Constant for Login History ID Header used in API Call
      */
@@ -306,11 +338,15 @@ public class HeaderConstants {
      */
 
     public static final String IS_STREAMING_RESTRICTION = "is_streaming_restriction";
-
     /**
      * Constant for Content Type Header used in API Call
      */
 
     public static final String RESTRICT_STREAM_ID = "restrict_stream_id";
+
+    /**
+     * Constant for FCM Token Header used in API Call
+     */
+    public static final String FCM_TOKEN = "fcm_token";
 
 }

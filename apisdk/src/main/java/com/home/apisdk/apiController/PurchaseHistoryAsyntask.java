@@ -20,6 +20,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 
 public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel, Void, Void> {
 
-    private PurchaseHistoryInputModel purchaseHistoryInput;
+    private PurchaseHistoryInputModel purchaseHistoryInputModel;
     private String PACKAGE_NAME;
     private String message;
     private String responseStr;
@@ -59,31 +60,31 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param purchaseHistoryOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                Response Code from the server
+         * @param purchaseHistoryOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                     Response Code from the server
          */
 
-        void onPurchaseHistoryPostExecuteCompleted(ArrayList<PurchaseHistoryOutputModel> purchaseHistoryOutput, int status);
+        void onPurchaseHistoryPostExecuteCompleted(ArrayList<PurchaseHistoryOutputModel> purchaseHistoryOutputModel, int status);
     }
 
-    ArrayList<PurchaseHistoryOutputModel> purchaseHistoryOutput = new ArrayList<PurchaseHistoryOutputModel>();
+    ArrayList<PurchaseHistoryOutputModel> purchaseHistoryOutputModel = new ArrayList<PurchaseHistoryOutputModel>();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param purchaseHistoryInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                             For Example: to use this API we have to set following attributes:
-     *                             setAuthToken(),setUser_id() etc.
-     * @param listener             PurchaseHistory Listener
-     * @param context              android.content.Context
+     * @param purchaseHistoryInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                  For Example: to use this API we have to set following attributes:
+     *                                  setAuthToken(),setUser_id() etc.
+     * @param listener                  PurchaseHistory Listener
+     * @param context                   android.content.Context
      */
 
-    public PurchaseHistoryAsyntask(PurchaseHistoryInputModel purchaseHistoryInput, PurchaseHistoryListener listener, Context context) {
+    public PurchaseHistoryAsyntask(PurchaseHistoryInputModel purchaseHistoryInputModel, PurchaseHistoryListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.purchaseHistoryInput = purchaseHistoryInput;
+        this.purchaseHistoryInputModel = purchaseHistoryInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "getPlanListAsynctask");
@@ -93,9 +94,10 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
     /**
      * Background thread to execute.
      *
-     * @return  null
-     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
      */
+
     @Override
     protected Void doInBackground(PurchaseHistoryInputModel... params) {
 
@@ -105,10 +107,10 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
             HttpPost httppost = new HttpPost(APIUrlConstant.getPurchaseHistoryUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.purchaseHistoryInput.getAuthToken());
-            httppost.addHeader(HeaderConstants.USER_ID, this.purchaseHistoryInput.getUser_id());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.purchaseHistoryInput.getLang_code());
-            httppost.addHeader(HeaderConstants.ID, this.purchaseHistoryInput.getId());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.purchaseHistoryInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.purchaseHistoryInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.purchaseHistoryInputModel.getLang_code());
+            httppost.addHeader(HeaderConstants.ID, this.purchaseHistoryInputModel.getId());
 
 
             try {
@@ -172,7 +174,7 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
                         }
 
 
-                        purchaseHistoryOutput.add(content);
+                        purchaseHistoryOutputModel.add(content);
                     } catch (Exception e) {
                         code = 0;
                         message = "";
@@ -196,19 +198,19 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutput, code);
+            listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutput, code);
+            listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutput, code);
+        listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);
     }
 }

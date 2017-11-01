@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadInputModel, Void, Void> {
 
-    private GetImageForDownloadInputModel getImageForDownloadInput;
+    private GetImageForDownloadInputModel getImageForDownloadInputModel;
     private String responseStr;
     private int status;
     private String message;
@@ -56,33 +56,33 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getImageForDownloadOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                    Response Code From The Server
-         * @param message                   On Success Message
+         * @param getImageForDownloadOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                         Response Code From The Server
+         * @param message                        On Success Message
          */
 
-        void onGetImageForDownloadPostExecuteCompleted(GetImageForDownloadOutputModel getImageForDownloadOutput, int status, String message);
+        void onGetImageForDownloadPostExecuteCompleted(GetImageForDownloadOutputModel getImageForDownloadOutputModel, int status, String message);
     }
 
 
-    GetImageForDownloadOutputModel getImageForDownloadOutput = new GetImageForDownloadOutputModel();
+    GetImageForDownloadOutputModel getImageForDownloadOutputModel = new GetImageForDownloadOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getImageForDownloadInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                 For Example: to use this API we have to set following attributes:
-     *                                 setAuthToken() etc.
-     * @param listener                 GetImageForDownload Listener
-     * @param context                  android.content.Context
+     * @param getImageForDownloadInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                      For Example: to use this API we have to set following attributes:
+     *                                      setAuthToken() etc.
+     * @param listener                      GetImageForDownload Listener
+     * @param context                       android.content.Context
      */
 
-    public GetImageForDownloadAsynTask(GetImageForDownloadInputModel getImageForDownloadInput, GetImageForDownloadListener listener, Context context) {
+    public GetImageForDownloadAsynTask(GetImageForDownloadInputModel getImageForDownloadInputModel, GetImageForDownloadListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.getImageForDownloadInput = getImageForDownloadInput;
+        this.getImageForDownloadInputModel = getImageForDownloadInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "getFeatureContentAsynTask");
@@ -92,7 +92,7 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
     /**
      * Background thread to execute.
      *
-     * @return  null
+     * @return null
      * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
@@ -104,7 +104,7 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetImageForDownloadUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getImageForDownloadInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getImageForDownloadInputModel.getAuthToken());
 
 
             // Execute HTTP Post Request
@@ -134,7 +134,7 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
 
             if (status == 200) {
                 if ((myJson.has("image_url")) && myJson.optString("image_url").trim() != null && !myJson.optString("image_url").trim().isEmpty() && !myJson.optString("image_url").trim().equals("null") && !myJson.optString("image_url").trim().matches("")) {
-                    getImageForDownloadOutput.setImageUrl(myJson.optString("image_url"));
+                    getImageForDownloadOutputModel.setImageUrl(myJson.optString("image_url"));
                 }
 
             }
@@ -156,13 +156,13 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutput, status, message);
+            listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutput, status, message);
+            listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message);
         }
 
 
@@ -171,7 +171,7 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutput, status, message);
+        listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message);
 
     }
 

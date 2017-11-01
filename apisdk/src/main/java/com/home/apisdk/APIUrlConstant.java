@@ -13,7 +13,7 @@ import java.util.Date;
 
 public class APIUrlConstant {
 
-    public static final String BASE_URl = "https://www.muvi.com/rest/";
+    public static String BASE_URl;
     /**
      * endpoint to initialize SDK API
      */
@@ -81,11 +81,14 @@ public class APIUrlConstant {
     /**
      * endpoint to get Home Page API
      */
-    public static String HOMEPAGE_URL = "homePage";
+    // public static String HOMEPAGE_URL = "homePage";
+
+    public static String HOMEPAGE_URL = "getAppHomePage";
     /**
      * endpoint to get Featured Content Details API
      */
-    public static String GET_FEATURE_CONTENT_URL = "getFeaturedContent";
+    // public static String GET_FEATURE_CONTENT_URL = "getFeaturedContent";
+    public static String GET_FEATURE_CONTENT_URL = "getAPPFeaturedContent";
     /**
      * endpoint to get Image For Download API
      */
@@ -182,6 +185,16 @@ public class APIUrlConstant {
      * endpoint to get About Us Details API
      */
     public static String AboutUs = "getStaticPagedetails";
+
+    /**
+     * endpoint to get Gmail Registration Details API
+     */
+    public static String GmailRegUrl = "socialAuth";
+
+    public static String getGmailRegUrl() {
+        return BASE_URl + GmailRegUrl;
+    }
+
     /**
      * endpoint to get View Favorite Details API
      */
@@ -249,6 +262,7 @@ public class APIUrlConstant {
     /**
      * endpoint to get Video Logs Details API
      */
+
     public static String VIDEO_LOGS_URL = "VideoLogNew";
     /**
      * endpoint to get Remove Device Details API
@@ -260,13 +274,63 @@ public class APIUrlConstant {
     public static final String CheckIfUserLoggedIn = "CheckIfUserLoggedIn";
 
     /**
-     * endpoint to get Gmail Registration Details API
+     * endpoint to get all the menu lists including sub menus
      */
 
-    public static String GmailRegUrl = "socialAuth";
+    public static final String GetAppMenu = "getAppMenu";
 
-    public static String getGmailRegUrl() {
-        return BASE_URl + GmailRegUrl;
+    /**
+     * endpoint to get all the Sub Category lists including
+     */
+
+    public static final String GetSubCategoryList = "getSubCategoryList";
+
+    /* endpoint to get Notification Count Details API*/
+
+    public static String notificationcount = "GetNoOfUnreadNotification";
+
+    /* endpoint to get Fcmregistration Details API*/
+    public static String fcmregistration = "RegisterMyDevice";
+
+
+    /* endpoint to get Notification Lists Details API*/
+
+    public static String notificationlists = "NotificationLists";
+
+
+    /* endpoint to get Read All Notification Details API*/
+
+    public static String readallnotification = "ReadAllNotification";
+
+    public static String getNotificationcount() {
+        return BASE_URl + notificationcount;
+    }
+
+    public static String getFcmregistration() {
+        return BASE_URl + fcmregistration;
+    }
+
+    public static String getNotificationLists() {
+        return BASE_URl + notificationlists;
+    }
+
+    public static String getReadallnotification() {
+        return BASE_URl + readallnotification;
+    }
+
+
+    public static String getGetSubCategoryList() {
+        return GetSubCategoryList;
+    }
+
+
+    public static String getGetAppMenu() {
+        return BASE_URl + GetAppMenu;
+    }
+
+
+    public static String getMenuListUrl() {
+        return BASE_URl + MENU_LIST_URL;
     }
 
     public static String getRemoveDevice() {
@@ -345,10 +409,6 @@ public class APIUrlConstant {
 
     public static String getInitializationUrl() {
         return BASE_URl + INITIALIZATION_URL;
-    }
-
-    public static String getMenuListUrl() {
-        return BASE_URl + MENU_LIST_URL;
     }
 
     public static String getGenreListUrl() {

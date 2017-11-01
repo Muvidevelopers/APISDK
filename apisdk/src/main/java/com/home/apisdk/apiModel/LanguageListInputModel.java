@@ -1,7 +1,7 @@
 package com.home.apisdk.apiModel;
 
 /**
- * This Model Class Holds All The Input Attributes For TextTranslationAsync
+ * This Model Class Holds All The Input Attributes For GetTranslateLanguageAsync
  *
  * @author MUVI
  */

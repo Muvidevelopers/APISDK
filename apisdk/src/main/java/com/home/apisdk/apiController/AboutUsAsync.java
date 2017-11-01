@@ -67,17 +67,17 @@ public class AboutUsAsync extends AsyncTask<AboutUsInput, Void, Void> {
     /**
      * Constructor to initialise the private data members.
      *
-     * @param aboutUsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                     For Example: to use this API we have to set following attributes:
-     *                     setAuthToken() ,setPermalink() etc.
-     * @param listener     AboutUs Listener
-     * @param context      android.content.Context
+     * @param contactUsInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                            For Example: to use this API we have to set following attributes:
+     *                            setAuthToken() ,setPermalink() etc.
+     * @param listener            AboutUs Listener
+     * @param context             android.content.Context
      */
-    public AboutUsAsync(AboutUsInput aboutUsInput, AboutUsListener listener, Context context) {
+    public AboutUsAsync(AboutUsInput contactUsInputModel, AboutUsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.aboutUsInput = aboutUsInput;
+        this.aboutUsInput = contactUsInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetUserProfileAsynctask");

@@ -1,10 +1,11 @@
 package com.home.apisdk.apiModel;
 
 /**
- * This Model Class Holds All The Output Attributes For GetContentListAsyn
+ * This Model Class Holds All The Output Attributes For GetContentListAsynTask
  *
- * @author MUVI
+ * @author Abhishek
  */
+
 public class ContentListOutput{
     String movieId;
     String permalink;

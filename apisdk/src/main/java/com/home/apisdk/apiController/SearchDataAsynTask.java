@@ -20,6 +20,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -60,13 +61,13 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param contentListOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status            Response Code from the server
-         * @param totalItems        For Getting The Total Item
-         * @param message           On Success Message
+         * @param contentListOutputArray A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                 Response Code from the server
+         * @param totalItems             For Getting The Total Item
+         * @param message                On Success Message
          */
 
-        void onSearchDataPostExecuteCompleted(ArrayList<Search_Data_otput> contentListOutput, int status, int totalItems, String message);
+        void onSearchDataPostExecuteCompleted(ArrayList<Search_Data_otput> contentListOutputArray, int status, int totalItems, String message);
     }
 
     ArrayList<Search_Data_otput> search_data_otputs = new ArrayList<Search_Data_otput>();
@@ -93,8 +94,8 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
     /**
      * Background thread to execute.
      *
-     * @return  null
-     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
      */
 
     @Override
@@ -151,10 +152,10 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
                             Search_Data_otput content = new Search_Data_otput();
 
                             if ((jsonChildNode.has("genre")) && jsonChildNode.optString("genre").trim() != null && !jsonChildNode.optString("genre").trim().isEmpty() && !jsonChildNode.optString("genre").trim().equals("null") && !jsonChildNode.optString("genre").trim().matches("")) {
-                                String movieTypeStr = jsonChildNode.optString("genre");
+                               String movieTypeStr = jsonChildNode.optString("genre");
                                 movieTypeStr = movieTypeStr.replaceAll("\\[", "");
-                                movieTypeStr = movieTypeStr.replaceAll("\\]", "");
-                                movieTypeStr = movieTypeStr.replaceAll(",", " , ");
+                                movieTypeStr = movieTypeStr.replaceAll("\\]","");
+                                movieTypeStr = movieTypeStr.replaceAll(","," , ");
                                 movieTypeStr = movieTypeStr.replaceAll("\"", "");
                                 content.setGenre(movieTypeStr);
 
@@ -198,7 +199,9 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
                             }
                             if ((jsonChildNode.has("episode_title")) && jsonChildNode.optString("episode_title").trim() != null && !jsonChildNode.optString("episode_title").trim().isEmpty() && !jsonChildNode.optString("episode_title").trim().equals("null") && !jsonChildNode.optString("episode_title").trim().matches("")) {
                                 content.setEpisode_title(jsonChildNode.optString("episode_title"));
-
+                            }else {
+                                if ((jsonChildNode.has("name")) && jsonChildNode.optString("name").trim() != null && !jsonChildNode.optString("name").trim().isEmpty() && !jsonChildNode.optString("name").trim().equals("null") && !jsonChildNode.optString("name").trim().matches(""))
+                                    content.setEpisode_title(jsonChildNode.optString("name"));
                             }
 
                             if ((jsonChildNode.has("display_name")) && jsonChildNode.optString("display_name").trim() != null && !jsonChildNode.optString("display_name").trim().isEmpty() && !jsonChildNode.optString("display_name").trim().equals("null") && !jsonChildNode.optString("display_name").trim().matches("")) {

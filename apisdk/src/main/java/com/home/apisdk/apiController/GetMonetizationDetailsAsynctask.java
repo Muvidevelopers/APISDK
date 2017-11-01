@@ -32,7 +32,7 @@ import java.io.IOException;
  */
 public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDetailsInputModel, Void, Void> {
 
-    private GetMonetizationDetailsInputModel getMonetizationDetailsInput;
+    private GetMonetizationDetailsInputModel getMonetizationDetailsInputModel;
     private String responseStr;
     private int status;
     private String message;
@@ -58,32 +58,32 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getMonetizationDetailsOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                       Response Code From The Server
-         * @param message                      On Success Message
+         * @param getMonetizationDetailsOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                            Response Code From The Server
+         * @param message                           On Success Message
          */
 
-        void onGetMonetizationDetailsPostExecuteCompleted(GetMonetizationDetailsOutputModel getMonetizationDetailsOutput, int status, String message);
+        void onGetMonetizationDetailsPostExecuteCompleted(GetMonetizationDetailsOutputModel getMonetizationDetailsOutputModel, int status, String message);
     }
 
 
-    GetMonetizationDetailsOutputModel getMonetizationDetailsOutput = new GetMonetizationDetailsOutputModel();
+    GetMonetizationDetailsOutputModel getMonetizationDetailsOutputModel = new GetMonetizationDetailsOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getMonetizationDetailsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                    For Example: to use this API we have to set following attributes:
-     *                                    setAuthToken(),setUser_id() etc.
-     * @param listener                    GetMonetizationDetails Listener
-     * @param context                     android.content.Context
+     * @param getMonetizationDetailsInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                         For Example: to use this API we have to set following attributes:
+     *                                         setAuthToken(),setUser_id() etc.
+     * @param listener                         GetMonetizationDetails Listener
+     * @param context                          android.content.Context
      */
 
-    public GetMonetizationDetailsAsynctask(GetMonetizationDetailsInputModel getMonetizationDetailsInput, GetMonetizationDetailsListener listener, Context context) {
+    public GetMonetizationDetailsAsynctask(GetMonetizationDetailsInputModel getMonetizationDetailsInputModel, GetMonetizationDetailsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.getMonetizationDetailsInput = getMonetizationDetailsInput;
+        this.getMonetizationDetailsInputModel = getMonetizationDetailsInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "transaction" + responseStr);
@@ -105,11 +105,11 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetMonetizationDetailsUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getMonetizationDetailsInput.getAuthToken());
-            httppost.addHeader(HeaderConstants.USER_ID, this.getMonetizationDetailsInput.getUser_id());
-            httppost.addHeader(HeaderConstants.MOVIE_ID, this.getMonetizationDetailsInput.getMovie_id());
-            httppost.addHeader(HeaderConstants.PURCHASE_TYPE, this.getMonetizationDetailsInput.getPurchase_type());
-            httppost.addHeader(HeaderConstants.STREAM_ID, this.getMonetizationDetailsInput.getStream_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getMonetizationDetailsInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.getMonetizationDetailsInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.MOVIE_ID, this.getMonetizationDetailsInputModel.getMovie_id());
+            httppost.addHeader(HeaderConstants.PURCHASE_TYPE, this.getMonetizationDetailsInputModel.getPurchase_type());
+            httppost.addHeader(HeaderConstants.STREAM_ID, this.getMonetizationDetailsInputModel.getStream_id());
 
 
             // Execute HTTP Post Request
@@ -142,11 +142,14 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
                 if (status == 200) {
 
                     JSONObject mainJson = myJson.getJSONObject("monetization_plans");
-                    if ((mainJson.has("voucher")) && mainJson.optString("voucher").trim() != null && !mainJson.optString("voucher").trim().isEmpty() && !mainJson.optString("voucher").trim().equals("null") && !mainJson.optString("voucher").trim().matches("")) {
-                        getMonetizationDetailsOutput.setVoucher(mainJson.optString("voucher"));
-                    } else {
-                        getMonetizationDetailsOutput.setVoucher("");
-
+                    if(!(mainJson.optString("voucher").equals("")) && !(mainJson.optString("voucher").equals("null"))
+                            && (mainJson.optString("voucher").trim().equals("1")))
+                    {
+                        getMonetizationDetailsOutputModel.setVoucher(1);
+                    }
+                    else
+                    {
+                        getMonetizationDetailsOutputModel.setVoucher(0);
                     }
 
 
@@ -182,13 +185,13 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutput, status, message);
+            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutput, status, message);
+            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message);
         }
 
 
@@ -197,7 +200,7 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutput, status, message);
+        listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message);
 
     }
 

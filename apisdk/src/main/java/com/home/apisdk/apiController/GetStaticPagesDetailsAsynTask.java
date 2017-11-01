@@ -30,13 +30,13 @@ import java.io.IOException;
 
 public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeatilsModelInput, Void, Void> {
 
-    private GetStaticPagesDeatilsModelInput getStaticPagesDeatilsInput;
+    private GetStaticPagesDeatilsModelInput getStaticPagesDeatilsModelInput;
     private String PACKAGE_NAME;
     private String message;
     private String responseStr;
     private String status;
     private int code;
-    private GetStaticPageDetailsModelOutput getStaticPageDetailsOutput;
+    private GetStaticPageDetailsModelOutput getStaticPageDetailsModelOutput;
     private GetStaticPageDetailsListener listener;
     private Context context;
 
@@ -58,30 +58,30 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getStaticPageDetailsOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param code                       Response Code From The Server
-         * @param message                    On Success Message
-         * @param status                     For Getting The Status
+         * @param getStaticPageDetailsModelOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param code                            Response Code From The Server
+         * @param message                         On Success Message
+         * @param status                          For Getting The Status
          */
-        void onGetStaticPageDetailsPostExecuteCompleted(GetStaticPageDetailsModelOutput getStaticPageDetailsOutput, int code, String message, String status);
+        void onGetStaticPageDetailsPostExecuteCompleted(GetStaticPageDetailsModelOutput getStaticPageDetailsModelOutput, int code, String message, String status);
     }
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getStaticPagesDeatilsInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                                   For Example: to use this API we have to set following attributes:
-     *                                   setAuthToken(),setPermalink() etc.
-     * @param listener                   GetStaticPageDetails Listener
-     * @param context                    android.content.Context
+     * @param getStaticPagesDeatilsModelInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                        For Example: to use this API we have to set following attributes:
+     *                                        setAuthToken(),setPermalink() etc.
+     * @param listener                        GetStaticPageDetails Listener
+     * @param context                         android.content.Context
      */
 
-    public GetStaticPagesDetailsAsynTask(GetStaticPagesDeatilsModelInput getStaticPagesDeatilsInput, GetStaticPageDetailsListener listener, Context context) {
+    public GetStaticPagesDetailsAsynTask(GetStaticPagesDeatilsModelInput getStaticPagesDeatilsModelInput, GetStaticPageDetailsListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.getStaticPagesDeatilsInput = getStaticPagesDeatilsInput;
+        this.getStaticPagesDeatilsModelInput = getStaticPagesDeatilsModelInput;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "GetUserProfileAsynctask");
@@ -103,9 +103,9 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetstaticpagesUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getStaticPagesDeatilsInput.getAuthToken());
-            httppost.addHeader(HeaderConstants.PERMALINK, this.getStaticPagesDeatilsInput.getPermalink());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.getStaticPagesDeatilsInput.getLanguage());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getStaticPagesDeatilsModelInput.getAuthToken());
+            httppost.addHeader(HeaderConstants.PERMALINK, this.getStaticPagesDeatilsModelInput.getPermalink());
+            httppost.addHeader(HeaderConstants.LANG_CODE, this.getStaticPagesDeatilsModelInput.getLanguage());
 
             // Execute HTTP Post Request
             try {
@@ -135,27 +135,27 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
 
                 Log.v("MUVISDK", "code = " + status);
                 JSONObject mainJson = myJson.getJSONObject("page_details");
-                getStaticPageDetailsOutput = new GetStaticPageDetailsModelOutput();
+                getStaticPageDetailsModelOutput = new GetStaticPageDetailsModelOutput();
                 if ((mainJson.has("content")) && mainJson.optString("content").trim() != null && !mainJson.optString("content").trim().isEmpty() && !mainJson.optString("content").trim().equals("null") && !mainJson.optString("content").trim().matches("")) {
                     Log.v("MUVISDK", "mainJson.has(\"content\") = " + mainJson.optString("content"));
 
-                    getStaticPageDetailsOutput.setContent(mainJson.optString("content"));
+                    getStaticPageDetailsModelOutput.setContent(mainJson.optString("content"));
 
                 } else {
-                    getStaticPageDetailsOutput.setContent("");
+                    getStaticPageDetailsModelOutput.setContent("");
 
                 }
                 if ((mainJson.has("title")) && mainJson.optString("title").trim() != null && !mainJson.optString("title").trim().isEmpty() && !mainJson.optString("title").trim().equals("null") && !mainJson.optString("title").trim().matches("")) {
-                    getStaticPageDetailsOutput.setTitle(mainJson.optString("title"));
+                    getStaticPageDetailsModelOutput.setTitle(mainJson.optString("title"));
                 } else {
-                    getStaticPageDetailsOutput.setTitle("");
+                    getStaticPageDetailsModelOutput.setTitle("");
 
                 }
 
 
             }
 
-            Log.v("MUVISDK", "content = " + getStaticPageDetailsOutput.getContent());
+            Log.v("MUVISDK", "content = " + getStaticPageDetailsModelOutput.getContent());
         } catch (Exception e) {
             code = 0;
             message = "";
@@ -172,19 +172,19 @@ public class GetStaticPagesDetailsAsynTask extends AsyncTask<GetStaticPagesDeati
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsOutput, code, message, status);
+            listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsModelOutput, code, message, status);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsOutput, code, message, status);
+            listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsModelOutput, code, message, status);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsOutput, code, message, status);
+        listener.onGetStaticPageDetailsPostExecuteCompleted(getStaticPageDetailsModelOutput, code, message, status);
     }
 }

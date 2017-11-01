@@ -10,6 +10,16 @@ public class Video_Log_Output_Model {
 
     String videoLogId;
 
+    public String getLogTempId() {
+        return LogTempId;
+    }
+
+    public void setLogTempId(String logTempId) {
+        LogTempId = logTempId;
+    }
+
+    String LogTempId;
+
     /**
      * This Method is use to Get the Video Log Id
      *

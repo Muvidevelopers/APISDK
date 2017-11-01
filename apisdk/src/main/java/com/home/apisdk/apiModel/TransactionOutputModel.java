@@ -16,6 +16,29 @@ public class TransactionOutputModel {
     String currency_code;
     String amount;
 
+
+    /**
+     * This Method is use to Get the Invoice Id
+     *
+     * @return invoice_id
+     */
+
+    public String getInvoice_id() {
+        return invoice_id;
+    }
+
+    /**
+     * This Method is use to Set the Invoice Id
+     *
+     * @param invoice_id For Setting The Invoice Id
+     */
+
+    public void setInvoice_id(String invoice_id) {
+        this.invoice_id = invoice_id;
+    }
+
+    String invoice_id;
+
     /**
      * This Method is use to Get the Amount
      *

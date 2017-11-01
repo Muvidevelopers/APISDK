@@ -3,7 +3,9 @@ package com.home.apisdk.apiModel;
 import java.util.ArrayList;
 
 /**
- * Created by Muvi on 9/21/2016.
+ * This Model Class Holds All The Output Attributes For GetCastDetailsAsynTask
+ *
+ * @author Abhishek
  */
 public class GetCastDetailsOutputModel {
 

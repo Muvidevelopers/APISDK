@@ -1,9 +1,9 @@
 package com.home.apisdk.apiModel;
 
 /**
- * This Model Class Holds All The Output Attributes For GetContentDetailsAsyn
+ * This Model Class Holds All The Output Attributes For GetContentDetailsAsynTask
  *
- * @author MUVI
+ * @author Abhishek
  */
 
 public class ContentDetailsOutput {

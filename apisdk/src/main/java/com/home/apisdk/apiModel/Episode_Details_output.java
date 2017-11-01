@@ -3,12 +3,15 @@ package com.home.apisdk.apiModel;
 import java.util.ArrayList;
 
 /**
- * Created by Muvi on 9/29/2016.
+ * This Model Class Holds All The Output Attributes For GetEpisodeDeatailsAsynTask
+ *
+ * @author Abhishek
  */
+
 public class Episode_Details_output {
     ArrayList<Episode> EpisodeArray = new ArrayList<>();
     private String name, code, msg, muvi_uniq_id, permalink, item_count, limit, offset;
-    private int is_ppv=0;
+    private int is_ppv = 0;
     APVModel apvDetails;
 
     public int getIsAPV() {
@@ -19,7 +22,7 @@ public class Episode_Details_output {
         this.isAPV = isAPV;
     }
 
-    private int isAPV=0;
+    private int isAPV = 0;
     PPVModel ppvDetails;
     CurrencyModel currencyDetails;
 

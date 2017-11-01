@@ -32,13 +32,13 @@ import java.util.ArrayList;
  */
 public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputModel, Void, Void> {
 
-    private GetCardListForPPVInputModel getCardListForPPVInput;
+    private GetCardListForPPVInputModel getCardListForPPVInputModel;
     private String responseStr;
     private int status;
     private int totalItems;
     private String message;
     private String PACKAGE_NAME;
-    private CardListForPPVListener listener;
+    private GetCardListForPPVListener listener;
     private Context context;
 
     /**
@@ -46,56 +46,56 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
      * responses.
      */
 
-    public interface CardListForPPVListener {
+    public interface GetCardListForPPVListener {
 
         /**
          * This method will be invoked before controller start execution.
          * This method to handle pre-execution work.
          */
 
-        void onCardListForPPVPreExecuteStarted();
+        void onGetCardListForPPVPreExecuteStarted();
 
         /**
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getCardListForPPVOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status                  Response Code From The Server
-         * @param totalItems              Getting the total item
-         * @param message                 On Success Message
+         * @param getCardListForPPVOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                       Response Code From The Server
+         * @param totalItems                   Getting the total item
+         * @param message                      On Success Message
          */
 
-        void onCardListForPPVPostExecuteCompleted(ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutput, int status, int totalItems, String message);
+        void onGetCardListForPPVPostExecuteCompleted(ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutputModel, int status, int totalItems, String message);
     }
 
-    ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutput = new ArrayList<GetCardListForPPVOutputModel>();
+    ArrayList<GetCardListForPPVOutputModel> getCardListForPPVOutputModel = new ArrayList<GetCardListForPPVOutputModel>();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getCardListForPPVInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                               For Example: to use this API we have to set following attributes:
-     *                               setAuthToken(),setUser_id() etc.
-     * @param listener               GetCardListForPPV Listener
-     * @param context                android.content.Context
+     * @param getCardListForPPVInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                    For Example: to use this API we have to set following attributes:
+     *                                    setAuthToken(),setUser_id() etc.
+     * @param listener                    GetCardListForPPV Listener
+     * @param context                     android.content.Context
      */
 
-    public GetCardListForPPVAsynTask(GetCardListForPPVInputModel getCardListForPPVInput, CardListForPPVListener listener, Context context) {
+    public GetCardListForPPVAsynTask(GetCardListForPPVInputModel getCardListForPPVInputModel, GetCardListForPPVListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.getCardListForPPVInput = getCardListForPPVInput;
+        this.getCardListForPPVInputModel = getCardListForPPVInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
-        Log.v("MUVISDK", "GetContentListAsyn");
+        Log.v("MUVISDK", "GetContentListAsynTask");
 
     }
 
     /**
      * Background thread to execute.
      *
-     * @return  null
+     * @return null
      * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
@@ -107,8 +107,8 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetCardListForPpvUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getCardListForPPVInput.getAuthToken());
-            httppost.addHeader(HeaderConstants.USER_ID, this.getCardListForPPVInput.getUser_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getCardListForPPVInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.USER_ID, this.getCardListForPPVInputModel.getUser_id());
 
 
             // Execute HTTP Post Request
@@ -156,7 +156,7 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
                             content.setCard_id(jsonChildNode.optString("card_id"));
                         }
 
-                        getCardListForPPVOutput.add(content);
+                        getCardListForPPVOutputModel.add(content);
                     } catch (Exception e) {
                         status = 0;
 
@@ -177,19 +177,19 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        listener.onCardListForPPVPreExecuteStarted();
+        listener.onGetCardListForPPVPreExecuteStarted();
         responseStr = "0";
         status = 0;
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
+            listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutputModel, status, totalItems, message);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
+            listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutputModel, status, totalItems, message);
         }
 
     }
@@ -197,7 +197,7 @@ public class GetCardListForPPVAsynTask extends AsyncTask<GetCardListForPPVInputM
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onCardListForPPVPostExecuteCompleted(getCardListForPPVOutput, status, totalItems, message);
+        listener.onGetCardListForPPVPostExecuteCompleted(getCardListForPPVOutputModel, status, totalItems, message);
 
     }
 

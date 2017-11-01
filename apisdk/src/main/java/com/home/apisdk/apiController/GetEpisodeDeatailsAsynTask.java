@@ -100,14 +100,14 @@ public class GetEpisodeDeatailsAsynTask extends AsyncTask<Episode_Details_input,
 
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
-        Log.v("MUVISDK", "GetContentListAsyn");
+        Log.v("MUVISDK", "GetContentListAsynTask");
 
     }
 
     /**
      * Background thread to execute.
      *
-     * @return  null
+     * @return null
      * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
@@ -178,6 +178,7 @@ public class GetEpisodeDeatailsAsynTask extends AsyncTask<Episode_Details_input,
                     } else {
                         isAPV = 0;
                     }
+
                     episode_details_output.setIsAPV(isAPV);
 
                     // Episode_Details_output payment = new Episode_Details_output();
@@ -687,7 +688,7 @@ public class GetEpisodeDeatailsAsynTask extends AsyncTask<Episode_Details_input,
         this.episode_details_input = episode_details_input;
         PACKAGE_NAME=context.getPackageName();
         Log.v("MUVISDK", "pkgnm :"+PACKAGE_NAME);
-        Log.v("MUVISDK", "GetContentListAsyn");
+        Log.v("MUVISDK", "GetContentListAsynTask");
 
     }
 

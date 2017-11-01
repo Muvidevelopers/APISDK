@@ -1,7 +1,5 @@
 /**
  * SDK initialization, platform and device information classes.
- *
- *
  */
 
 
@@ -33,7 +31,7 @@ import java.io.IOException;
 
 public class AuthUserPaymentInfoAsyntask extends AsyncTask<AuthUserPaymentInfoInputModel, Void, Void> {
 
-    private AuthUserPaymentInfoInputModel authUserPaymentInfoInput;
+    private AuthUserPaymentInfoInputModel authUserPaymentInfoInputModel;
     private String PACKAGE_NAME;
     private String message;
     private String responseStr;
@@ -61,32 +59,32 @@ public class AuthUserPaymentInfoAsyntask extends AsyncTask<AuthUserPaymentInfoIn
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param authUserPaymentInfoOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param authUserPaymentInfoOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
          * @param status                         Response Code from the server
          * @param message                        Message Response
          */
 
-        void onAuthUserPaymentInfoPostExecuteCompleted(AuthUserPaymentInfoOutputModel authUserPaymentInfoOutput, int status, String message);
+        void onAuthUserPaymentInfoPostExecuteCompleted(AuthUserPaymentInfoOutputModel authUserPaymentInfoOutputModel, int status, String message);
     }
 
 
-    AuthUserPaymentInfoOutputModel authUserPaymentInfoOutput = new AuthUserPaymentInfoOutputModel();
+    AuthUserPaymentInfoOutputModel authUserPaymentInfoOutputModel = new AuthUserPaymentInfoOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param authUserPaymentInfoInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     * @param authUserPaymentInfoInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
      *                                      For Example: to use this API we have to set following attributes:
      *                                      setAuthToken(),setName_on_card() etc.
      * @param listener                      AuthUserPaymentInfo Listener
      * @param context                       android.content.Context
      */
 
-    public AuthUserPaymentInfoAsyntask(AuthUserPaymentInfoInputModel authUserPaymentInfoInput, AuthUserPaymentInfoListener listener, Context context) {
+    public AuthUserPaymentInfoAsyntask(AuthUserPaymentInfoInputModel authUserPaymentInfoInputModel, AuthUserPaymentInfoListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
-        this.authUserPaymentInfoInput = authUserPaymentInfoInput;
+        this.authUserPaymentInfoInputModel = authUserPaymentInfoInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "register user payment");
@@ -95,7 +93,7 @@ public class AuthUserPaymentInfoAsyntask extends AsyncTask<AuthUserPaymentInfoIn
     /**
      * Background thread to execute.
      *
-     * @return  null
+     * @return null
      * @throws org.apache.http.conn.ConnectTimeoutException,IOException
      */
 
@@ -108,13 +106,13 @@ public class AuthUserPaymentInfoAsyntask extends AsyncTask<AuthUserPaymentInfoIn
             HttpPost httppost = new HttpPost(APIUrlConstant.getAuthUserPaymentInfoUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.authUserPaymentInfoInput.getAuthToken());
-            httppost.addHeader(HeaderConstants.NAME_ON_CARD, this.authUserPaymentInfoInput.getName_on_card());
-            httppost.addHeader(HeaderConstants.EXPIRY_MONTH, this.authUserPaymentInfoInput.getExpiryMonth());
-            httppost.addHeader(HeaderConstants.EXPIRY_YEAR, this.authUserPaymentInfoInput.getExpiryYear());
-            httppost.addHeader(HeaderConstants.CARD_NUMBER, this.authUserPaymentInfoInput.getCardNumber());
-            httppost.addHeader(HeaderConstants.CVV, this.authUserPaymentInfoInput.getCvv());
-            httppost.addHeader(HeaderConstants.EMAIL, this.authUserPaymentInfoInput.getEmail());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.authUserPaymentInfoInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.NAME_ON_CARD, this.authUserPaymentInfoInputModel.getName_on_card());
+            httppost.addHeader(HeaderConstants.EXPIRY_MONTH, this.authUserPaymentInfoInputModel.getExpiryMonth());
+            httppost.addHeader(HeaderConstants.EXPIRY_YEAR, this.authUserPaymentInfoInputModel.getExpiryYear());
+            httppost.addHeader(HeaderConstants.CARD_NUMBER, this.authUserPaymentInfoInputModel.getCardNumber());
+            httppost.addHeader(HeaderConstants.CVV, this.authUserPaymentInfoInputModel.getCvv());
+            httppost.addHeader(HeaderConstants.EMAIL, this.authUserPaymentInfoInputModel.getEmail());
 
 
             try {
@@ -146,26 +144,26 @@ public class AuthUserPaymentInfoAsyntask extends AsyncTask<AuthUserPaymentInfoIn
                 if (myJson.has("card")) {
                     mainJson = myJson.getJSONObject("card");
                     if (mainJson.has("status") && mainJson.optString("status").trim() != null && !mainJson.optString("status").trim().isEmpty() && !mainJson.optString("status").trim().equals("null") && !mainJson.optString("status").trim().matches("")) {
-                        authUserPaymentInfoOutput.setStatus(mainJson.optString("status"));
+                        authUserPaymentInfoOutputModel.setStatus(mainJson.optString("status"));
                     }
 
                     if (mainJson.has("token") && mainJson.optString("token").trim() != null && !mainJson.optString("token").trim().isEmpty() && !mainJson.optString("token").trim().equals("null") && !mainJson.optString("token").trim().matches("")) {
-                        authUserPaymentInfoOutput.setToken(mainJson.optString("token"));
+                        authUserPaymentInfoOutputModel.setToken(mainJson.optString("token"));
                     }
 
                     if (mainJson.has("response_text") && mainJson.optString("response_text").trim() != null && !mainJson.optString("response_text").trim().isEmpty() && !mainJson.optString("response_text").trim().equals("null") && !mainJson.optString("response_text").trim().matches("")) {
-                        authUserPaymentInfoOutput.setResponse_text(mainJson.optString("response_text"));
+                        authUserPaymentInfoOutputModel.setResponse_text(mainJson.optString("response_text"));
                     }
 
                     if (mainJson.has("profile_id") && mainJson.optString("profile_id").trim() != null && !mainJson.optString("profile_id").trim().isEmpty() && !mainJson.optString("profile_id").trim().equals("null") && !mainJson.optString("profile_id").trim().matches("")) {
-                        authUserPaymentInfoOutput.setProfile_id(mainJson.optString("profile_id"));
+                        authUserPaymentInfoOutputModel.setProfile_id(mainJson.optString("profile_id"));
                     }
                     if (mainJson.has("card_last_fourdigit") && mainJson.optString("card_last_fourdigit").trim() != null && !mainJson.optString("card_last_fourdigit").trim().isEmpty() && !mainJson.optString("card_last_fourdigit").trim().equals("null") && !mainJson.optString("card_last_fourdigit").trim().matches("")) {
-                        authUserPaymentInfoOutput.setCard_last_fourdigit(mainJson.optString("card_last_fourdigit"));
+                        authUserPaymentInfoOutputModel.setCard_last_fourdigit(mainJson.optString("card_last_fourdigit"));
                     }
 
                     if (mainJson.has("card_type") && mainJson.optString("card_type").trim() != null && !mainJson.optString("card_type").trim().isEmpty() && !mainJson.optString("card_type").trim().equals("null") && !mainJson.optString("card_type").trim().matches("")) {
-                        authUserPaymentInfoOutput.setCard_type(mainJson.optString("card_type"));
+                        authUserPaymentInfoOutputModel.setCard_type(mainJson.optString("card_type"));
                     }
                 }
 
@@ -200,18 +198,18 @@ public class AuthUserPaymentInfoAsyntask extends AsyncTask<AuthUserPaymentInfoIn
         code = 0;
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
-            listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutput, code, message);
+            listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutputModel, code, message);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
-            listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutput, code, message);
+            listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutputModel, code, message);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutput, code, responseMessageStr);
+        listener.onAuthUserPaymentInfoPostExecuteCompleted(authUserPaymentInfoOutputModel, code, responseMessageStr);
     }
 }

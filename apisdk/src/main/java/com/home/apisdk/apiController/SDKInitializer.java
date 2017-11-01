@@ -21,9 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * This is the main entrance point for the API SDK. By Calling the init() Method of this class, we will able to use all the API Controllers.
- *
- * @author MUVI
+ * Created by muvi on 25/7/17.
  */
 
 public class SDKInitializer {
@@ -74,11 +72,6 @@ public class SDKInitializer {
         return _instance;
     }
 
-    /**
-     * @param sdkInitializerListner
-     * @param context
-     * @param authToken
-     */
 
     public void init(SDKInitializerListner sdkInitializerListner,
                      Context context,
@@ -89,11 +82,6 @@ public class SDKInitializer {
         this.authToken = authToken;
         new InitAsync().execute();
     }
-
-    /**
-     * @param context
-     * @param authToken
-     */
 
     public void init(Context context,
                      String authToken) {
@@ -115,7 +103,7 @@ public class SDKInitializer {
                 e.printStackTrace();
             }
             Date today = new Date();
-            long differenceInDays = (int) calculateDays(loggedInDate, today);
+            long differenceInDays = (int)calculateDays(loggedInDate, today);
             if (differenceInDays >= 1) {
 
                 sdkInitializerPreference.clearSDKPref();
@@ -226,14 +214,14 @@ public class SDKInitializer {
 
     public static long calculateDays(Date dateEarly, Date dateLater) {
         return (dateLater.getTime() - dateEarly.getTime()) / (24 * 60 * 60 * 1000);
-
     }
+
     public static void setData(Context ctx){
         sdkInitializerPreference = SDKInitializerPreference.getSdkInitializerPreference(ctx);
         sdkInitializerPreference.setPackage_namePref(ctx.getPackageName());
         sdkInitializerPreference.setHash_KeyPref("NN");
     }
-}
 
+}
 
 

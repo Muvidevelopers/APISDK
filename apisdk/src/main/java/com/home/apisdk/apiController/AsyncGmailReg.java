@@ -24,6 +24,7 @@ import java.io.IOException;
  * @author MUVI
  */
 
+
 public class AsyncGmailReg extends AsyncTask<GmailLoginInput, Void, Void> {
     private GmailLoginInput gmailLoginInput;
     private int status;
@@ -37,6 +38,7 @@ public class AsyncGmailReg extends AsyncTask<GmailLoginInput, Void, Void> {
      * Interface used to allow the caller of a AsyncGmailReg to run some code when get
      * responses.
      */
+
 
     public interface AsyncGmailListener {
 

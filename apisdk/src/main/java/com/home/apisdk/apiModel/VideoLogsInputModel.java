@@ -18,6 +18,70 @@ public class VideoLogsInputModel {
     String deviceType;
     String videoLogId;
     String is_streaming_restriction;
+    String contentTypeId;
+
+    /**
+     * This Method is use to Get the Content Type Id
+     *
+     * @return contentTypeId
+     */
+
+    public String getContentTypeId() {
+        return contentTypeId;
+    }
+
+    /**
+     * This Method is use to Set the Content Type Id
+     *
+     * @param contentTypeId For Setting The Content Type Id
+     */
+
+    public void setContentTypeId(String contentTypeId) {
+        this.contentTypeId = contentTypeId;
+    }
+
+    /**
+     * This Method is use to Get the Resume Time
+     *
+     * @return resumeTime
+     */
+
+    public String getResumeTime() {
+        return resumeTime;
+    }
+
+    /**
+     * This Method is use to Set the Resume Time
+     *
+     * @param resumeTime For Setting The Resume Time
+     */
+
+    public void setResumeTime(String resumeTime) {
+        this.resumeTime = resumeTime;
+    }
+
+    /**
+     * This Method is use to Get the Log Item Id
+     *
+     * @return logTemId
+     */
+
+    public String getLogTemId() {
+        return logTemId;
+    }
+
+    /**
+     * This Method is use to Set the Log Item Id
+     *
+     * @param logTemId For Setting The Log Item Id
+     */
+
+    public void setLogTemId(String logTemId) {
+        this.logTemId = logTemId;
+    }
+
+    String resumeTime;
+    String logTemId;
 
     /**
      * This Method is use to Get the Streaming Restriction Details

@@ -1,7 +1,7 @@
 package com.home.apisdk.apiModel;
 
 /**
- * This Model Class Holds All The Output Attributes For ContentAuthorizedAsynTask
+ * This Model Class Holds All The Output Attributes For GetValidateUserAsynTask
  *
  * @author MUVI
  */

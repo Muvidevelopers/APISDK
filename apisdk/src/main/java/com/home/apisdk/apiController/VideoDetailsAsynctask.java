@@ -20,6 +20,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -74,9 +75,9 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
          * This method to handle post-execution work.
          *
          * @param _video_details_output A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param code                  Response Code from the server
-         * @param status                For Getting The Status
-         * @param message               On Success Message
+         * @param code                     Response Code from the server
+         * @param status                   For Getting The Status
+         * @param message                  On Success Message
          */
 
         void onVideoDetailsPostExecuteCompleted(Video_Details_Output _video_details_output, int code, String status, String message);
@@ -109,7 +110,7 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
      * Background thread to execute.
      *
      * @return null
-     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
      */
 
     @Override
@@ -163,11 +164,19 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
                     _video_details_output.setVideoResolution(myJson.optString("videoResolution"));
                     _video_details_output.setVideoUrl(myJson.optString("videoUrl"));
                     _video_details_output.setEmed_url(myJson.optString("emed_url"));
-                    _video_details_output.setPlayed_length(myJson.optString("played_length"));
+                    if ((myJson.has("played_length")) && myJson.getString("played_length").trim() != null && !myJson.getString("played_length").trim().isEmpty() && !myJson.getString("played_length").trim().equals("null") && !myJson.getString("played_length").trim().matches("")) {
+                        _video_details_output.setPlayed_length(myJson.optString("played_length"));
+                    } else {
+                        _video_details_output.setPlayed_length("0");
+                    }
                     _video_details_output.setThirdparty_url(myJson.optString("thirdparty_url"));
                     _video_details_output.setStudio_approved_url(myJson.optString("studio_approved_url"));
                     _video_details_output.setLicenseUrl(myJson.optString("licenseUrl"));
-                    _video_details_output.setIs_offline(myJson.optString("is_offline"));
+                    if ((myJson.has("is_offline")) && myJson.getString("is_offline").trim() != null && !myJson.getString("is_offline").trim().isEmpty() && !myJson.getString("is_offline").trim().equals("null") && !myJson.getString("is_offline").trim().matches("")) {
+                        _video_details_output.setIs_offline(myJson.optString("is_offline"));
+                    } else {
+                        _video_details_output.setIs_offline("");
+                    }
                     _video_details_output.setStreaming_restriction(myJson.optString("streaming_restriction"));
                     _video_details_output.setEmbedTrailerUrl(myJson.optString("embedTrailerUrl"));
                     _video_details_output.setEmed_url(myJson.optString("emed_url"));
@@ -233,10 +242,10 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
                         if (adJosnArray != null) {
                             if (adJosnArray.length() > 0) {
                                 for (int i = 0; i < adJosnArray.length(); i++) {
-                                    if (adJosnArray.getJSONObject(i).has("channel_id"))
-                                        _video_details_output.setChannel_id(adJosnArray.getJSONObject(i).optString("channel_id").trim());
-                                    if (adJosnArray.getJSONObject(i).has("ad_network_id"))
-                                        _video_details_output.setAdNetworkId(adJosnArray.getJSONObject(i).optInt("ad_network_id"));
+                                    if(adJosnArray.getJSONObject(i).has("channel_id"))
+                                    _video_details_output.setChannel_id(adJosnArray.getJSONObject(i).optString("channel_id").trim());
+                                    if(adJosnArray.getJSONObject(i).has("ad_network_id"))
+                                    _video_details_output.setAdNetworkId(adJosnArray.getJSONObject(i).optInt("ad_network_id"));
                                 }
 
                             }
@@ -245,12 +254,12 @@ public class VideoDetailsAsynctask extends AsyncTask<GetVideoDetailsInput, Void,
 
                     if (adJosnDetails.has("adsTime")) {
                         JSONObject adTimeJosnDetails = adJosnDetails.getJSONObject("adsTime");
-                        _video_details_output.setMidRoll(Integer.parseInt(adTimeJosnDetails.optString("mid")));
-                        _video_details_output.setPreRoll(Integer.parseInt(adTimeJosnDetails.optString("start")));
-                        _video_details_output.setPostRoll(Integer.parseInt(adTimeJosnDetails.optString("end")));
+                            _video_details_output.setMidRoll(Integer.parseInt(adTimeJosnDetails.optString("mid")));
+                            _video_details_output.setPreRoll(Integer.parseInt(adTimeJosnDetails.optString("start")));
+                            _video_details_output.setPostRoll(Integer.parseInt(adTimeJosnDetails.optString("end")));
 
-                        if (_video_details_output.getMidRoll() == 1) {
-                            _video_details_output.setAdDetails(adTimeJosnDetails.optString("midroll_values"));
+                            if (_video_details_output.getMidRoll()==1) {
+                                _video_details_output.setAdDetails(adTimeJosnDetails.optString("midroll_values"));
                         }
                     }
                 }

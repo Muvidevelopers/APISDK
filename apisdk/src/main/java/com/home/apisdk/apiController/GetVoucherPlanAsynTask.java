@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ import java.io.IOException;
  */
 public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, Void, Void> {
 
-    private GetVoucherPlanInputModel getVoucherPlanInput;
+    private GetVoucherPlanInputModel getVoucherPlanInputModel;
     private String responseStr;
     private int status;
     private String message;
@@ -56,33 +57,33 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
          * This method will be invoked after controller complete execution.
          * This method to handle post-execution work.
          *
-         * @param getVoucherPlanOutput A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param status               Response Code From The Server
-         * @param message              On Success Message
+         * @param getVoucherPlanOutputModel A Model Class which contain responses. To get that responses we need to call the respective getter methods.
+         * @param status                    Response Code From The Server
+         * @param message                   On Success Message
          */
 
-        void onGetVoucherPlanPostExecuteCompleted(GetVoucherPlanOutputModel getVoucherPlanOutput, int status, String message);
+        void onGetVoucherPlanPostExecuteCompleted(GetVoucherPlanOutputModel getVoucherPlanOutputModel, int status, String message);
     }
 
 
-    GetVoucherPlanOutputModel getVoucherPlanOutput = new GetVoucherPlanOutputModel();
+    GetVoucherPlanOutputModel getVoucherPlanOutputModel = new GetVoucherPlanOutputModel();
 
     /**
      * Constructor to initialise the private data members.
      *
-     * @param getVoucherPlanInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                            For Example: to use this API we have to set following attributes:
-     *                            setAuthToken(),setMovie_id() etc.
-     * @param listener            GetVoucherPlan Listener
-     * @param context             android.content.Context
+     * @param getVoucherPlanInputModel A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
+     *                                 For Example: to use this API we have to set following attributes:
+     *                                 setAuthToken(),setMovie_id() etc.
+     * @param listener                 GetVoucherPlan Listener
+     * @param context                  android.content.Context
      */
 
-    public GetVoucherPlanAsynTask(GetVoucherPlanInputModel getVoucherPlanInput, GetVoucherPlanListener listener, Context context) {
+    public GetVoucherPlanAsynTask(GetVoucherPlanInputModel getVoucherPlanInputModel, GetVoucherPlanListener listener, Context context) {
         this.listener = listener;
         this.context = context;
 
 
-        this.getVoucherPlanInput = getVoucherPlanInput;
+        this.getVoucherPlanInputModel = getVoucherPlanInputModel;
         PACKAGE_NAME = context.getPackageName();
         Log.v("MUVISDK", "pkgnm :" + PACKAGE_NAME);
         Log.v("MUVISDK", "get voucher plan");
@@ -92,8 +93,8 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
     /**
      * Background thread to execute.
      *
-     * @return  null
-     * @throws org.apache.http.conn.ConnectTimeoutException,IOException
+     * @return null
+     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
      */
 
     @Override
@@ -104,11 +105,11 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
             HttpPost httppost = new HttpPost(APIUrlConstant.getGetVoucherPlanUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getVoucherPlanInput.getAuthToken());
-            httppost.addHeader(HeaderConstants.MOVIE_ID, this.getVoucherPlanInput.getMovie_id());
-            httppost.addHeader(HeaderConstants.STREAM_ID, this.getVoucherPlanInput.getStream_id());
-            httppost.addHeader(HeaderConstants.SEASON, this.getVoucherPlanInput.getSeason());
-            httppost.addHeader(HeaderConstants.USER_ID, this.getVoucherPlanInput.getUser_id());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.getVoucherPlanInputModel.getAuthToken());
+            httppost.addHeader(HeaderConstants.MOVIE_ID, this.getVoucherPlanInputModel.getMovie_id());
+            httppost.addHeader(HeaderConstants.STREAM_ID, this.getVoucherPlanInputModel.getStream_id());
+            httppost.addHeader(HeaderConstants.SEASON, this.getVoucherPlanInputModel.getSeason());
+            httppost.addHeader(HeaderConstants.USER_ID, this.getVoucherPlanInputModel.getUser_id());
 
 
             // Execute HTTP Post Request
@@ -135,21 +136,23 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
 
 
             if (status == 200) {
+
+
                 if(myJson.optString("is_show")!=null)
                 {
                     if(!(myJson.optString("is_show").equals("")) && !(myJson.optString("is_show").equals("null"))
                             && (myJson.optString("is_show").trim().equals("1")))
                     {
-                        getVoucherPlanOutput.setIs_show(myJson.optString("1"));
+                        getVoucherPlanOutputModel.setIs_show(myJson.optString("1"));
                     }
                     else
                     {
-                        getVoucherPlanOutput.setIs_show(myJson.optString("0"));
+                        getVoucherPlanOutputModel.setIs_show(myJson.optString("0"));
                     }
                 }
                 else
                 {
-                    getVoucherPlanOutput.setIs_show(myJson.optString("0"));
+                    getVoucherPlanOutputModel.setIs_show(myJson.optString("0"));
                 }
 
                 // Checking for Season Purchase Type
@@ -159,16 +162,16 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
                     if(!(myJson.optString("is_season").equals("")) && !(myJson.optString("is_season").equals("null"))
                             && (myJson.optString("is_season").trim().equals("1")))
                     {
-                        getVoucherPlanOutput.setIs_season(myJson.optString("1"));
+                        getVoucherPlanOutputModel.setIs_season(myJson.optString("1"));
                     }
                     else
                     {
-                        getVoucherPlanOutput.setIs_season(myJson.optString("0"));
+                        getVoucherPlanOutputModel.setIs_season(myJson.optString("0"));
                     }
                 }
                 else
                 {
-                    getVoucherPlanOutput.setIs_season(myJson.optString("0"));
+                    getVoucherPlanOutputModel.setIs_season(myJson.optString("0"));
                 }
 
                 // Checking for Episode Purchase Type
@@ -178,18 +181,17 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
                     if(!(myJson.optString("is_episode").equals("")) && !(myJson.optString("is_episode").equals("null"))
                             && (myJson.optString("is_episode").trim().equals("1")))
                     {
-                        getVoucherPlanOutput.setIs_episode(myJson.optString("1"));
+                        getVoucherPlanOutputModel.setIs_episode(myJson.optString("1"));
                     }
                     else
                     {
-                        getVoucherPlanOutput.setIs_episode(myJson.optString("0"));
+                        getVoucherPlanOutputModel.setIs_episode(myJson.optString("0"));
                     }
                 }
                 else
                 {
-                    getVoucherPlanOutput.setIs_episode(myJson.optString("0"));
+                    getVoucherPlanOutputModel.setIs_episode(myJson.optString("0"));
                 }
-
 
             }
 
@@ -210,13 +212,13 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutput, status, message);
+            listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutput, status, message);
+            listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);
         }
 
 
@@ -225,7 +227,7 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutput, status, message);
+        listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);
 
     }
 
