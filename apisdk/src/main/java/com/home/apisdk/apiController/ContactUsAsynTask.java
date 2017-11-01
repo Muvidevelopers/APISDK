@@ -168,8 +168,6 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
             message = "Hash Key Is Not Available. Please Initialize The SDK";
             listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);
         }
-
-
     }
 
     @Override
