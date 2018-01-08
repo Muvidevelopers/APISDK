@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.MyLibraryInputModel;
 import com.home.apisdk.apiModel.MyLibraryOutputModel;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void> {
 
     private MyLibraryInputModel myLibraryInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String totalItems;
     private String message;
@@ -66,7 +67,7 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
          * @param message                   On Success Message
          */
 
-        void onMyLibraryPostExecuteCompleted(ArrayList<MyLibraryOutputModel> myLibraryOutputModelArray, int status, String totalItems, String message);
+        void onMyLibraryPostExecuteCompleted(ArrayList<MyLibraryOutputModel> myLibraryOutputModelArray, int status, String totalItems, String message,String response);
     }
 
     ArrayList<MyLibraryOutputModel> myLibraryOutputModel = new ArrayList<MyLibraryOutputModel>();
@@ -153,8 +154,14 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
                         jsonChildNode = jsonMainNode.getJSONObject(i);
                         MyLibraryOutputModel content = new MyLibraryOutputModel();
 
-                        if ((jsonChildNode.has("genre")) && jsonChildNode.optString("genre").trim() != null && !jsonChildNode.optString("genre").trim().isEmpty() && !jsonChildNode.optString("genre").trim().equals("null") && !jsonChildNode.optString("genre").trim().matches("")) {
-                            content.setGenre(jsonChildNode.optString("genre"));
+                        String mylibrarygenre = "";
+                        if ((jsonChildNode.has("genres")) && jsonChildNode.optString("genres").trim() != null && !jsonChildNode.optString("genres").trim().isEmpty() && !jsonChildNode.optString("genres").trim().equals("null") && !jsonChildNode.optString("genres").trim().matches("")) {
+                            mylibrarygenre = jsonChildNode.optString("genres");
+                            mylibrarygenre = mylibrarygenre.replaceAll("\\[", "");
+                            mylibrarygenre = mylibrarygenre.replaceAll("\\]", "");
+                            mylibrarygenre = mylibrarygenre.replaceAll(",", " , ");
+                            mylibrarygenre = mylibrarygenre.replaceAll("\"", "");
+                            content.setGenre(mylibrarygenre);
 
                         }
                         if ((jsonChildNode.has("name")) && jsonChildNode.optString("name").trim() != null && !jsonChildNode.optString("name").trim().isEmpty() && !jsonChildNode.optString("name").trim().equals("null") && !jsonChildNode.optString("name").trim().matches("")) {
@@ -223,13 +230,13 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, responseStr);
+            listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, responseStr);
+            listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, message,responseStr);
         }
 
     }
@@ -237,7 +244,7 @@ public class MyLibraryAsynTask extends AsyncTask<MyLibraryInputModel, Void, Void
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, responseStr);
+        listener.onMyLibraryPostExecuteCompleted(myLibraryOutputModel, status, totalItems, message,responseStr);
 
     }
 

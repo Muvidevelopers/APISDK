@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> {
 
     private GetMenusInputModel getMenusInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -92,7 +92,7 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
          * @param message             On Success Message
          */
 
-        void onGetMenusPostExecuteCompleted(MenusOutputModel menusOutputModel, int status, String message);
+        void onGetMenusPostExecuteCompleted(MenusOutputModel menusOutputModel, int status, String message , String response);
     }
 
 
@@ -346,13 +346,13 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetMenusPostExecuteCompleted(menusOutputModel, status, message);
+            listener.onGetMenusPostExecuteCompleted(menusOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetMenusPostExecuteCompleted(menusOutputModel, status, message);
+            listener.onGetMenusPostExecuteCompleted(menusOutputModel, status, message,responseStr);
         }
 
     }
@@ -360,7 +360,7 @@ public class GetMenusAsynTask extends AsyncTask<GetMenusInputModel, Void, Void> 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetMenusPostExecuteCompleted(menusOutputModel, status, message);
+        listener.onGetMenusPostExecuteCompleted(menusOutputModel, status, message,responseStr);
 
     }
 

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.DeleteInvoicePdfInputModel;
 import com.home.apisdk.apiModel.DeleteInvoicePdfOutputModel;
@@ -35,7 +36,7 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
     private DeleteInvoicePdfInputModel deleteInvoicePdfInputModel;
     private String PACKAGE_NAME;
     private String message;
-    private String responseStr;
+    private String responseStr="";
     private String status;
     private int code;
     private DeleteInvoicePdfOutputModel deleteInvoicePdfOutputModel;
@@ -66,7 +67,7 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
          * @param status                      For Current Status
          */
 
-        void onDeleteInvoicePdfPostExecuteCompleted(DeleteInvoicePdfOutputModel deleteInvoicePdfOutputModel, int code, String message, String status);
+        void onDeleteInvoicePdfPostExecuteCompleted(DeleteInvoicePdfOutputModel deleteInvoicePdfOutputModel, int code, String message, String status,String response);
     }
 
     /**
@@ -154,19 +155,19 @@ public class DeleteInvoicePdfAsynTask extends AsyncTask<DeleteInvoicePdfInputMod
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status);
+            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status);
+            listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status,responseStr);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status);
+        listener.onDeleteInvoicePdfPostExecuteCompleted(deleteInvoicePdfOutputModel, code, message, status,responseStr);
     }
 }

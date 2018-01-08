@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
+import com.home.apisdk.Utils;
 import com.home.apisdk.apiModel.FFVideoLogDetailsInput;
 
 import org.json.JSONObject;
@@ -35,12 +36,12 @@ import javax.net.ssl.HttpsURLConnection;
 public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput, Void, Void> {
 
     private FFVideoLogDetailsInput ffVideoLogDetailsInput;
-    private String responseStr;
+    private String responseStr="";
     private String message;
     private int code;
     private String PACKAGE_NAME;
     private String videoLogId = "";
-    private String videoLogstreamId="";
+    private String videoLogstreamId = "";
     private GetFFVideoLogsListener listener;
     private Context context;
 
@@ -66,7 +67,7 @@ public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput,
          * @param videoLogId For getting the Video Log Id
          */
 
-        void onGetFFVideoLogsPostExecuteCompleted(int code, String status, String videoLogId);
+        void onGetFFVideoLogsPostExecuteCompleted(int code, String status, String videoLogId,String response);
     }
 
     /**
@@ -103,56 +104,19 @@ public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput,
         try {
 
             // Execute HTTP Post Request
-            try {
-                URL url = new URL(APIUrlConstant.getVideoLogsUrl());
-                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-
-                Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.ffVideoLogDetailsInput.getAuthToken())
-                        .appendQueryParameter(HeaderConstants.USER_ID, this.ffVideoLogDetailsInput.getUser_id())
-                        .appendQueryParameter(HeaderConstants.IP_ADDRESS, this.ffVideoLogDetailsInput.getIp_address())
-                        .appendQueryParameter(HeaderConstants.MOVIE_ID, this.ffVideoLogDetailsInput.getMovie_id())
-                        .appendQueryParameter(HeaderConstants.EPISODE_ID, this.ffVideoLogDetailsInput.getEpisode_id())
-                        .appendQueryParameter(HeaderConstants.PLAYED_LENGTH, this.ffVideoLogDetailsInput.getPlayed_length())
-                        .appendQueryParameter(HeaderConstants.WATCH_STATUS, this.ffVideoLogDetailsInput.getWatch_status())
-                        .appendQueryParameter(HeaderConstants.DEVICE_TYPE, this.ffVideoLogDetailsInput.getDevice_type())
-                        .appendQueryParameter(HeaderConstants.LOG_ID, this.ffVideoLogDetailsInput.getLog_id());
-                String query = builder.build().getEncodedQuery();
-
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                writer.write(query);
-                writer.flush();
-                writer.close();
-                os.close();
-
-                InputStream ins = conn.getInputStream();
-                InputStreamReader isr = new InputStreamReader(ins);
-                BufferedReader in = new BufferedReader(isr);
-
-                String inputLine;
-
-                while ((inputLine = in.readLine()) != null) {
-                    System.out.println(inputLine);
-                    responseStr = inputLine;
-                    Log.v("MUVISDK", "responseStr" + responseStr);
-
-                }
-                in.close();
-            } catch (org.apache.http.conn.ConnectTimeoutException e) {
-
-                code = 0;
-
-
-            } catch (IOException e) {
-                code = 0;
-            }
+            URL url = new URL(APIUrlConstant.getVideoLogsUrl());
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.ffVideoLogDetailsInput.getAuthToken())
+                    .appendQueryParameter(HeaderConstants.USER_ID, this.ffVideoLogDetailsInput.getUser_id())
+                    .appendQueryParameter(HeaderConstants.IP_ADDRESS, this.ffVideoLogDetailsInput.getIp_address())
+                    .appendQueryParameter(HeaderConstants.MOVIE_ID, this.ffVideoLogDetailsInput.getMovie_id())
+                    .appendQueryParameter(HeaderConstants.EPISODE_ID, this.ffVideoLogDetailsInput.getEpisode_id())
+                    .appendQueryParameter(HeaderConstants.PLAYED_LENGTH, this.ffVideoLogDetailsInput.getPlayed_length())
+                    .appendQueryParameter(HeaderConstants.WATCH_STATUS, this.ffVideoLogDetailsInput.getWatch_status())
+                    .appendQueryParameter(HeaderConstants.DEVICE_TYPE, this.ffVideoLogDetailsInput.getDevice_type())
+                    .appendQueryParameter(HeaderConstants.LOG_ID, this.ffVideoLogDetailsInput.getLog_id());
+            String query = builder.build().getEncodedQuery();
+            responseStr = Utils.handleHttpAndHttpsRequest(url, query, code, message);
 
             JSONObject mainJson = null;
             if (responseStr != null) {
@@ -188,19 +152,19 @@ public class GetFFVideoLogDetailsAsync extends AsyncTask<FFVideoLogDetailsInput,
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetFFVideoLogsPostExecuteCompleted(code, responseStr, videoLogId);
+            listener.onGetFFVideoLogsPostExecuteCompleted(code, responseStr, videoLogId,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetFFVideoLogsPostExecuteCompleted(code, responseStr, videoLogId);
+            listener.onGetFFVideoLogsPostExecuteCompleted(code, responseStr, videoLogId,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onGetFFVideoLogsPostExecuteCompleted(code, responseStr, videoLogId);
+        listener.onGetFFVideoLogsPostExecuteCompleted(code, responseStr, videoLogId,responseStr);
     }
 }

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GetMonetizationDetailsInputModel;
 import com.home.apisdk.apiModel.GetMonetizationDetailsOutputModel;
@@ -33,7 +34,7 @@ import java.io.IOException;
 public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDetailsInputModel, Void, Void> {
 
     private GetMonetizationDetailsInputModel getMonetizationDetailsInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -63,7 +64,7 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
          * @param message                           On Success Message
          */
 
-        void onGetMonetizationDetailsPostExecuteCompleted(GetMonetizationDetailsOutputModel getMonetizationDetailsOutputModel, int status, String message);
+        void onGetMonetizationDetailsPostExecuteCompleted(GetMonetizationDetailsOutputModel getMonetizationDetailsOutputModel, int status, String message,String response);
     }
 
 
@@ -156,18 +157,15 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
                 }
             } else {
 
-                responseStr = "0";
                 status = 0;
                 message = "Error";
             }
         } catch (final JSONException e1) {
 
-            responseStr = "0";
             status = 0;
             message = "Error";
         } catch (Exception e) {
 
-            responseStr = "0";
             status = 0;
             message = "Error";
         }
@@ -185,13 +183,13 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message);
+            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message);
+            listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message,responseStr);
         }
 
 
@@ -200,7 +198,7 @@ public class GetMonetizationDetailsAsynctask extends AsyncTask<GetMonetizationDe
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message);
+        listener.onGetMonetizationDetailsPostExecuteCompleted(getMonetizationDetailsOutputModel, status, message,responseStr);
 
     }
 

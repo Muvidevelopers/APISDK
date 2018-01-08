@@ -33,7 +33,7 @@ import java.io.IOException;
 public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputModel, Void, Void> {
 
     private AddContentRatingInputModel addContentRatingInputModel;
-    private String responseStr;
+    private String responseStr="";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -62,7 +62,7 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
          * @param status                      Response Code from the server
          * @param message                     Holds the Status
          */
-        void onAddContentRatingPostExecuteCompleted(AddContentRatingOutputModel addContentRatingOutputModel, int status, String message);
+        void onAddContentRatingPostExecuteCompleted(AddContentRatingOutputModel addContentRatingOutputModel, int status, String message,String response);
     }
 
 
@@ -141,18 +141,16 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
 
                 if ((myJson.has("msg")) && myJson.optString("msg").trim() != null && !myJson.optString("msg").trim().isEmpty() && !myJson.optString("msg").trim().equals("null") && !myJson.optString("msg").trim().matches("")) {
                     addContentRatingOutputModel.setMsg(myJson.optString("msg"));
+                } else {
+                    addContentRatingOutputModel.setMsg("");
                 }
 
 
             } else {
-
-                responseStr = "0";
                 status = 0;
                 message = "Error";
             }
         } catch (Exception e) {
-
-            responseStr = "0";
             status = 0;
             message = "Error";
         }
@@ -170,13 +168,13 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message);
+            listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message);
+            listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message,responseStr);
         }
 
     }
@@ -184,7 +182,7 @@ public class AddContentRatingAsynTask extends AsyncTask<AddContentRatingInputMod
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message);
+        listener.onAddContentRatingPostExecuteCompleted(addContentRatingOutputModel, status, message,responseStr);
 
     }
 

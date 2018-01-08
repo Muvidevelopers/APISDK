@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.PurchaseHistoryInputModel;
 import com.home.apisdk.apiModel.PurchaseHistoryOutputModel;
@@ -37,7 +38,7 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
     private PurchaseHistoryInputModel purchaseHistoryInputModel;
     private String PACKAGE_NAME;
     private String message;
-    private String responseStr;
+    private String responseStr = "";
     private int code;
     private PurchaseHistoryListener listener;
     private Context context;
@@ -64,7 +65,7 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
          * @param status                     Response Code from the server
          */
 
-        void onPurchaseHistoryPostExecuteCompleted(ArrayList<PurchaseHistoryOutputModel> purchaseHistoryOutputModel, int status);
+        void onPurchaseHistoryPostExecuteCompleted(ArrayList<PurchaseHistoryOutputModel> purchaseHistoryOutputModel, int status,String response);
     }
 
     ArrayList<PurchaseHistoryOutputModel> purchaseHistoryOutputModel = new ArrayList<PurchaseHistoryOutputModel>();
@@ -147,15 +148,36 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
                         jsonChildNode = jsonMainNode.getJSONObject(i);
                         PurchaseHistoryOutputModel content = new PurchaseHistoryOutputModel();
 
-                        if ((jsonChildNode.has("amount")) && jsonChildNode.optString("amount").trim() != null && !jsonChildNode.optString("amount").trim().isEmpty() && !jsonChildNode.optString("amount").trim().equals("null") && !jsonChildNode.optString("amount").trim().matches("")) {
-                            content.setAmount(jsonChildNode.optString("amount"));
-                        }
+
                         if ((jsonChildNode.has("currency_code")) && jsonChildNode.optString("currency_code").trim() != null && !jsonChildNode.optString("currency_code").trim().isEmpty() && !jsonChildNode.optString("currency_code").trim().equals("null") && !jsonChildNode.optString("currency_code").trim().matches("")) {
                             content.setCurrency_code(jsonChildNode.optString("currency_code"));
 
                         }
                         if ((jsonChildNode.has("currency_symbol")) && jsonChildNode.optString("currency_symbol").trim() != null && !jsonChildNode.optString("currency_symbol").trim().isEmpty() && !jsonChildNode.optString("currency_symbol").trim().equals("null") && !jsonChildNode.optString("currency_symbol").trim().matches("")) {
                             content.setCurrency_symbol(jsonChildNode.optString("currency_symbol"));
+                        }
+                        if ((jsonChildNode.has("amount")) && jsonChildNode.optString("amount").trim() != null && !jsonChildNode.optString("amount").trim().isEmpty() && !jsonChildNode.optString("amount").trim().equals("null") && !jsonChildNode.optString("amount").trim().matches("")) {
+                            content.setAmount(jsonChildNode.optString("amount"));
+                            if(content.getCurrency_symbol().equals("") || content.getCurrency_symbol()==null || content.getCurrency_symbol().trim().equals(null))
+                            {
+                                content.setAmount(content.getCurrency_code()+""+content.getAmount());
+                            }
+                            else
+                            {
+                                content.setAmount(content.getCurrency_symbol()+""+content.getAmount());
+                            }
+                        }
+                        else {
+
+                            if(content.getCurrency_symbol().equals("") || content.getCurrency_symbol()==null || content.getCurrency_symbol().trim().equals(null))
+                            {
+                                content.setAmount(content.getCurrency_code()+"0");
+                            }
+                            else
+                            {
+                                content.setAmount(content.getCurrency_symbol()+"0");
+                            }
+                           // content.setAmount("");
                         }
                         if ((jsonChildNode.has("id")) && jsonChildNode.optString("id").trim() != null && !jsonChildNode.optString("id").trim().isEmpty() && !jsonChildNode.optString("id").trim().equals("null") && !jsonChildNode.optString("id").trim().matches("")) {
                             content.setId(jsonChildNode.optString("id"));
@@ -198,19 +220,19 @@ public class PurchaseHistoryAsyntask extends AsyncTask<PurchaseHistoryInputModel
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);
+            listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);
+            listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code,responseStr);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code);
+        listener.onPurchaseHistoryPostExecuteCompleted(purchaseHistoryOutputModel, code,responseStr);
     }
 }

@@ -1,5 +1,7 @@
 package com.home.apisdk.apiModel;
 
+import java.util.ArrayList;
+
 /**
  * This Model Class Holds All The Output Attributes For GetContentDetailsAsynTask
  *

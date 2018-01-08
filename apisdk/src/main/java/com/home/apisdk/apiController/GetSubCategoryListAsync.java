@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class GetSubCategoryListAsync extends AsyncTask<SubCategoryListInput, Void, Void> {
 
     private SubCategoryListInput subCategoryListInput;
-    private String responseStr;
+    private String responseStr = "";
     private int code;
     private String status;
     private String PACKAGE_NAME;
@@ -59,7 +59,7 @@ public class GetSubCategoryListAsync extends AsyncTask<SubCategoryListInput, Voi
          * @param status             On Success Message
          */
 
-        void onGetSubCategoryListPostExecuteCompleted(ArrayList<SubCategoryOutput> subCategoryOutputs, int code, String status);
+        void onGetSubCategoryListPostExecuteCompleted(ArrayList<SubCategoryOutput> subCategoryOutputs, int code, String status ,String response);
     }
 
     ArrayList<SubCategoryOutput> subCategoryOutputs = new ArrayList<SubCategoryOutput>();
@@ -163,17 +163,17 @@ public class GetSubCategoryListAsync extends AsyncTask<SubCategoryListInput, Voi
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             status = "Packge Name Not Matched";
-            listener.onGetSubCategoryListPostExecuteCompleted(subCategoryOutputs, code, status);
+            listener.onGetSubCategoryListPostExecuteCompleted(subCategoryOutputs, code, status,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
-            listener.onGetSubCategoryListPostExecuteCompleted(subCategoryOutputs, code, status);
+            listener.onGetSubCategoryListPostExecuteCompleted(subCategoryOutputs, code, status,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetSubCategoryListPostExecuteCompleted(subCategoryOutputs, code, status);
+        listener.onGetSubCategoryListPostExecuteCompleted(subCategoryOutputs, code, status,responseStr);
     }
 }

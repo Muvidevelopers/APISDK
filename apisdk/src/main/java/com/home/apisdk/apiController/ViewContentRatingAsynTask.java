@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputModel, Void, Void> {
 
     private ViewContentRatingInputModel viewContentRatingInputModel;
-    private String responseStr, movieUniqueId;
+    private String responseStr = "", movieUniqueId;
     private int status;
     private String message;
     private String permalink;
@@ -65,7 +65,7 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
          * @param message                      On Success Message
          */
 
-        void onViewContentRatingPostExecuteCompleted(ViewContentRatingOutputModel viewContentRatingOutputModel, int status, String message);
+        void onViewContentRatingPostExecuteCompleted(ViewContentRatingOutputModel viewContentRatingOutputModel, int status, String message,String response);
     }
 
     ViewContentRatingOutputModel viewContentRatingOutputModel;
@@ -143,9 +143,15 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
                 if (status == 200) {
                     viewContentRatingOutputModel = new ViewContentRatingOutputModel();
 
-                    if ((myJson.has("showrating")) && myJson.optString("showrating").trim() != null && !myJson.optString("showrating").trim().isEmpty() && !myJson.optString("showrating").trim().equals("null") && !myJson.optString("showrating").trim().matches("")) {
-                        viewContentRatingOutputModel.setShowrating(Integer.parseInt(myJson.optString("showrating")));
+                    try {
+                        if ((myJson.has("showrating")) && myJson.optString("showrating").trim() != null && !myJson.optString("showrating").trim().isEmpty() && !myJson.optString("showrating").trim().equals("null") && !myJson.optString("showrating").trim().matches("")) {
+                            viewContentRatingOutputModel.setShowrating(Integer.parseInt(myJson.optString("showrating")));
 
+                        }else {
+                            viewContentRatingOutputModel.setShowrating(0);
+                        }
+                    }catch (Exception e){
+                        viewContentRatingOutputModel.setShowrating(0);
                     }
                     JSONArray jsonMainNode = myJson.getJSONArray("rating");
                     int lengthJsonArr = jsonMainNode.length();
@@ -185,7 +191,6 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
 
                     viewContentRatingOutputModel.setRatingValue(ratingArrayList);
                 } else {
-                    responseStr = "0";
                     status = 0;
                     // totalItems = 0;
                     message = "";
@@ -209,14 +214,14 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
         {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutputModel, status, message);
+            listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutputModel, status, message,responseStr);
             return;
         }
         if(SDKInitializer.getHashKey(context).equals(""))
         {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutputModel, status,message);
+            listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutputModel, status,message,responseStr);
         }
 
     }
@@ -224,7 +229,7 @@ public class ViewContentRatingAsynTask extends AsyncTask<ViewContentRatingInputM
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutputModel, status, message);
+        listener.onViewContentRatingPostExecuteCompleted(viewContentRatingOutputModel, status, message,responseStr);
 
     }
 

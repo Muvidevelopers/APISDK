@@ -32,7 +32,7 @@ import java.io.IOException;
 public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void, Void> {
 
     private RemoveDeviceInputModel removeDeviceInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -62,7 +62,7 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
          * @param message                 On Success Message
          */
 
-        void onRemoveDevicePostExecuteCompleted(RemoveDeviceOutputModel removeDeviceOutputModel, int status, String message);
+        void onRemoveDevicePostExecuteCompleted(RemoveDeviceOutputModel removeDeviceOutputModel, int status, String message,String response);
     }
 
 
@@ -168,13 +168,13 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutputModel, status, message);
+            listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutputModel, status, message);
+            listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutputModel, status, message,responseStr);
         }
 
     }
@@ -182,7 +182,7 @@ public class RemoveDeviceAsynTask extends AsyncTask<RemoveDeviceInputModel, Void
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutputModel, status, message);
+        listener.onRemoveDevicePostExecuteCompleted(removeDeviceOutputModel, status, message,responseStr);
 
     }
 

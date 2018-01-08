@@ -35,7 +35,7 @@ public class CheckFbUserDetailsAsyn extends AsyncTask<CheckFbUserDetailsInput, V
 
     private CheckFbUserDetailsInput checkFbUserDetailsInput;
     private String PACKAGE_NAME;
-    private String responseStr;
+    private String responseStr = "";
     private String message;
     private int isNewUserStr = 1;
     private int code;
@@ -64,7 +64,7 @@ public class CheckFbUserDetailsAsyn extends AsyncTask<CheckFbUserDetailsInput, V
          * @param code Response Code From The Server
          */
 
-        void onCheckFbUserDetailsAsynPostExecuteCompleted(int code);
+        void onCheckFbUserDetailsAsynPostExecuteCompleted(int code , String response);
     }
 
     /**
@@ -123,7 +123,12 @@ public class CheckFbUserDetailsAsyn extends AsyncTask<CheckFbUserDetailsInput, V
             if (responseStr != null) {
                 myJson = new JSONObject(responseStr);
                 code = Integer.parseInt(myJson.optString("code"));
-                isNewUserStr = Integer.parseInt(myJson.optString("is_newuser"));
+                try {
+                    isNewUserStr = Integer.parseInt(myJson.optString("is_newuser"));
+                }catch (Exception e){
+                    isNewUserStr = 0;
+                }
+
             }
 
         } catch (JSONException e) {
@@ -142,19 +147,19 @@ public class CheckFbUserDetailsAsyn extends AsyncTask<CheckFbUserDetailsInput, V
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onCheckFbUserDetailsAsynPostExecuteCompleted(code);
+            listener.onCheckFbUserDetailsAsynPostExecuteCompleted(code,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onCheckFbUserDetailsAsynPostExecuteCompleted(code);
+            listener.onCheckFbUserDetailsAsynPostExecuteCompleted(code,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onCheckFbUserDetailsAsynPostExecuteCompleted(code);
+        listener.onCheckFbUserDetailsAsynPostExecuteCompleted(code,responseStr);
     }
 }

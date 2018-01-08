@@ -16,22 +16,18 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * This Class provides users to Load Filtered Video
- *
- * @author MUVI
+ * Created by MUVI on 11/8/2017.
  */
 
-public class LoadFilterVideoAsync extends AsyncTask<LoadFilterVideoInput, Void, Void> {
-
+public class LoadFilterVideoAsync extends AsyncTask<LoadFilterVideoInput,Void,Void>{
     private LoadFilterVideoInput loadFilterVideoInput;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private int totalItems;
     private String message;
@@ -40,45 +36,15 @@ public class LoadFilterVideoAsync extends AsyncTask<LoadFilterVideoInput, Void, 
     private Context context;
     public static ArrayList<String> genreArray;
 
-    /**
-     * Interface used to allow the caller of a LoadFilterVideoAsync to run some code when get
-     * responses.
-     */
 
-
-    public interface LoadFilterVideoListner {
-
-        /**
-         * This method will be invoked before controller start execution.
-         * This method to handle pre-execution work.
-         */
+    public interface LoadFilterVideoListner{
 
         void onLoadFilterVideoPreExecuteStarted();
-
-        /**
-         * This method will be invoked after controller complete execution.
-         * This method to handle post-execution work.
-         *
-         * @param loadFilterVideoOutputArrayList A Model Class which contain responses. To get that responses we need to call the respective getter methods.
-         * @param message              On Success Message
-         * @param status               For Getting the status
-         */
-
-        void onLoadFilterVideoPostExecuteCompleted(ArrayList<LoadFilterVideoOutput> loadFilterVideoOutputArrayList, int status, int totalItems, String message);
+        void onLoadFilterVideoPostExecuteCompleted(ArrayList<LoadFilterVideoOutput> loadFilterVideoOutputArrayList, int status, int totalItems, String message , String response);
 
     }
 
     ArrayList<LoadFilterVideoOutput> loadFilterVideoOutput = new ArrayList<LoadFilterVideoOutput>();
-
-    /**
-     * Constructor to initialise the private data members.
-     *
-     * @param loadFilterVideoInput A Model Class which is use for background task, we need to set all the attributes through setter methods of input model class,
-     *                            For Example: to use this API we have to set following attributes:
-     *                            setAuthToken(),setName() etc.
-     * @param listener            LoadFilterVideoListner
-     * @param context             android.content.Context
-     */
 
 
     public LoadFilterVideoAsync(LoadFilterVideoInput loadFilterVideoInput, LoadFilterVideoAsync.LoadFilterVideoListner listener, Context context) {
@@ -92,14 +58,6 @@ public class LoadFilterVideoAsync extends AsyncTask<LoadFilterVideoInput, Void, 
         Log.v("MUVISDK", "GetContentListAsynTask");
 
     }
-
-    /**
-     * Background thread to execute.
-     *
-     * @return null
-     * @throws org.apache.http.conn.ConnectTimeoutException,IOException,JSONException
-     */
-
     @Override
     protected Void doInBackground(LoadFilterVideoInput... params) {
         String urlRouteList = APIUrlConstant.getGetContentListUrl();
@@ -158,7 +116,11 @@ public class LoadFilterVideoAsync extends AsyncTask<LoadFilterVideoInput, Void, 
             if (responseStr != null) {
                 myJson = new JSONObject(responseStr);
                 status = Integer.parseInt(myJson.optString("status"));
-                totalItems = Integer.parseInt(myJson.optString("item_count"));
+                try {
+                    totalItems = Integer.parseInt(myJson.optString("item_count"));
+                }catch (Exception e){
+                    totalItems=0;
+                }
                 message = myJson.optString("msg");
             }
 
@@ -194,18 +156,38 @@ public class LoadFilterVideoAsync extends AsyncTask<LoadFilterVideoInput, Void, 
                         }
                         //videoTypeIdStr = "1";
 
-                        if ((jsonChildNode.has("is_converted")) && jsonChildNode.optString("is_converted").trim() != null && !jsonChildNode.optString("is_converted").trim().isEmpty() && !jsonChildNode.optString("is_converted").trim().equals("null") && !jsonChildNode.optString("is_converted").trim().matches("")) {
-                            filterVideo.setIsConverted(Integer.parseInt(jsonChildNode.optString("is_converted")));
+                        try {
+                            if ((jsonChildNode.has("is_converted")) && jsonChildNode.optString("is_converted").trim() != null && !jsonChildNode.optString("is_converted").trim().isEmpty() && !jsonChildNode.optString("is_converted").trim().equals("null") && !jsonChildNode.optString("is_converted").trim().matches("")) {
+                                filterVideo.setIsConverted(Integer.parseInt(jsonChildNode.optString("is_converted")));
 
+                            }else {
+                                filterVideo.setIsConverted(0);
+                            }
+                        }catch (Exception e){
+                            filterVideo.setIsConverted(0);
                         }
-                        if ((jsonChildNode.has("is_advance")) && jsonChildNode.optString("is_advance").trim() != null && !jsonChildNode.optString("is_advance").trim().isEmpty() && !jsonChildNode.optString("is_advance").trim().equals("null") && !jsonChildNode.optString("is_advance").trim().matches("")) {
-                            filterVideo.setIsAPV(Integer.parseInt(jsonChildNode.optString("is_advance")));
+                        try {
+                            if ((jsonChildNode.has("is_advance")) && jsonChildNode.optString("is_advance").trim() != null && !jsonChildNode.optString("is_advance").trim().isEmpty() && !jsonChildNode.optString("is_advance").trim().equals("null") && !jsonChildNode.optString("is_advance").trim().matches("")) {
+                                filterVideo.setIsAPV(Integer.parseInt(jsonChildNode.optString("is_advance")));
 
+                            }else {
+                                filterVideo.setIsAPV(0);
+                            }
+                        }catch (Exception e){
+                            filterVideo.setIsAPV(0);
                         }
-                        if ((jsonChildNode.has("is_ppv")) && jsonChildNode.optString("is_ppv").trim() != null && !jsonChildNode.optString("is_ppv").trim().isEmpty() && !jsonChildNode.optString("is_ppv").trim().equals("null") && !jsonChildNode.optString("is_ppv").trim().matches("")) {
-                            filterVideo.setIsPPV(Integer.parseInt(jsonChildNode.optString("is_ppv")));
 
+                        try {
+                            if ((jsonChildNode.has("is_ppv")) && jsonChildNode.optString("is_ppv").trim() != null && !jsonChildNode.optString("is_ppv").trim().isEmpty() && !jsonChildNode.optString("is_ppv").trim().equals("null") && !jsonChildNode.optString("is_ppv").trim().matches("")) {
+                                filterVideo.setIsPPV(Integer.parseInt(jsonChildNode.optString("is_ppv")));
+
+                            }else {
+                                filterVideo.setIsPPV(0);
+                            }
+                        }catch (Exception e){
+                            filterVideo.setIsPPV(0);
                         }
+
                         if ((jsonChildNode.has("is_episode")) && jsonChildNode.optString("is_episode").trim() != null && !jsonChildNode.optString("is_episode").trim().isEmpty() && !jsonChildNode.optString("is_episode").trim().equals("null") && !jsonChildNode.optString("is_episode").trim().matches("")) {
                             filterVideo.setIsEpisodeStr(jsonChildNode.optString("is_episode"));
 
@@ -237,18 +219,18 @@ public class LoadFilterVideoAsync extends AsyncTask<LoadFilterVideoInput, Void, 
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onLoadFilterVideoPostExecuteCompleted(loadFilterVideoOutput, status, totalItems, message);
+            listener.onLoadFilterVideoPostExecuteCompleted(loadFilterVideoOutput, status, totalItems, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onLoadFilterVideoPostExecuteCompleted(loadFilterVideoOutput, status, totalItems, message);
+            listener.onLoadFilterVideoPostExecuteCompleted(loadFilterVideoOutput, status, totalItems, message,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        listener.onLoadFilterVideoPostExecuteCompleted(loadFilterVideoOutput, status, totalItems, message);
+        listener.onLoadFilterVideoPostExecuteCompleted(loadFilterVideoOutput, status, totalItems, message,responseStr);
     }
 }

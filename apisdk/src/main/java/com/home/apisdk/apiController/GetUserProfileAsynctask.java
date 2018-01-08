@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.Get_UserProfile_Input;
 import com.home.apisdk.apiModel.Get_UserProfile_Output;
@@ -35,7 +36,7 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
     private Get_UserProfile_Input get_userProfile_input;
     private String PACKAGE_NAME;
     private String message;
-    private String responseStr;
+    private String responseStr="";
     private String status;
     private int code;
     private Get_UserProfile_Output get_userProfile_output;
@@ -66,7 +67,7 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
          * @param status                 For Getting The Status
          */
 
-        void onGet_UserProfilePostExecuteCompleted(Get_UserProfile_Output get_userProfile_output, int code, String message, String status);
+        void onGet_UserProfilePostExecuteCompleted(Get_UserProfile_Output get_userProfile_output, int code, String message, String status,String response);
     }
 
     /**
@@ -146,8 +147,13 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
                     get_userProfile_output.setDisplay_name(myJson.optString("display_name"));
                     get_userProfile_output.setStudio_id(myJson.optString("studio_id"));
                     get_userProfile_output.setProfile_image(myJson.optString("profile_image"));
+                    get_userProfile_output.setCustom_last_name(myJson.optString("custom_last_name"));
                     get_userProfile_output.setIsSubscribed(myJson.optString("isSubscribed"));
-
+                    if ((myJson.has("mobile_number")) && myJson.optString("mobile_number").trim() != null && !myJson.optString("mobile_number").trim().isEmpty() && !myJson.optString("mobile_number").trim().equals("null") && !myJson.optString("mobile_number").trim().matches("")) {
+                        get_userProfile_output.setPhone(myJson.optString("mobile_number"));
+                    } else {
+                        get_userProfile_output.setPhone("");
+                    }
 
                     if (myJson.has("custom_languages")) {
                         get_userProfile_output.setCustom_languages("custom_languages");
@@ -179,18 +185,18 @@ public class GetUserProfileAsynctask extends AsyncTask<Get_UserProfile_Input, Vo
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGet_UserProfilePostExecuteCompleted(get_userProfile_output, code, message, status);
+            listener.onGet_UserProfilePostExecuteCompleted(get_userProfile_output, code, message, status,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGet_UserProfilePostExecuteCompleted(get_userProfile_output, code, message, status);
+            listener.onGet_UserProfilePostExecuteCompleted(get_userProfile_output, code, message, status,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGet_UserProfilePostExecuteCompleted(get_userProfile_output, code, message, status);
+        listener.onGet_UserProfilePostExecuteCompleted(get_userProfile_output, code, message, status,responseStr);
     }
 }

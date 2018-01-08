@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.ContactUsInputModel;
 import com.home.apisdk.apiModel.ContactUsOutputModel;
@@ -36,7 +37,7 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
     private ContactUsInputModel contactUsInputModel;
     private String PACKAGE_NAME;
     private String message;
-    private String responseStr;
+    private String responseStr = "";
     private String status;
     private int code;
     private ContactUsOutputModel contactUsOutputModel;
@@ -68,7 +69,7 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
          * @param status               For Getting the status
          */
 
-        void onContactUsPostExecuteCompleted(ContactUsOutputModel contactUsOutputModel, int code, String message, String status);
+        void onContactUsPostExecuteCompleted(ContactUsOutputModel contactUsOutputModel, int code, String message, String status ,String response);
     }
 
     /**
@@ -160,18 +161,20 @@ public class ContactUsAsynTask extends AsyncTask<ContactUsInputModel, Void, Void
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);
+            listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);
+            listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status,responseStr);
         }
+
+
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status);
+        listener.onContactUsPostExecuteCompleted(contactUsOutputModel, code, message, status,responseStr);
     }
 }

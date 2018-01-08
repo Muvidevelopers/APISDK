@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.ViewFavouriteInputModel;
 import com.home.apisdk.apiModel.ViewFavouriteOutputModel;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Void, Void> {
 
     private ViewFavouriteInputModel viewFavouriteInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private int totalItems;
     private String message;
@@ -67,7 +68,7 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
          * @param message                       On Success Message
          */
 
-        void onViewFavouritePostExecuteCompleted(ArrayList<ViewFavouriteOutputModel> viewFavouriteOutputModelArray, int status, int totalItems, String message);
+        void onViewFavouritePostExecuteCompleted(ArrayList<ViewFavouriteOutputModel> viewFavouriteOutputModelArray, int status, int totalItems, String message,String response);
     }
 
     ArrayList<ViewFavouriteOutputModel> viewFavouriteOutputModel = new ArrayList<ViewFavouriteOutputModel>();
@@ -214,13 +215,13 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutputModel, status, totalItems, message);
+            listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutputModel, status, totalItems, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutputModel, status, totalItems, message);
+            listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutputModel, status, totalItems, message,responseStr);
         }
 
     }
@@ -228,7 +229,7 @@ public class ViewFavouriteAsynTask extends AsyncTask<ViewFavouriteInputModel, Vo
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutputModel, status, totalItems, message);
+        listener.onViewFavouritePostExecuteCompleted(viewFavouriteOutputModel, status, totalItems, message,responseStr);
 
     }
 

@@ -34,7 +34,7 @@ import java.io.IOException;
 public class UpdateGoogleIdAsynTask extends AsyncTask<UpdateGoogleIdInputModel, Void, Void> {
 
     private UpdateGoogleIdInputModel updateGoogleIdInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -64,7 +64,7 @@ public class UpdateGoogleIdAsynTask extends AsyncTask<UpdateGoogleIdInputModel, 
          * @param message                   On Success Message
          */
 
-        void onUpdateGoogleIdPostExecuteCompleted(UpdateGoogleIdOutputModel updateGoogleIdOutputModel, int status, String message);
+        void onUpdateGoogleIdPostExecuteCompleted(UpdateGoogleIdOutputModel updateGoogleIdOutputModel, int status, String message ,String response);
     }
 
 
@@ -170,13 +170,13 @@ public class UpdateGoogleIdAsynTask extends AsyncTask<UpdateGoogleIdInputModel, 
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onUpdateGoogleIdPostExecuteCompleted(updateGoogleIdOutputModel, status, message);
+            listener.onUpdateGoogleIdPostExecuteCompleted(updateGoogleIdOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onUpdateGoogleIdPostExecuteCompleted(updateGoogleIdOutputModel, status, message);
+            listener.onUpdateGoogleIdPostExecuteCompleted(updateGoogleIdOutputModel, status, message,responseStr);
         }
 
     }
@@ -184,7 +184,7 @@ public class UpdateGoogleIdAsynTask extends AsyncTask<UpdateGoogleIdInputModel, 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onUpdateGoogleIdPostExecuteCompleted(updateGoogleIdOutputModel, status, message);
+        listener.onUpdateGoogleIdPostExecuteCompleted(updateGoogleIdOutputModel, status, message,responseStr);
 
     }
 

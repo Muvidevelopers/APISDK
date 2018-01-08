@@ -7,7 +7,30 @@ package com.home.apisdk.apiModel;
  */
 public class Update_UserProfile_Output {
 
-    String name, email, nick_name, profile_image;
+    String name;
+
+    public String getCustom_last_name() {
+        return custom_last_name;
+    }
+
+    public void setCustom_last_name(String custom_last_name) {
+        this.custom_last_name = custom_last_name;
+    }
+
+    String custom_last_name;
+    String email;
+    String nick_name;
+    String profile_image;
+
+    public String getPhone_no() {
+        return phone_no;
+    }
+
+    public void setPhone_no(String phone_no) {
+        this.phone_no = phone_no;
+    }
+
+    String phone_no;
 
     /**
      * This Method is use to Set the Name

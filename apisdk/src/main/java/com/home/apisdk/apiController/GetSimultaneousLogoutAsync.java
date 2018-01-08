@@ -33,7 +33,7 @@ public class GetSimultaneousLogoutAsync extends AsyncTask<SimultaneousLogoutInpu
 
     private SimultaneousLogoutInput simultaneousLogoutInput;
     private String PACKAGE_NAME;
-    private String responseStr;
+    private String responseStr = "";
     private String message;
     private int code;
     private SimultaneousLogoutAsyncListener listener;
@@ -60,7 +60,7 @@ public class GetSimultaneousLogoutAsync extends AsyncTask<SimultaneousLogoutInpu
          * @param code Response Code From The Server
          */
 
-        void onSimultaneousLogoutPostExecuteCompleted(int code);
+        void onSimultaneousLogoutPostExecuteCompleted(int code ,String response);
     }
 
     /**
@@ -135,19 +135,19 @@ public class GetSimultaneousLogoutAsync extends AsyncTask<SimultaneousLogoutInpu
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onSimultaneousLogoutPostExecuteCompleted(code);
+            listener.onSimultaneousLogoutPostExecuteCompleted(code,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onSimultaneousLogoutPostExecuteCompleted(code);
+            listener.onSimultaneousLogoutPostExecuteCompleted(code,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onSimultaneousLogoutPostExecuteCompleted(code);
+        listener.onSimultaneousLogoutPostExecuteCompleted(code,responseStr);
     }
 }

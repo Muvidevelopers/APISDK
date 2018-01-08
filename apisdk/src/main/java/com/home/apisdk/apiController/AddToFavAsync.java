@@ -33,7 +33,7 @@ import java.io.IOException;
 public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {
     private AddToFavInputModel addToFavInputModel;
     private String PACKAGE_NAME;
-    private String responseStr;
+    private String responseStr="";
     private String sucessMsg;
     private int status=0;
     private AddToFavListener listener;
@@ -63,7 +63,7 @@ public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {
          * @param sucessMsg           On Success Message
          */
 
-        void onAddToFavPostExecuteCompleted(AddToFavOutputModel addToFavOutputModel, int status, String sucessMsg);
+        void onAddToFavPostExecuteCompleted(AddToFavOutputModel addToFavOutputModel, int status, String sucessMsg , String response);
     }
 
     AddToFavOutputModel AddToFavOutputModel = new AddToFavOutputModel();
@@ -101,7 +101,7 @@ public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getAddtoFavlist());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.addToFavInputModel.getAuthToken().trim());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.addToFavInputModel.getAuthToken());
             httppost.addHeader(HeaderConstants.MOVIE_UNIQ_ID, this.addToFavInputModel.getMovie_uniq_id());
             httppost.addHeader(HeaderConstants.CONTENT_TYPE, this.addToFavInputModel.getIsEpisodeStr());
             httppost.addHeader(HeaderConstants.USER_ID, this.addToFavInputModel.getLoggedInStr());
@@ -140,19 +140,19 @@ public class AddToFavAsync extends AsyncTask<AddToFavInputModel, Void, Void> {
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg);
+            listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg);
+            listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg);
+        listener.onAddToFavPostExecuteCompleted(AddToFavOutputModel, status, sucessMsg,responseStr);
     }
 }

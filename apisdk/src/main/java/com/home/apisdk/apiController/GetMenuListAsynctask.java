@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.MenuListInput;
 import com.home.apisdk.apiModel.MenuListOutput;
@@ -36,7 +37,7 @@ public class GetMenuListAsynctask extends AsyncTask<MenuListInput, Void, Void> {
     private MenuListInput menuListInput;
     private String PACKAGE_NAME;
     private String message;
-    private String responseStr;
+    private String responseStr= "";
     private int code;
     private GetMenuListListener listener;
     private Context context;
@@ -65,7 +66,7 @@ public class GetMenuListAsynctask extends AsyncTask<MenuListInput, Void, Void> {
          * @param message              On Success Message
          */
 
-        void onGetMenuListPostExecuteCompleted(ArrayList<MenuListOutput> menuListOutput, ArrayList<MenuListOutput> footermenuListOutput, int status, String message);
+        void onGetMenuListPostExecuteCompleted(ArrayList<MenuListOutput> menuListOutput, ArrayList<MenuListOutput> footermenuListOutput, int status, String message , String response);
     }
 
 
@@ -194,18 +195,18 @@ public class GetMenuListAsynctask extends AsyncTask<MenuListInput, Void, Void> {
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetMenuListPostExecuteCompleted(menuListOutput, footermenuListOutput, code, message);
+            listener.onGetMenuListPostExecuteCompleted(menuListOutput, footermenuListOutput, code, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetMenuListPostExecuteCompleted(menuListOutput, footermenuListOutput, code, message);
+            listener.onGetMenuListPostExecuteCompleted(menuListOutput, footermenuListOutput, code, message,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetMenuListPostExecuteCompleted(menuListOutput, footermenuListOutput, code, message);
+        listener.onGetMenuListPostExecuteCompleted(menuListOutput, footermenuListOutput, code, message,responseStr);
     }
 }

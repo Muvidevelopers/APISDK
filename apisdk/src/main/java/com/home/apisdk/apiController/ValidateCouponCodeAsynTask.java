@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.ValidateCouponCodeInputModel;
 import com.home.apisdk.apiModel.ValidateCouponCodeOutputModel;
@@ -34,7 +35,7 @@ import java.io.IOException;
 public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInputModel, Void, Void> {
 
     private ValidateCouponCodeInputModel validateCouponCodeInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private float planPrice = 0.0f;
     private float chargedPrice = 0.0f;
@@ -67,7 +68,7 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
          * @param message                       On Success Message
          */
 
-        void onValidateCouponCodePostExecuteCompleted(ValidateCouponCodeOutputModel validateCouponCodeOutputModel, int status, String message);
+        void onValidateCouponCodePostExecuteCompleted(ValidateCouponCodeOutputModel validateCouponCodeOutputModel, int status, String message,String response);
     }
 
     ValidateCouponCodeOutputModel validateCouponCodeOutputModel = new ValidateCouponCodeOutputModel();
@@ -109,11 +110,11 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
             HttpPost httppost = new HttpPost(APIUrlConstant.getValidateCouponCodeUrl());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
 
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.validateCouponCodeInputModel.getAuthToken().trim());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.validateCouponCodeInputModel.getAuthToken());
 
-            httppost.addHeader(HeaderConstants.USER_ID, this.validateCouponCodeInputModel.getUser_id().trim());
-            httppost.addHeader(HeaderConstants.COUPAN_CODE, this.validateCouponCodeInputModel.getCouponCode().trim());
-            httppost.addHeader(HeaderConstants.CURRENCY_ID, this.validateCouponCodeInputModel.getCurrencyId().trim());
+            httppost.addHeader(HeaderConstants.USER_ID, this.validateCouponCodeInputModel.getUser_id());
+            httppost.addHeader(HeaderConstants.COUPAN_CODE, this.validateCouponCodeInputModel.getCouponCode());
+            httppost.addHeader(HeaderConstants.CURRENCY_ID, this.validateCouponCodeInputModel.getCurrencyId());
 
 
             // Execute HTTP Post Request
@@ -172,13 +173,13 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, responseStr);
+            listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, responseStr);
+            listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, message,responseStr);
         }
 
 
@@ -187,7 +188,7 @@ public class ValidateCouponCodeAsynTask extends AsyncTask<ValidateCouponCodeInpu
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, message);
+        listener.onValidateCouponCodePostExecuteCompleted(validateCouponCodeOutputModel, status, message,responseStr);
 
     }
 

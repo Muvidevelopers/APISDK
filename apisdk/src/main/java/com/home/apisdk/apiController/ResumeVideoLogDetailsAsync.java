@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
+import com.home.apisdk.Utils;
 import com.home.apisdk.apiModel.ResumeVideoLogDetailsInput;
 
 import org.json.JSONException;
@@ -23,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -35,7 +37,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsInput, Void, Void> {
 
     private ResumeVideoLogDetailsInput resumeVideoLogDetailsInput;
-    private String responseStr;
+    private String responseStr="";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -67,7 +69,7 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
          * @param videoLogId For Getting The Video Log Id
          */
 
-        void onGetResumeVideoLogDetailsPostExecuteCompleted(int status, String message, String videoLogId);
+        void onGetResumeVideoLogDetailsPostExecuteCompleted(int status, String message, String videoLogId,String response);
     }
 
     /**
@@ -104,59 +106,19 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
         try {
 
             // Execute HTTP Post Request
-            try {
-                URL url = new URL(APIUrlConstant.getVideoLogsUrl());
-                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
 
-                Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.resumeVideoLogDetailsInput.getAuthToken())
-                        .appendQueryParameter(HeaderConstants.USER_ID, this.resumeVideoLogDetailsInput.getUser_id())
-                        .appendQueryParameter(HeaderConstants.IP_ADDRESS, this.resumeVideoLogDetailsInput.getIp_address())
-                        .appendQueryParameter(HeaderConstants.MOVIE_ID, this.resumeVideoLogDetailsInput.getMovie_id())
-                        .appendQueryParameter(HeaderConstants.EPISODE_ID, this.resumeVideoLogDetailsInput.getEpisode_id())
-                        .appendQueryParameter(HeaderConstants.PLAYED_LENGTH, this.resumeVideoLogDetailsInput.getPlayed_length())
-                        .appendQueryParameter(HeaderConstants.WATCH_STATUS, this.resumeVideoLogDetailsInput.getWatch_status());
+            URL url = new URL(APIUrlConstant.getVideoLogsUrl());
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.resumeVideoLogDetailsInput.getAuthToken())
+                    .appendQueryParameter(HeaderConstants.USER_ID, this.resumeVideoLogDetailsInput.getUser_id())
+                    .appendQueryParameter(HeaderConstants.IP_ADDRESS, this.resumeVideoLogDetailsInput.getIp_address())
+                    .appendQueryParameter(HeaderConstants.MOVIE_ID, this.resumeVideoLogDetailsInput.getMovie_id())
+                    .appendQueryParameter(HeaderConstants.EPISODE_ID, this.resumeVideoLogDetailsInput.getEpisode_id())
+                    .appendQueryParameter(HeaderConstants.PLAYED_LENGTH, this.resumeVideoLogDetailsInput.getPlayed_length())
+                    .appendQueryParameter(HeaderConstants.WATCH_STATUS, this.resumeVideoLogDetailsInput.getWatch_status());
 
-                String query = builder.build().getEncodedQuery();
-
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                writer.write(query);
-                writer.flush();
-                writer.close();
-                os.close();
-
-                InputStream ins = conn.getInputStream();
-                InputStreamReader isr = new InputStreamReader(ins);
-                BufferedReader in = new BufferedReader(isr);
-
-                String inputLine;
-
-                while ((inputLine = in.readLine()) != null) {
-                    System.out.println(inputLine);
-                    responseStr = inputLine;
-                    Log.v("MUVISDK", "responseStr" + responseStr);
-
-                }
-                in.close();
-
-
-            } catch (org.apache.http.conn.ConnectTimeoutException e) {
-
-                status = 0;
-                message = "Error";
-
-
-            } catch (IOException e) {
-                status = 0;
-                message = "Error";
-            }
+            String query = builder.build().getEncodedQuery();
+            responseStr = Utils.handleHttpAndHttpsRequest(url, query, status, message);
 
             JSONObject mainJson = null;
             if (responseStr != null) {
@@ -171,6 +133,10 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -182,13 +148,13 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status, responseStr, videoLogId);
+            listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status, responseStr, videoLogId,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status, responseStr, videoLogId);
+            listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status, responseStr, videoLogId,responseStr);
         }
 
     }
@@ -196,6 +162,6 @@ public class ResumeVideoLogDetailsAsync extends AsyncTask<ResumeVideoLogDetailsI
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status, responseStr, videoLogId);
+        listener.onGetResumeVideoLogDetailsPostExecuteCompleted(status, responseStr, videoLogId,responseStr);
     }
 }

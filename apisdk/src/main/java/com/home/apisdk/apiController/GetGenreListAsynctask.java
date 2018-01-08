@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GenreListInput;
 import com.home.apisdk.apiModel.GenreListOutput;
@@ -36,7 +37,7 @@ public class GetGenreListAsynctask extends AsyncTask<GenreListInput, Void, Void>
     private GenreListInput genreListInput;
     private String PACKAGE_NAME;
     private String status;
-    private String responseStr;
+    private String responseStr = "";
     private int code;
     private GenreListListener listener;
     private Context context;
@@ -64,7 +65,7 @@ public class GetGenreListAsynctask extends AsyncTask<GenreListInput, Void, Void>
          * @param status          Fo Getting the Status
          */
 
-        void onGetGenreListPostExecuteCompleted(ArrayList<GenreListOutput> genreListOutput, int code, String status);
+        void onGetGenreListPostExecuteCompleted(ArrayList<GenreListOutput> genreListOutput, int code, String status , String response);
     }
 
 
@@ -164,18 +165,18 @@ public class GetGenreListAsynctask extends AsyncTask<GenreListInput, Void, Void>
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             status = "Package Name Not Matched";
-            listener.onGetGenreListPostExecuteCompleted(genreListOutput, code, status);
+            listener.onGetGenreListPostExecuteCompleted(genreListOutput, code, status,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             status = "Please Initialize The SDK";
-            listener.onGetGenreListPostExecuteCompleted(genreListOutput, code, status);
+            listener.onGetGenreListPostExecuteCompleted(genreListOutput, code, status,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetGenreListPostExecuteCompleted(genreListOutput, code, status);
+        listener.onGetGenreListPostExecuteCompleted(genreListOutput, code, status,responseStr);
     }
 }

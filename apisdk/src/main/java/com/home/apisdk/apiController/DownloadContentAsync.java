@@ -37,7 +37,7 @@ public class DownloadContentAsync extends AsyncTask<DownloadContentInput, Void, 
     private String message;
     private String PACKAGE_NAME;
     private String filepath;
-    private String responseStr;
+    private String responseStr="";
     private DownloadContentListener listener;
     private Context context;
 
@@ -60,7 +60,7 @@ public class DownloadContentAsync extends AsyncTask<DownloadContentInput, Void, 
          *
          * @param filepath Holds download file of "filepath"
          */
-        void onDownloadContentPostExecuteCompleted(String filepath);
+        void onDownloadContentPostExecuteCompleted(String filepath,String response);
     }
 
 
@@ -139,19 +139,19 @@ public class DownloadContentAsync extends AsyncTask<DownloadContentInput, Void, 
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onDownloadContentPostExecuteCompleted(filepath);
+            listener.onDownloadContentPostExecuteCompleted(filepath,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onDownloadContentPostExecuteCompleted(filepath);
+            listener.onDownloadContentPostExecuteCompleted(filepath,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onDownloadContentPostExecuteCompleted(filepath);
+        listener.onDownloadContentPostExecuteCompleted(filepath,responseStr);
     }
 }

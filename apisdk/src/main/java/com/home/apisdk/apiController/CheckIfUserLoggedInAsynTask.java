@@ -32,7 +32,7 @@ import java.io.IOException;
 public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInInputModel, Void, Void> {
 
     private CheckIfUserLoggedInInputModel checkIfUserLoggedInInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -62,7 +62,7 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
          * @param message                        On Success Message
          */
 
-        void onCheckIfUserLogggedInPostExecuteCompleted(CheckIfUserLoggedInOutputModel checkIfUserLoggedInOutputModel, int status, String message);
+        void onCheckIfUserLogggedInPostExecuteCompleted(CheckIfUserLoggedInOutputModel checkIfUserLoggedInOutputModel, int status, String message , String response);
     }
 
 
@@ -137,20 +137,24 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
 
             if (status == 200) {
 
-                if ((myJson.has("is_login")) && myJson.optString("is_login").trim() != null && !myJson.optString("is_login").trim().isEmpty() && !myJson.optString("is_login").trim().equals("null") && !myJson.optString("is_login").trim().matches("")) {
-                    checkIfUserLoggedInOutputModel.setIs_login(Integer.parseInt(myJson.optString("is_login")));
+                try {
+                    if ((myJson.has("is_login")) && myJson.optString("is_login").trim() != null && !myJson.optString("is_login").trim().isEmpty() && !myJson.optString("is_login").trim().equals("null") && !myJson.optString("is_login").trim().matches("")) {
+                        checkIfUserLoggedInOutputModel.setIs_login(Integer.parseInt(myJson.optString("is_login")));
+                    }
+                    else {
+                        checkIfUserLoggedInOutputModel.setIs_login(0);
+                    }
+                }catch (Exception e){
+                    checkIfUserLoggedInOutputModel.setIs_login(0);
                 }
-
 
             } else {
 
-                responseStr = "0";
                 status = 0;
                 message = "Error";
             }
         } catch (Exception e) {
 
-            responseStr = "0";
             status = 0;
             message = "Error";
         }
@@ -168,13 +172,13 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
+            listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
+            listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message,responseStr);
         }
 
     }
@@ -182,7 +186,7 @@ public class CheckIfUserLoggedInAsynTask extends AsyncTask<CheckIfUserLoggedInIn
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message);
+        listener.onCheckIfUserLogggedInPostExecuteCompleted(checkIfUserLoggedInOutputModel, status, message,responseStr);
 
     }
 

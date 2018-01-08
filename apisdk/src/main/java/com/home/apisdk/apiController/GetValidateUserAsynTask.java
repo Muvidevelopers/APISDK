@@ -10,7 +10,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
+import com.home.apisdk.Utils;
 import com.home.apisdk.apiModel.ValidateUserInput;
 import com.home.apisdk.apiModel.ValidateUserOutput;
 
@@ -24,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -37,7 +40,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, Void> {
 
     private ValidateUserInput validateUserInput;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -69,7 +72,7 @@ public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, 
          * @param message            On Success Message
          */
 
-        void onGetValidateUserPostExecuteCompleted(ValidateUserOutput validateUserOutput, int status, String message);
+        void onGetValidateUserPostExecuteCompleted(ValidateUserOutput validateUserOutput, int status, String message,String response);
     }
 
 
@@ -108,97 +111,18 @@ public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, 
         try {
 
             // Execute HTTP Post Request
-            try {
-                URL url = new URL(APIUrlConstant.getValidateUserForContentUrl());
-                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(20000);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Accept", "application/json");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getUserId());
-                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getMuviUniqueId());
-                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getAuthToken());
 
-                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getEpisodeStreamUniqueId());
-                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getSeasonId());
-                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getLanguageCode());
-                Log.v("MUVISDK", "this.validateUserInput.getUserId()" + this.validateUserInput.getPurchaseType());
-
-                Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.validateUserInput.getAuthToken())
-                        .appendQueryParameter(HeaderConstants.USER_ID, this.validateUserInput.getUserId())
-                        .appendQueryParameter(HeaderConstants.MOVIE_ID, this.validateUserInput.getMuviUniqueId())
-                        .appendQueryParameter(HeaderConstants.EPISODE_ID, this.validateUserInput.getEpisodeStreamUniqueId())
-                        .appendQueryParameter(HeaderConstants.SEASON_ID, this.validateUserInput.getSeasonId())
-                        .appendQueryParameter(HeaderConstants.LANG_CODE, this.validateUserInput.getLanguageCode())
-                        .appendQueryParameter(HeaderConstants.PURCHASE_TYPE, this.validateUserInput.getPurchaseType());
-                String query = builder.build().getEncodedQuery();
-
-                Log.v("MUVISDK", "authToken" + this.validateUserInput.getAuthToken());
-                Log.v("MUVISDK", "user_id" + this.validateUserInput.getUserId());
-                Log.v("MUVISDK", "movie_id" + this.validateUserInput.getMuviUniqueId());
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                writer.write(query);
-                writer.flush();
-                writer.close();
-                os.close();
-
-
-                int responseCode = conn.getResponseCode();
-                if (responseCode != HttpsURLConnection.HTTP_OK) {
-                    final InputStream err = conn.getErrorStream();
-                    try {
-                    } finally {
-
-                        InputStreamReader isr = new InputStreamReader(err);
-                        BufferedReader in = new BufferedReader(isr);
-
-                        String inputLine;
-
-                        while ((inputLine = in.readLine()) != null) {
-                            System.out.println(inputLine);
-                            responseStr = inputLine;
-                            Log.v("MUVISDK", "responseStr" + responseStr);
-
-                        }
-                        in.close();
-                        err.close();
-                    }
-                } else {
-                    InputStream ins = conn.getInputStream();
-
-                    InputStreamReader isr = new InputStreamReader(ins);
-                    BufferedReader in = new BufferedReader(isr);
-
-                    String inputLine;
-
-                    while ((inputLine = in.readLine()) != null) {
-                        System.out.println(inputLine);
-                        responseStr = inputLine;
-                        Log.v("MUVISDK", "responseStr" + responseStr);
-
-                    }
-                    in.close();
-                }
-
-
-            } catch (org.apache.http.conn.ConnectTimeoutException e) {
-
-                status = 0;
-                message = "Error";
-                Log.v("MUVISDK", "ConnectTimeoutException" + e);
-
-
-            } catch (IOException e) {
-                status = 0;
-                message = "Error";
-                Log.v("MUVISDK", "IOException" + e);
-
-            }
+            URL url = new URL(APIUrlConstant.getValidateUserForContentUrl());
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter(HeaderConstants.AUTH_TOKEN, this.validateUserInput.getAuthToken())
+                    .appendQueryParameter(HeaderConstants.USER_ID, this.validateUserInput.getUserId())
+                    .appendQueryParameter(HeaderConstants.MOVIE_ID, this.validateUserInput.getMuviUniqueId())
+                    .appendQueryParameter(HeaderConstants.EPISODE_ID, this.validateUserInput.getEpisodeStreamUniqueId())
+                    .appendQueryParameter(HeaderConstants.SEASON_ID, this.validateUserInput.getSeasonId())
+                    .appendQueryParameter(HeaderConstants.LANG_CODE, this.validateUserInput.getLanguageCode())
+                    .appendQueryParameter(HeaderConstants.PURCHASE_TYPE, this.validateUserInput.getPurchaseType());
+            String query = builder.build().getEncodedQuery();
+            responseStr = Utils.handleHttpAndHttpsRequest(url, query, status, message);
 
             JSONObject mainJson = null;
             if (responseStr != null) {
@@ -252,13 +176,13 @@ public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, 
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetValidateUserPostExecuteCompleted(validateUserOutput, status, message);
+            listener.onGetValidateUserPostExecuteCompleted(validateUserOutput, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetValidateUserPostExecuteCompleted(validateUserOutput, status, message);
+            listener.onGetValidateUserPostExecuteCompleted(validateUserOutput, status, message,responseStr);
         }
 
     }
@@ -266,7 +190,7 @@ public class GetValidateUserAsynTask extends AsyncTask<ValidateUserInput, Void, 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetValidateUserPostExecuteCompleted(validateUserOutput, status, message);
+        listener.onGetValidateUserPostExecuteCompleted(validateUserOutput, status, message,responseStr);
 
     }
 

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.FeatureContentInputModel;
 import com.home.apisdk.apiModel.FeatureContentOutputModel;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputModel, Void, Void> {
 
     private FeatureContentInputModel featureContentInputModel;
-    private String responseStr;
+    private String responseStr="";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -62,7 +63,7 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
          * @param message                   On Success Message
          */
 
-        void onGetFeatureContentPostExecuteCompleted(ArrayList<FeatureContentOutputModel> featureContentOutputModel, int status, String message);
+        void onGetFeatureContentPostExecuteCompleted(ArrayList<FeatureContentOutputModel> featureContentOutputModel, int status, String message, String response);
     }
 
 
@@ -121,7 +122,7 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 responseStr = EntityUtils.toString(response.getEntity());
-                Log.v("MUVISDK", "RES" + responseStr);
+                Log.v("Muvi", "RES feature =" + responseStr);
 
             } catch (org.apache.http.conn.ConnectTimeoutException e) {
                 status = 0;
@@ -171,18 +172,40 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
                         }
                         //videoTypeIdStr = "1";
 
-                        if ((jsonChildNode.has("is_converted")) && jsonChildNode.optString("is_converted").trim() != null && !jsonChildNode.optString("is_converted").trim().isEmpty() && !jsonChildNode.optString("is_converted").trim().equals("null") && !jsonChildNode.optString("is_converted").trim().matches("")) {
-                            content.setIs_converted(Integer.parseInt(jsonChildNode.optString("is_converted")));
-
+                        try {
+                            if ((jsonChildNode.has("is_converted")) && jsonChildNode.optString("is_converted").trim() != null && !jsonChildNode.optString("is_converted").trim().isEmpty() && !jsonChildNode.optString("is_converted").trim().equals("null") && !jsonChildNode.optString("is_converted").trim().matches("")) {
+                                content.setIs_converted(Integer.parseInt(jsonChildNode.optString("is_converted")));
+                            }
+                            else {
+                                content.setIs_converted(0);
+                            }
+                        }catch (Exception e){
+                            content.setIs_converted(0);
                         }
-                        if ((jsonChildNode.has("is_advance")) && jsonChildNode.optString("is_advance").trim() != null && !jsonChildNode.optString("is_advance").trim().isEmpty() && !jsonChildNode.optString("is_advance").trim().equals("null") && !jsonChildNode.optString("is_advance").trim().matches("")) {
-                            content.setIs_advance(Integer.parseInt(jsonChildNode.optString("is_advance")));
 
-                        }
-                        if ((jsonChildNode.has("is_ppv")) && jsonChildNode.optString("is_ppv").trim() != null && !jsonChildNode.optString("is_ppv").trim().isEmpty() && !jsonChildNode.optString("is_ppv").trim().equals("null") && !jsonChildNode.optString("is_ppv").trim().matches("")) {
-                            content.setIs_ppv(Integer.parseInt(jsonChildNode.optString("is_ppv")));
+                        try{
+                            if ((jsonChildNode.has("is_advance")) && jsonChildNode.optString("is_advance").trim() != null && !jsonChildNode.optString("is_advance").trim().isEmpty() && !jsonChildNode.optString("is_advance").trim().equals("null") && !jsonChildNode.optString("is_advance").trim().matches("")) {
+                                content.setIs_advance(Integer.parseInt(jsonChildNode.optString("is_advance")));
 
+                            }else {
+                                content.setIs_advance(0);
+                            }
+                        }catch (Exception e){
+                            content.setIs_advance(0);
                         }
+
+                        try {
+                            if ((jsonChildNode.has("is_ppv")) && jsonChildNode.optString("is_ppv").trim() != null && !jsonChildNode.optString("is_ppv").trim().isEmpty() && !jsonChildNode.optString("is_ppv").trim().equals("null") && !jsonChildNode.optString("is_ppv").trim().matches("")) {
+                                content.setIs_ppv(Integer.parseInt(jsonChildNode.optString("is_ppv")));
+
+                            }
+                            else {
+                                content.setIs_ppv(0);
+                            }
+                        }catch (Exception e){
+                            content.setIs_ppv(0);
+                        }
+
                         if ((jsonChildNode.has("is_episode")) && jsonChildNode.optString("is_episode").trim() != null && !jsonChildNode.optString("is_episode").trim().isEmpty() && !jsonChildNode.optString("is_episode").trim().equals("null") && !jsonChildNode.optString("is_episode").trim().matches("")) {
                             content.setIs_episode(jsonChildNode.optString("is_episode"));
 
@@ -212,13 +235,13 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel, status, message);
+            listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel, status, message);
+            listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel, status, message,responseStr);
         }
 
 
@@ -227,7 +250,7 @@ public class GetFeatureContentAsynTask extends AsyncTask<FeatureContentInputMode
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel, status, message);
+        listener.onGetFeatureContentPostExecuteCompleted(featureContentOutputModel, status, message,responseStr);
 
     }
 

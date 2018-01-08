@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.Update_UserProfile_Input;
 import com.home.apisdk.apiModel.Update_UserProfile_Output;
@@ -35,7 +36,7 @@ public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Inp
     private Update_UserProfile_Input update_userProfile_input;
     private String PACKAGE_NAME;
     private String message;
-    private String responseStr;
+    private String responseStr ="";
     private int code;
     private Update_UserProfile_Output update_userProfile_output;
     private Update_UserProfileListener listener;
@@ -64,7 +65,7 @@ public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Inp
          * @param message                   On Success Message
          */
 
-        void onUpdateUserProfilePostExecuteCompleted(Update_UserProfile_Output update_userProfile_output, int code, String message);
+        void onUpdateUserProfilePostExecuteCompleted(Update_UserProfile_Output update_userProfile_output, int code, String message,String response);
     }
 
     /**
@@ -111,6 +112,8 @@ public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Inp
             httppost.addHeader(HeaderConstants.CUSTOM_LANGUAGES, this.update_userProfile_input.getCustom_languages());
             httppost.addHeader(HeaderConstants.CUSTOM_COUNTRY, this.update_userProfile_input.getCustom_country());
             httppost.addHeader(HeaderConstants.LANG_CODE, this.update_userProfile_input.getLang_code());
+            httppost.addHeader(HeaderConstants.MOBILE_NO, this.update_userProfile_input.getPhone_no());
+            httppost.addHeader(HeaderConstants.Custom_last_Name, this.update_userProfile_input.getCustom_last_name());
 
             // Execute HTTP Post Request
             try {
@@ -142,7 +145,13 @@ public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Inp
                     update_userProfile_output.setEmail(myJson.optString("email"));
                     update_userProfile_output.setNick_name(myJson.optString("nick_name"));
                     update_userProfile_output.setProfile_image(myJson.optString("profile_image"));
+                    if (myJson.has("mobile_number")) {
+                        update_userProfile_output.setPhone_no(myJson.optString("mobile_number"));
+                    }
+                    else {
+                        update_userProfile_output.setPhone_no("");
 
+                    }
                     Log.v("MUVISDK", "user_name====== " + myJson.optString("name"));
 
                 } catch (Exception e) {
@@ -167,18 +176,18 @@ public class UpadteUserProfileAsynctask extends AsyncTask<Update_UserProfile_Inp
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onUpdateUserProfilePostExecuteCompleted(update_userProfile_output, code, message);
+            listener.onUpdateUserProfilePostExecuteCompleted(update_userProfile_output, code, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onUpdateUserProfilePostExecuteCompleted(update_userProfile_output, code, message);
+            listener.onUpdateUserProfilePostExecuteCompleted(update_userProfile_output, code, message,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onUpdateUserProfilePostExecuteCompleted(update_userProfile_output, code, message);
+        listener.onUpdateUserProfilePostExecuteCompleted(update_userProfile_output, code, message,responseStr);
     }
 }

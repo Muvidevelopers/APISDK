@@ -42,6 +42,16 @@ public class APIUrlConstant {
      * endpoint to get Video Details API
      */
     public static String VIDEO_DETAILS_URL = "getVideoDetails";
+
+    /**
+     * endpoint to getMonitization Details API
+     */
+    public static String GET_MONITIZATION_DETAILS = "GetMonetizationDetails";
+
+    public static String getGetMonitizationDetails() {
+        return BASE_URl + GET_MONITIZATION_DETAILS;
+    }
+
     /**
      * endpoint to get Content List API
      */
@@ -81,13 +91,13 @@ public class APIUrlConstant {
     /**
      * endpoint to get Home Page API
      */
-    // public static String HOMEPAGE_URL = "homePage";
+   // public static String HOMEPAGE_URL = "homePage";
 
     public static String HOMEPAGE_URL = "getAppHomePage";
     /**
      * endpoint to get Featured Content Details API
      */
-    // public static String GET_FEATURE_CONTENT_URL = "getFeaturedContent";
+   // public static String GET_FEATURE_CONTENT_URL = "getFeaturedContent";
     public static String GET_FEATURE_CONTENT_URL = "getAPPFeaturedContent";
     /**
      * endpoint to get Image For Download API
@@ -285,43 +295,12 @@ public class APIUrlConstant {
 
     public static final String GetSubCategoryList = "getSubCategoryList";
 
-    /* endpoint to get Notification Count Details API*/
-
-    public static String notificationcount = "GetNoOfUnreadNotification";
-
-    /* endpoint to get Fcmregistration Details API*/
-    public static String fcmregistration = "RegisterMyDevice";
-
-
-    /* endpoint to get Notification Lists Details API*/
-
-    public static String notificationlists = "NotificationLists";
-
-
-    /* endpoint to get Read All Notification Details API*/
-
-    public static String readallnotification = "ReadAllNotification";
-
-    public static String getNotificationcount() {
-        return BASE_URl + notificationcount;
-    }
-
-    public static String getFcmregistration() {
-        return BASE_URl + fcmregistration;
-    }
-
-    public static String getNotificationLists() {
-        return BASE_URl + notificationlists;
-    }
-
-    public static String getReadallnotification() {
-        return BASE_URl + readallnotification;
-    }
 
 
     public static String getGetSubCategoryList() {
         return GetSubCategoryList;
     }
+
 
 
     public static String getGetAppMenu() {

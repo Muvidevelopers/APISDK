@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
+import com.home.apisdk.apiModel.AboutUsInput;
 import com.home.apisdk.apiModel.GmailLoginInput;
 import com.home.apisdk.apiModel.GmailLoginOutput;
 
@@ -30,7 +31,7 @@ public class AsyncGmailReg extends AsyncTask<GmailLoginInput, Void, Void> {
     private int status;
     private String message;
     private String PACKAGE_NAME;
-    private String responseStr;
+    private String responseStr="";
     private AsyncGmailReg.AsyncGmailListener listener;
     private Context context;
 
@@ -58,7 +59,7 @@ public class AsyncGmailReg extends AsyncTask<GmailLoginInput, Void, Void> {
          * @param message          On Success Message
          */
 
-        void onGmailRegPostExecuteCompleted(GmailLoginOutput gmailLoginOutput, int status, String message);
+        void onGmailRegPostExecuteCompleted(GmailLoginOutput gmailLoginOutput, int status, String message,String response);
     }
 
     GmailLoginOutput gmailLoginOutput = new GmailLoginOutput();
@@ -108,7 +109,7 @@ public class AsyncGmailReg extends AsyncTask<GmailLoginInput, Void, Void> {
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 responseStr = EntityUtils.toString(response.getEntity());
-                Log.v("Nihar", responseStr);
+
             } catch (org.apache.http.conn.ConnectTimeoutException e) {
                 status = 0;
                 message = "Error";
@@ -132,8 +133,15 @@ public class AsyncGmailReg extends AsyncTask<GmailLoginInput, Void, Void> {
                         gmailLoginOutput.setId("");
 
                     }
-                    if ((myJson.has("isSubscribed")) && myJson.optString("isSubscribed").trim() != null && !myJson.optString("isSubscribed").trim().isEmpty() && !myJson.optString("isSubscribed").trim().equals("null") && !myJson.optString("isSubscribed").trim().matches("")) {
-                        gmailLoginOutput.setIsSubscribed(myJson.optInt("isSubscribed"));
+                    try {
+                        if ((myJson.has("isSubscribed")) && myJson.optString("isSubscribed").trim() != null && !myJson.optString("isSubscribed").trim().isEmpty() && !myJson.optString("isSubscribed").trim().equals("null") && !myJson.optString("isSubscribed").trim().matches("")) {
+                            gmailLoginOutput.setIsSubscribed(myJson.optInt("isSubscribed"));
+                        }
+                        else {
+                            gmailLoginOutput.setIsSubscribed(0);
+                        }
+                    }catch (Exception e){
+                        gmailLoginOutput.setIsSubscribed(0);
                     }
 
                     if ((myJson.has("login_history_id")) && myJson.optString("login_history_id").trim() != null && !myJson.optString("login_history_id").trim().isEmpty() && !myJson.optString("login_history_id").trim().equals("null") && !myJson.optString("login_history_id").trim().matches("")) {
@@ -168,7 +176,6 @@ public class AsyncGmailReg extends AsyncTask<GmailLoginInput, Void, Void> {
 
                 } else {
 
-                    responseStr = "";
                     status = 0;
                     message = "Error";
                 }
@@ -182,7 +189,6 @@ public class AsyncGmailReg extends AsyncTask<GmailLoginInput, Void, Void> {
             }
 
         } catch (Exception e) {
-            responseStr = "";
             status = 0;
             message = "Error";
 
@@ -200,13 +206,13 @@ public class AsyncGmailReg extends AsyncTask<GmailLoginInput, Void, Void> {
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGmailRegPostExecuteCompleted(gmailLoginOutput, status, message);
+            listener.onGmailRegPostExecuteCompleted(gmailLoginOutput, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGmailRegPostExecuteCompleted(gmailLoginOutput, status, message);
+            listener.onGmailRegPostExecuteCompleted(gmailLoginOutput, status, message,responseStr);
         }
 
     }
@@ -214,7 +220,7 @@ public class AsyncGmailReg extends AsyncTask<GmailLoginInput, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGmailRegPostExecuteCompleted(gmailLoginOutput, status, message);
+        listener.onGmailRegPostExecuteCompleted(gmailLoginOutput, status, message,responseStr);
 
     }
 }

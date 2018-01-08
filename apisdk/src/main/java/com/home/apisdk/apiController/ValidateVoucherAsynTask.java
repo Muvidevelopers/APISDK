@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.ValidateVoucherInputModel;
 import com.home.apisdk.apiModel.ValidateVoucherOutputModel;
@@ -34,7 +35,7 @@ import java.io.IOException;
 public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel, Void, Void> {
 
     private ValidateVoucherInputModel validateVoucherInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -64,7 +65,7 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
          * @param message                    On Success Message
          */
 
-        void onValidateVoucherPostExecuteCompleted(ValidateVoucherOutputModel validateVoucherOutputModel, int status, String message);
+        void onValidateVoucherPostExecuteCompleted(ValidateVoucherOutputModel validateVoucherOutputModel, int status, String message,String response);
     }
 
     ValidateVoucherOutputModel validateVoucherOutputModel = new ValidateVoucherOutputModel();
@@ -162,13 +163,13 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message);
+            listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message);
+            listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message,responseStr);
         }
 
     }
@@ -176,7 +177,7 @@ public class ValidateVoucherAsynTask extends AsyncTask<ValidateVoucherInputModel
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message);
+        listener.onValidateVoucherPostExecuteCompleted(validateVoucherOutputModel, status, message,responseStr);
 
     }
 

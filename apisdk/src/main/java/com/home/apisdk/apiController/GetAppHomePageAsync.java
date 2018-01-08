@@ -4,8 +4,6 @@ package com.home.apisdk.apiController;
  * Created by MUVI on 10/5/2017.
  * <p>
  * SDK initialization, platform and device information classes.
- * <p>
- * SDK initialization, platform and device information classes.
  */
 
 /**
@@ -44,7 +42,7 @@ import java.util.ArrayList;
 public class GetAppHomePageAsync extends AsyncTask<HomePageInputModel, Void, Void> {
 
     private HomePageInputModel homePageInputModel;
-    private String responseStr;
+    private String responseStr="";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -78,7 +76,7 @@ public class GetAppHomePageAsync extends AsyncTask<HomePageInputModel, Void, Voi
          * @param message             On Success Message
          */
 
-        void onHomePagePostExecuteCompleted(AppHomePageOutput appHomePageOutput, int status, String message);
+        void onHomePagePostExecuteCompleted(AppHomePageOutput appHomePageOutput, int status, String message , String response);
     }
 
     AppHomePageOutput appHomePageOutput = new AppHomePageOutput();
@@ -183,8 +181,8 @@ public class GetAppHomePageAsync extends AsyncTask<HomePageInputModel, Void, Voi
                 JSONArray jsonMainNode = null;
                 if (myJson.has("SectionName")) {
 
-                    jsonMainNode = myJson.optJSONArray("SectionName");
-                    if (jsonMainNode != null && jsonMainNode.length() > 0) {
+                        jsonMainNode = myJson.optJSONArray("SectionName");
+                    if (jsonMainNode!=null && jsonMainNode.length()>0) {
                         for (int i = 0; i < jsonMainNode.length(); i++) {
 
                             JSONObject jsonChildNode;
@@ -227,13 +225,13 @@ public class GetAppHomePageAsync extends AsyncTask<HomePageInputModel, Void, Voi
                                 e.printStackTrace();
                             }
                         }
-                    } else {
+                    }else {
                         status = 0;
                     }
 
-                    Log.v("MUVISDK", "response123 = " + responseStr);
+                        Log.v("MUVISDK", "response123 = " + responseStr);
 
-                } else {
+                }else {
                     status = 0;
                 }
 
@@ -263,20 +261,20 @@ public class GetAppHomePageAsync extends AsyncTask<HomePageInputModel, Void, Voi
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onHomePagePostExecuteCompleted(appHomePageOutput, status, message);
+            listener.onHomePagePostExecuteCompleted(appHomePageOutput, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onHomePagePostExecuteCompleted(appHomePageOutput, status, message);
+            listener.onHomePagePostExecuteCompleted(appHomePageOutput, status, message,responseStr);
         }
     }
 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onHomePagePostExecuteCompleted(appHomePageOutput, status, message);
+        listener.onHomePagePostExecuteCompleted(appHomePageOutput, status, message,responseStr);
 
     }
 }

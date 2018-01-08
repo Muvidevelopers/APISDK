@@ -34,7 +34,7 @@ public class GetPPVPaymentAsync extends AsyncTask<RegisterUserPaymentInputModel,
     private RegisterUserPaymentInputModel registerUserPaymentInputModel;
     private String PACKAGE_NAME;
     private String message;
-    private String responseStr;
+    private String responseStr = "";
     private int code;
     private GetPPVPaymentListener listener;
     private Context context;

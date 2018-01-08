@@ -37,7 +37,7 @@ public class CheckDeviceAsyncTask extends AsyncTask<Void, Void, Void> {
     private CheckDeviceInput checkDeviceInput;
     private String PACKAGE_NAME;
     private String message = "";
-    private String responseStr;
+    private String responseStr="";
     private int code;
     private JSONObject myJson = null;
     private CheckDeviceOutput checkDeviceOutput;
@@ -68,7 +68,7 @@ public class CheckDeviceAsyncTask extends AsyncTask<Void, Void, Void> {
          * @param message           On Success Message
          */
 
-        void onCheckDevicePostExecuteCompleted(CheckDeviceOutput checkDeviceOutput, int code, String message);
+        void onCheckDevicePostExecuteCompleted(CheckDeviceOutput checkDeviceOutput, int code, String message ,String response);
     }
 
     /**
@@ -146,19 +146,19 @@ public class CheckDeviceAsyncTask extends AsyncTask<Void, Void, Void> {
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onCheckDevicePostExecuteCompleted(checkDeviceOutput, code, message);
+            listener.onCheckDevicePostExecuteCompleted(checkDeviceOutput, code, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onCheckDevicePostExecuteCompleted(checkDeviceOutput, code, message);
+            listener.onCheckDevicePostExecuteCompleted(checkDeviceOutput, code, message,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onCheckDevicePostExecuteCompleted(checkDeviceOutput, code, message);
+        listener.onCheckDevicePostExecuteCompleted(checkDeviceOutput, code, message,responseStr);
     }
 }

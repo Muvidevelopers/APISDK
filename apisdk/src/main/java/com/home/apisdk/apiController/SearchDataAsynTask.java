@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.Search_Data_input;
 import com.home.apisdk.apiModel.Search_Data_otput;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void> {
 
     private Search_Data_input search_data_input;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private int totalItems;
     private String message;
@@ -67,7 +68,7 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
          * @param message                On Success Message
          */
 
-        void onSearchDataPostExecuteCompleted(ArrayList<Search_Data_otput> contentListOutputArray, int status, int totalItems, String message);
+        void onSearchDataPostExecuteCompleted(ArrayList<Search_Data_otput> contentListOutputArray, int status, int totalItems, String message ,String response);
     }
 
     ArrayList<Search_Data_otput> search_data_otputs = new ArrayList<Search_Data_otput>();
@@ -111,7 +112,7 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
             httppost.addHeader(HeaderConstants.OFFSET, this.search_data_input.getOffset());
             httppost.addHeader(HeaderConstants.Q, this.search_data_input.getQ());
             httppost.addHeader(HeaderConstants.COUNTRY, this.search_data_input.getCountry());
-            httppost.addHeader(HeaderConstants.LANG_CODE, this.search_data_input.getLanguage_code());
+           // httppost.addHeader(HeaderConstants.LANG_CODE, this.search_data_input.getLanguage_code());
 
 
             // Execute HTTP Post Request
@@ -135,7 +136,11 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
             if (responseStr != null) {
                 myJson = new JSONObject(responseStr);
                 status = Integer.parseInt(myJson.optString("code"));
-                totalItems = Integer.parseInt(myJson.optString("item_count"));
+                try {
+                    totalItems = Integer.parseInt(myJson.optString("item_count"));
+                }catch (Exception e){
+                    totalItems=0;
+                }
                 message = myJson.optString("msg");
             }
 
@@ -162,6 +167,7 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
                             }
                             if ((jsonChildNode.has("name")) && jsonChildNode.optString("name").trim() != null && !jsonChildNode.optString("name").trim().isEmpty() && !jsonChildNode.optString("name").trim().equals("null") && !jsonChildNode.optString("name").trim().matches("")) {
                                 content.setName(jsonChildNode.optString("name"));
+                                Log.v("pratik","search name=="+jsonChildNode.optString("name"));
                             }
                             if ((jsonChildNode.has("poster_url")) && jsonChildNode.optString("poster_url").trim() != null && !jsonChildNode.optString("poster_url").trim().isEmpty() && !jsonChildNode.optString("poster_url").trim().equals("null") && !jsonChildNode.optString("poster_url").trim().matches("")) {
                                 content.setPoster_url(jsonChildNode.optString("poster_url"));
@@ -176,17 +182,37 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
                             }
                             //videoTypeIdStr = "1";
 
-                            if ((jsonChildNode.has("is_converted")) && jsonChildNode.optString("is_converted").trim() != null && !jsonChildNode.optString("is_converted").trim().isEmpty() && !jsonChildNode.optString("is_converted").trim().equals("null") && !jsonChildNode.optString("is_converted").trim().matches("")) {
-                                content.setIs_converted(Integer.parseInt(jsonChildNode.optString("is_converted")));
+                            try {
+                                if ((jsonChildNode.has("is_converted")) && jsonChildNode.optString("is_converted").trim() != null && !jsonChildNode.optString("is_converted").trim().isEmpty() && !jsonChildNode.optString("is_converted").trim().equals("null") && !jsonChildNode.optString("is_converted").trim().matches("")) {
+                                    content.setIs_converted(Integer.parseInt(jsonChildNode.optString("is_converted")));
 
+                                }else {
+                                    content.setIs_converted(0);
+                                }
+                            }catch (Exception e){
+                                content.setIs_converted(0);
                             }
-                            if ((jsonChildNode.has("is_advance")) && jsonChildNode.optString("is_advance").trim() != null && !jsonChildNode.optString("is_advance").trim().isEmpty() && !jsonChildNode.optString("is_advance").trim().equals("null") && !jsonChildNode.optString("is_advance").trim().matches("")) {
-                                content.setIs_advance(Integer.parseInt(jsonChildNode.optString("is_advance")));
 
+                            try {
+                                if ((jsonChildNode.has("is_advance")) && jsonChildNode.optString("is_advance").trim() != null && !jsonChildNode.optString("is_advance").trim().isEmpty() && !jsonChildNode.optString("is_advance").trim().equals("null") && !jsonChildNode.optString("is_advance").trim().matches("")) {
+                                    content.setIs_advance(Integer.parseInt(jsonChildNode.optString("is_advance")));
+
+                                }else {
+                                    content.setIs_advance(0);
+                                }
+                            }catch (Exception e){
+                                content.setIs_advance(0);
                             }
-                            if ((jsonChildNode.has("is_ppv")) && jsonChildNode.optString("is_ppv").trim() != null && !jsonChildNode.optString("is_ppv").trim().isEmpty() && !jsonChildNode.optString("is_ppv").trim().equals("null") && !jsonChildNode.optString("is_ppv").trim().matches("")) {
-                                content.setIs_ppv(Integer.parseInt(jsonChildNode.optString("is_ppv")));
 
+                            try {
+                                if ((jsonChildNode.has("is_ppv")) && jsonChildNode.optString("is_ppv").trim() != null && !jsonChildNode.optString("is_ppv").trim().isEmpty() && !jsonChildNode.optString("is_ppv").trim().equals("null") && !jsonChildNode.optString("is_ppv").trim().matches("")) {
+                                    content.setIs_ppv(Integer.parseInt(jsonChildNode.optString("is_ppv")));
+
+                                }else {
+                                    content.setIs_ppv(0);
+                                }
+                            }catch (Exception e){
+                                content.setIs_ppv(0);
                             }
 
                             if ((jsonChildNode.has("is_episode")) && jsonChildNode.optString("is_episode").trim() != null && !jsonChildNode.optString("is_episode").trim().isEmpty() && !jsonChildNode.optString("is_episode").trim().equals("null") && !jsonChildNode.optString("is_episode").trim().matches("")) {
@@ -254,20 +280,20 @@ public class SearchDataAsynTask extends AsyncTask<Search_Data_input, Void, Void>
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message);
+            listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message);
+            listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message,responseStr);
         }
     }
 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message);
+        listener.onSearchDataPostExecuteCompleted(search_data_otputs, status, totalItems, message,responseStr);
 
     }
 

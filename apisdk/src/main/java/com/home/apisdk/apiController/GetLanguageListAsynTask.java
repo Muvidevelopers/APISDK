@@ -10,7 +10,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
+import com.home.apisdk.Utils;
 import com.home.apisdk.apiModel.LanguageListInputModel;
 import com.home.apisdk.apiModel.LanguageListOutputModel;
 
@@ -27,6 +29,7 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.ArrayList;
 
+
 import javax.net.ssl.HttpsURLConnection;
 
 /**
@@ -38,7 +41,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, Void, Void> {
 
     private LanguageListInputModel languageListInputModel;
-    private String responseStr;
+    private String responseStr ="";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -70,7 +73,7 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
          * @param defaultLanguage         For Getting the Default Language
          */
 
-        void onGetLanguageListPostExecuteCompleted(ArrayList<LanguageListOutputModel> languageListOutputArray, int status, String message, String defaultLanguage);
+        void onGetLanguageListPostExecuteCompleted(ArrayList<LanguageListOutputModel> languageListOutputArray, int status, String message, String defaultLanguage,String response);
     }
 
     ArrayList<LanguageListOutputModel> languageListOutputArray = new ArrayList<LanguageListOutputModel>();
@@ -107,56 +110,11 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
         Log.v("MUVISDK", "this.languageListInputModel.getAuthToken()" + this.languageListInputModel.getAuthToken());
 
         try {
-
-            try {
                 URL url = new URL(APIUrlConstant.getGetLanguageListUrl());
-                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-
                 Uri.Builder builder = new Uri.Builder()
                         .appendQueryParameter("authToken", this.languageListInputModel.getAuthToken());
                 String query = builder.build().getEncodedQuery();
-
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                writer.write(query);
-                writer.flush();
-                writer.close();
-                os.close();
-
-                InputStream ins = conn.getInputStream();
-                InputStreamReader isr = new InputStreamReader(ins);
-                BufferedReader in = new BufferedReader(isr);
-
-                String inputLine;
-
-                while ((inputLine = in.readLine()) != null) {
-                    System.out.println(inputLine);
-                    responseStr = inputLine;
-                    Log.v("MUVISDK", "responseStr" + responseStr);
-
-                }
-                in.close();
-
-            }
-            // Execute HTTP Post Request
-            catch (org.apache.http.conn.ConnectTimeoutException e) {
-                Log.v("MUVISDK", "org.apache.http.conn.ConnectTimeoutException e" + e.toString());
-
-                status = 0;
-                message = "";
-
-            } catch (IOException e) {
-                Log.v("MUVISDK", "IOException" + e.toString());
-
-                status = 0;
-                message = "";
-            }
+                responseStr = Utils.handleHttpAndHttpsRequest(url, query, status, message);
 
             JSONObject myJson = null;
             if (responseStr != null) {
@@ -197,7 +155,9 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
                         status = 0;
                         message = "";
                     }
+
                 }
+
             }
 
         } catch (Exception e) {
@@ -219,20 +179,20 @@ public class GetLanguageListAsynTask extends AsyncTask<LanguageListInputModel, V
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage);
+            listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage);
+            listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage,responseStr);
         }
     }
 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage);
+        listener.onGetLanguageListPostExecuteCompleted(languageListOutputArray, status, message, defaultLanguage,responseStr);
 
     }
 

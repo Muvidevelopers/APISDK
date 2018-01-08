@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.VoucherSubscriptionInputModel;
 import com.home.apisdk.apiModel.VoucherSubscriptionOutputModel;
@@ -35,7 +36,7 @@ public class VoucherSubscriptionAsyntask extends AsyncTask<VoucherSubscriptionIn
     private VoucherSubscriptionInputModel voucherSubscriptionInputModel;
     private String PACKAGE_NAME;
     private String message;
-    private String responseStr;
+    private String responseStr = "";
     private int code;
     private VoucherSubscriptionListener listener;
     private Context context;
@@ -62,7 +63,7 @@ public class VoucherSubscriptionAsyntask extends AsyncTask<VoucherSubscriptionIn
          * @param status                         Response Code from the server
          */
 
-        void onVoucherSubscriptionPostExecuteCompleted(VoucherSubscriptionOutputModel voucherSubscriptionOutputModel, int status);
+        void onVoucherSubscriptionPostExecuteCompleted(VoucherSubscriptionOutputModel voucherSubscriptionOutputModel, int status,String response);
     }
 
     VoucherSubscriptionOutputModel voucherSubscriptionOutputModel = new VoucherSubscriptionOutputModel();
@@ -157,18 +158,18 @@ public class VoucherSubscriptionAsyntask extends AsyncTask<VoucherSubscriptionIn
         code = 0;
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
-            listener.onVoucherSubscriptionPostExecuteCompleted(voucherSubscriptionOutputModel, code);
+            listener.onVoucherSubscriptionPostExecuteCompleted(voucherSubscriptionOutputModel, code,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
-            listener.onVoucherSubscriptionPostExecuteCompleted(voucherSubscriptionOutputModel, code);
+            listener.onVoucherSubscriptionPostExecuteCompleted(voucherSubscriptionOutputModel, code,responseStr);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onVoucherSubscriptionPostExecuteCompleted(voucherSubscriptionOutputModel, code);
+        listener.onVoucherSubscriptionPostExecuteCompleted(voucherSubscriptionOutputModel, code,responseStr);
     }
 }

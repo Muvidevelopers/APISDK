@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.HomePageBannerModel;
 import com.home.apisdk.apiModel.HomePageInputModel;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
 public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> {
 
     private HomePageInputModel homePageInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -67,7 +68,7 @@ public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> 
          * @param message             On Success Message
          */
 
-        void onHomePagePostExecuteCompleted(HomePageOutputModel homePageOutputModel, int status, String message);
+        void onHomePagePostExecuteCompleted(HomePageOutputModel homePageOutputModel, int status, String message ,String response);
     }
 
     HomePageOutputModel homePageOutputModel = new HomePageOutputModel();
@@ -264,20 +265,20 @@ public class HomePageAsynTask extends AsyncTask<HomePageInputModel, Void, Void> 
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message);
+            listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message);
+            listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message,responseStr);
         }
     }
 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message);
+        listener.onHomePagePostExecuteCompleted(homePageOutputModel, status, message,responseStr);
 
     }
 

@@ -9,10 +9,30 @@ package com.home.apisdk.apiModel;
 public class Registration_input {
     String authToken;
     String email;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    String phone;
     String name;
     String password;
     String lang_code;
     String custom_country;
+
+    public String getCustom_last_name() {
+        return custom_last_name;
+    }
+
+    public void setCustom_last_name(String custom_last_name) {
+        this.custom_last_name = custom_last_name;
+    }
+
+    String custom_last_name;
 
     /**
      * This Method  is use to Get the Language Code

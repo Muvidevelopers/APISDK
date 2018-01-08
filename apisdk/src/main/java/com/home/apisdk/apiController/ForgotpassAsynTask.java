@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.Forgotpassword_input;
 import com.home.apisdk.apiModel.Forgotpassword_output;
@@ -33,7 +34,7 @@ import java.io.IOException;
 public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Void> {
 
     private Forgotpassword_input forgotpassword_input;
-    private String responseStr;
+    private String responseStr="";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -63,7 +64,7 @@ public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Vo
          * @param message               On Success Message
          */
 
-        void onForgotpassDetailsPostExecuteCompleted(Forgotpassword_output forgotpassword_output, int status, String message);
+        void onForgotpassDetailsPostExecuteCompleted(Forgotpassword_output forgotpassword_output, int status, String message,String response);
     }
 
 
@@ -141,18 +142,15 @@ public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Vo
                 }
 
             } else {
-                responseStr = "0";
                 status = 0;
                 message = "Error";
             }
         } catch (final JSONException e1) {
 
-            responseStr = "0";
             status = 0;
             message = "Error";
         } catch (Exception e) {
 
-            responseStr = "0";
             status = 0;
             message = "Error";
         }
@@ -171,18 +169,18 @@ public class ForgotpassAsynTask extends AsyncTask<Forgotpassword_input, Void, Vo
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message);
+            listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message);
+            listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message,responseStr);
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message);
+        listener.onForgotpassDetailsPostExecuteCompleted(forgotpassword_output, status, message,responseStr);
     }
 }

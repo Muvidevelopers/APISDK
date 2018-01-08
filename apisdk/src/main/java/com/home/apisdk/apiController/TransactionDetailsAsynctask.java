@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.TransactionInputModel;
 import com.home.apisdk.apiModel.TransactionOutputModel;
@@ -34,7 +35,7 @@ import java.io.IOException;
 public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel, Void, Void> {
 
     private TransactionInputModel transactionInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -64,7 +65,7 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
          * @param message                On Success Message
          */
 
-        void onTransactionPostExecuteCompleted(TransactionOutputModel transactionOutputModel, int status, String message);
+        void onTransactionPostExecuteCompleted(TransactionOutputModel transactionOutputModel, int status, String message,String response);
     }
 
 
@@ -192,7 +193,14 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
 
                     if ((mainJson.has("amount")) && mainJson.optString("amount").trim() != null && !mainJson.optString("amount").trim().isEmpty() && !mainJson.optString("amount").trim().equals("null") && !mainJson.optString("amount").trim().matches("")) {
                         transactionOutputModel.setAmount(mainJson.optString("amount"));
-
+                        if(transactionOutputModel.getCurrency_symbol().equals("") || transactionOutputModel.getCurrency_symbol()==null || transactionOutputModel.getCurrency_symbol().trim().equals(null))
+                        {
+                            transactionOutputModel.setAmount(transactionOutputModel.getCurrency_code()+""+transactionOutputModel.getAmount());
+                        }
+                        else
+                        {
+                            transactionOutputModel.setAmount(transactionOutputModel.getCurrency_symbol()+""+transactionOutputModel.getAmount());
+                        }
                     } else {
                         transactionOutputModel.setAmount("");
 
@@ -237,13 +245,13 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message);
+            listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message);
+            listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message,responseStr);
         }
 
     }
@@ -251,7 +259,7 @@ public class TransactionDetailsAsynctask extends AsyncTask<TransactionInputModel
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message);
+        listener.onTransactionPostExecuteCompleted(transactionOutputModel, status, message,responseStr);
 
     }
 

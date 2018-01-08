@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.SocialAuthInputModel;
 import com.home.apisdk.apiModel.SocialAuthOutputModel;
@@ -33,7 +34,7 @@ import java.io.IOException;
 public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Void> {
 
     private SocialAuthInputModel socialAuthInputModel;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -63,7 +64,7 @@ public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Vo
          * @param message               On Success Message
          */
 
-        void onSocialAuthPostExecuteCompleted(SocialAuthOutputModel socialAuthOutputModel, int status, String message);
+        void onSocialAuthPostExecuteCompleted(SocialAuthOutputModel socialAuthOutputModel, int status, String message ,String response);
     }
 
     SocialAuthOutputModel socialAuthOutputModel = new SocialAuthOutputModel();
@@ -235,13 +236,13 @@ public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Vo
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onSocialAuthPostExecuteCompleted(socialAuthOutputModel, status, message);
+            listener.onSocialAuthPostExecuteCompleted(socialAuthOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onSocialAuthPostExecuteCompleted(socialAuthOutputModel, status, message);
+            listener.onSocialAuthPostExecuteCompleted(socialAuthOutputModel, status, message,responseStr);
         }
 
     }
@@ -249,7 +250,7 @@ public class SocialAuthAsynTask extends AsyncTask<SocialAuthInputModel, Void, Vo
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onSocialAuthPostExecuteCompleted(socialAuthOutputModel, status, message);
+        listener.onSocialAuthPostExecuteCompleted(socialAuthOutputModel, status, message,responseStr);
 
     }
 

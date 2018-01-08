@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.RegisterUserPaymentInputModel;
 import com.home.apisdk.apiModel.RegisterUserPaymentOutputModel;
@@ -35,7 +36,8 @@ public class RegisterUserPaymentAsyntask extends AsyncTask<RegisterUserPaymentIn
     private RegisterUserPaymentInputModel registerUserPaymentInputModel;
     private String PACKAGE_NAME;
     private String message;
-    private String responseStr;
+    private String responseStr = "";
+
     private int code;
     private RegisterUserPaymentListener listener;
     private Context context;
@@ -62,7 +64,7 @@ public class RegisterUserPaymentAsyntask extends AsyncTask<RegisterUserPaymentIn
          * @param status                         Response Code from the server
          */
 
-        void onRegisterUserPaymentPostExecuteCompleted(RegisterUserPaymentOutputModel registerUserPaymentOutputModel, int status);
+        void onRegisterUserPaymentPostExecuteCompleted(RegisterUserPaymentOutputModel registerUserPaymentOutputModel, int status,String response);
     }
 
 
@@ -127,6 +129,24 @@ public class RegisterUserPaymentAsyntask extends AsyncTask<RegisterUserPaymentIn
             httppost.addHeader(HeaderConstants.COUPAN_CODE, this.registerUserPaymentInputModel.getCouponCode());
 
 
+            // ******************************* Added Later *********************************************//
+
+            httppost.addHeader(HeaderConstants.TRANSACTION_STATUS, this.registerUserPaymentInputModel.getTransaction_status());
+            httppost.addHeader(HeaderConstants.INVOICE_ID, this.registerUserPaymentInputModel.getInvoice_id());
+            httppost.addHeader(HeaderConstants.ORDER_NUMBER, this.registerUserPaymentInputModel.getOrder_number());
+            httppost.addHeader(HeaderConstants.DOLLAR_AMOUNT, this.registerUserPaymentInputModel.getDollar_amount());
+            httppost.addHeader(HeaderConstants.AMOUNT, this.registerUserPaymentInputModel.getAmount());
+//            httppost.addHeader(HeaderConstants.RESPONSE_TEXT, (this.registerUserPaymentInputModel.getResponse_text()).toString());
+//            httppost.addHeader(HeaderConstants.RESPONSE_TEXT,"");
+            httppost.addHeader(HeaderConstants.IS_SUCCESS, this.registerUserPaymentInputModel.getIsSuccess());
+            httppost.addHeader(HeaderConstants.TRANSACTION_IS_SUCCESS, this.registerUserPaymentInputModel.getTransaction_is_success());
+
+
+
+            // ******************************* Added Later *********************************************//
+
+
+
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 responseStr = EntityUtils.toString(response.getEntity());
@@ -173,19 +193,19 @@ public class RegisterUserPaymentAsyntask extends AsyncTask<RegisterUserPaymentIn
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code);
+            listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code);
+            listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code,responseStr);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code);
+        listener.onRegisterUserPaymentPostExecuteCompleted(registerUserPaymentOutputModel, code,responseStr);
     }
 }

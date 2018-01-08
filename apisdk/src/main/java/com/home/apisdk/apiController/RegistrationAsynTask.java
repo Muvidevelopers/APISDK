@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.Registration_input;
 import com.home.apisdk.apiModel.Registration_output;
@@ -31,7 +32,7 @@ import java.io.IOException;
  */
 public class RegistrationAsynTask extends AsyncTask<Registration_input, Void, Void> {
     private Registration_input registration_input;
-    private String responseStr;
+    private String responseStr = "";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -61,7 +62,7 @@ public class RegistrationAsynTask extends AsyncTask<Registration_input, Void, Vo
          * @param message             On Success Message
          */
 
-        void onRegistrationDetailsPostExecuteCompleted(Registration_output registration_output, int status, String message);
+        void onRegistrationDetailsPostExecuteCompleted(Registration_output registration_output, int status, String message ,String response);
     }
 
     Registration_output registration_output = new Registration_output();
@@ -104,6 +105,7 @@ public class RegistrationAsynTask extends AsyncTask<Registration_input, Void, Vo
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
             httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.registration_input.getAuthToken());
             httppost.addHeader(HeaderConstants.EMAIL, this.registration_input.getEmail());
+            httppost.addHeader(HeaderConstants.MOBILE_NO, this.registration_input.getPhone());
             httppost.addHeader(HeaderConstants.PASSWORD, this.registration_input.getPassword());
             httppost.addHeader(HeaderConstants.NAME, this.registration_input.getName());
             httppost.addHeader(HeaderConstants.LANG_CODE, this.registration_input.getLang_code());
@@ -112,6 +114,7 @@ public class RegistrationAsynTask extends AsyncTask<Registration_input, Void, Vo
             httppost.addHeader(HeaderConstants.DEVICE_ID, this.registration_input.getDevice_id());
             httppost.addHeader(HeaderConstants.GOOGLE_ID, this.registration_input.getGoogle_id());
             httppost.addHeader(HeaderConstants.DEVICE_TYPE, this.registration_input.getDevice_type());
+            httppost.addHeader(HeaderConstants.Custom_last_Name, this.registration_input.getCustom_last_name());
 
             // Execute HTTP Post Request
             try {
@@ -196,6 +199,12 @@ public class RegistrationAsynTask extends AsyncTask<Registration_input, Void, Vo
                     registration_output.setMsg("");
 
                 }
+                if ((mainJson.has("custom_last_name")) && mainJson.optString("custom_last_name").trim() != null && !mainJson.optString("custom_last_name").trim().isEmpty() && !mainJson.optString("custom_last_name").trim().equals("null") && !mainJson.optString("custom_last_name").trim().matches("")) {
+                    registration_output.setCustom_last_name(mainJson.optString("custom_last_name"));
+                } else {
+                    registration_output.setCustom_last_name("");
+
+                }
 
             } else {
                 responseStr = "0";
@@ -227,19 +236,19 @@ public class RegistrationAsynTask extends AsyncTask<Registration_input, Void, Vo
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onRegistrationDetailsPostExecuteCompleted(registration_output, status, message);
+            listener.onRegistrationDetailsPostExecuteCompleted(registration_output, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onRegistrationDetailsPostExecuteCompleted(registration_output, status, message);
+            listener.onRegistrationDetailsPostExecuteCompleted(registration_output, status, message,responseStr);
 
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onRegistrationDetailsPostExecuteCompleted(registration_output, status, message);
+        listener.onRegistrationDetailsPostExecuteCompleted(registration_output, status, message,responseStr);
     }
 }

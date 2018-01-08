@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.Login_input;
 import com.home.apisdk.apiModel.Login_output;
@@ -32,7 +33,7 @@ import java.io.IOException;
 public class LoginAsynTask extends AsyncTask<Login_input, Void, Void> {
 
     private Login_input login_input;
-    private String responseStr;
+    private String responseStr ="";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -62,7 +63,7 @@ public class LoginAsynTask extends AsyncTask<Login_input, Void, Void> {
          * @param message      On Success Message
          */
 
-        void onLoginPostExecuteCompleted(Login_output login_output, int status, String message);
+        void onLoginPostExecuteCompleted(Login_output login_output, int status, String message,String response);
     }
 
     Login_output login_output = new Login_output();
@@ -227,13 +228,13 @@ public class LoginAsynTask extends AsyncTask<Login_input, Void, Void> {
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onLoginPostExecuteCompleted(login_output, status, message);
+            listener.onLoginPostExecuteCompleted(login_output, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onLoginPostExecuteCompleted(login_output, status, message);
+            listener.onLoginPostExecuteCompleted(login_output, status, message,responseStr);
         }
 
     }
@@ -241,7 +242,7 @@ public class LoginAsynTask extends AsyncTask<Login_input, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onLoginPostExecuteCompleted(login_output, status, message);
+        listener.onLoginPostExecuteCompleted(login_output, status, message,responseStr);
 
     }
 

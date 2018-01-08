@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.CelibrityInputModel;
 import com.home.apisdk.apiModel.CelibrityOutputModel;
@@ -37,7 +38,7 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
     private CelibrityInputModel celibrityInputModel;
     private String PACKAGE_NAME;
     private String message;
-    private String responseStr;
+    private String responseStr = "";
     private String msg;
     private int code;
     private GetCelibrityListener listener;
@@ -66,7 +67,7 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
          * @param msg                  On Success Message
          */
 
-        void onGetCelibrityPostExecuteCompleted(ArrayList<CelibrityOutputModel> celibrityOutputModel, int code, String msg);
+        void onGetCelibrityPostExecuteCompleted(ArrayList<CelibrityOutputModel> celibrityOutputModel, int code, String msg ,String response);
     }
 
 
@@ -203,18 +204,18 @@ public class GetCelibrityAsyntask extends AsyncTask<CelibrityInputModel, Void, V
         code = 0;
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
-            listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
+            listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
-            listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
+            listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg,responseStr);
         }
 
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg);
+        listener.onGetCelibrityPostExecuteCompleted(celibrityOutputModel, code, msg,responseStr);
     }
 }

@@ -36,7 +36,7 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {
     private LanguageListInputModel languageListInputModel;
     private String PACKAGE_NAME;
     private String message = "";
-    private String responseStr;
+    private String responseStr = "";
     private int code;
     private String resultJsonString = "";
 
@@ -62,7 +62,7 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {
          * @param status       Response Code From The Server
          */
 
-        void onGetTranslateLanguagePostExecuteCompleted(String jsonResponse, int status);
+        void onGetTranslateLanguagePostExecuteCompleted(String jsonResponse, int status,String response);
     }
 
     /**
@@ -131,7 +131,7 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String resultJsonString) {
-        listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code);
+        listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code,responseStr);
 
     }
 
@@ -143,13 +143,13 @@ public class GetTranslateLanguageAsync extends AsyncTask<Void, Void, String> {
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code);
+            listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code);
+            listener.onGetTranslateLanguagePostExecuteCompleted(resultJsonString, code,responseStr);
         }
     }
 }

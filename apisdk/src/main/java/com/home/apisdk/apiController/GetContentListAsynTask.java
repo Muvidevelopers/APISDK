@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.ContentListInput;
 import com.home.apisdk.apiModel.ContentListOutput;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Void> {
 
     private ContentListInput contentListInput;
-    private String responseStr;
+    private String responseStr="";
     private int status;
     private int totalItems;
     private String message;
@@ -67,7 +68,7 @@ public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Vo
          * @param message                On Success Message
          */
 
-        void onGetContentListPostExecuteCompleted(ArrayList<ContentListOutput> contentListOutputArray, int status, int totalItems, String message);
+        void onGetContentListPostExecuteCompleted(ArrayList<ContentListOutput> contentListOutputArray, int status, int totalItems, String message, String response);
     }
 
 
@@ -123,7 +124,7 @@ public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Vo
             try {
                 HttpResponse response = httpclient.execute(httppost);
                 responseStr = EntityUtils.toString(response.getEntity());
-                Log.v("MUVISDK", "RES" + responseStr);
+                Log.v("Muvi", "RES fragment =" + responseStr);
 
             } catch (org.apache.http.conn.ConnectTimeoutException e) {
                 status = 0;
@@ -140,7 +141,12 @@ public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Vo
             if (responseStr != null) {
                 myJson = new JSONObject(responseStr);
                 status = Integer.parseInt(myJson.optString("status"));
-                totalItems = Integer.parseInt(myJson.optString("item_count"));
+                try {
+                    totalItems = Integer.parseInt(myJson.optString("item_count"));
+                }catch (Exception e){
+                    totalItems=0;
+                }
+
                 message = myJson.optString("msg");
             }
 
@@ -176,18 +182,40 @@ public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Vo
                         }
                         //videoTypeIdStr = "1";
 
-                        if ((jsonChildNode.has("is_converted")) && jsonChildNode.optString("is_converted").trim() != null && !jsonChildNode.optString("is_converted").trim().isEmpty() && !jsonChildNode.optString("is_converted").trim().equals("null") && !jsonChildNode.optString("is_converted").trim().matches("")) {
-                            content.setIsConverted(Integer.parseInt(jsonChildNode.optString("is_converted")));
+                        try {
+                            if ((jsonChildNode.has("is_converted")) && jsonChildNode.optString("is_converted").trim() != null && !jsonChildNode.optString("is_converted").trim().isEmpty() && !jsonChildNode.optString("is_converted").trim().equals("null") && !jsonChildNode.optString("is_converted").trim().matches("")) {
+                                content.setIsConverted(Integer.parseInt(jsonChildNode.optString("is_converted")));
 
+                            }else {
+                                content.setIsConverted(0);
+                            }
+                        }catch (Exception e){
+                            content.setIsConverted(0);
                         }
-                        if ((jsonChildNode.has("is_advance")) && jsonChildNode.optString("is_advance").trim() != null && !jsonChildNode.optString("is_advance").trim().isEmpty() && !jsonChildNode.optString("is_advance").trim().equals("null") && !jsonChildNode.optString("is_advance").trim().matches("")) {
-                            content.setIsAPV(Integer.parseInt(jsonChildNode.optString("is_advance")));
 
-                        }
-                        if ((jsonChildNode.has("is_ppv")) && jsonChildNode.optString("is_ppv").trim() != null && !jsonChildNode.optString("is_ppv").trim().isEmpty() && !jsonChildNode.optString("is_ppv").trim().equals("null") && !jsonChildNode.optString("is_ppv").trim().matches("")) {
-                            content.setIsPPV(Integer.parseInt(jsonChildNode.optString("is_ppv")));
+                        try {
+                            if ((jsonChildNode.has("is_advance")) && jsonChildNode.optString("is_advance").trim() != null && !jsonChildNode.optString("is_advance").trim().isEmpty() && !jsonChildNode.optString("is_advance").trim().equals("null") && !jsonChildNode.optString("is_advance").trim().matches("")) {
+                                content.setIsAPV(Integer.parseInt(jsonChildNode.optString("is_advance")));
 
+                            }else {
+                                content.setIsAPV(0);
+                            }
+                        }catch (Exception e){
+                            content.setIsAPV(0);
                         }
+
+                        try {
+                            if ((jsonChildNode.has("is_ppv")) && jsonChildNode.optString("is_ppv").trim() != null && !jsonChildNode.optString("is_ppv").trim().isEmpty() && !jsonChildNode.optString("is_ppv").trim().equals("null") && !jsonChildNode.optString("is_ppv").trim().matches("")) {
+                                content.setIsPPV(Integer.parseInt(jsonChildNode.optString("is_ppv")));
+
+                            }
+                            else {
+                                content.setIsPPV(0);
+                            }
+                        }catch (Exception e){
+                            content.setIsPPV(0);
+                        }
+
                         if ((jsonChildNode.has("is_episode")) && jsonChildNode.optString("is_episode").trim() != null && !jsonChildNode.optString("is_episode").trim().isEmpty() && !jsonChildNode.optString("is_episode").trim().equals("null") && !jsonChildNode.optString("is_episode").trim().matches("")) {
                             content.setIsEpisodeStr(jsonChildNode.optString("is_episode"));
 
@@ -219,13 +247,13 @@ public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Vo
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetContentListPostExecuteCompleted(contentListOutput, status, totalItems, message);
+            listener.onGetContentListPostExecuteCompleted(contentListOutput, status, totalItems, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetContentListPostExecuteCompleted(contentListOutput, status, totalItems, message);
+            listener.onGetContentListPostExecuteCompleted(contentListOutput, status, totalItems, message,responseStr);
         }
 
     }
@@ -233,7 +261,7 @@ public class GetContentListAsynTask extends AsyncTask<ContentListInput, Void, Vo
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetContentListPostExecuteCompleted(contentListOutput, status, totalItems, message);
+        listener.onGetContentListPostExecuteCompleted(contentListOutput, status, totalItems, message,responseStr);
 
     }
 

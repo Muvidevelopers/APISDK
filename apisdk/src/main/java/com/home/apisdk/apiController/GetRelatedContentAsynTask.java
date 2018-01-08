@@ -33,7 +33,7 @@ import java.io.IOException;
 public class GetRelatedContentAsynTask extends AsyncTask<RelatedContentInput, Void, Void> {
 
     private RelatedContentInput relatedContentInput;
-    private String responseStr;
+    private String responseStr ="";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -64,7 +64,7 @@ public class GetRelatedContentAsynTask extends AsyncTask<RelatedContentInput, Vo
          * @param message              On Success Message
          */
 
-        void onGetRelatedContentPostExecuteCompleted(RelatedContentOutput relatedContentOutput, int status, String message);
+        void onGetRelatedContentPostExecuteCompleted(RelatedContentOutput relatedContentOutput, int status, String message ,String response);
     }
 
 
@@ -152,23 +152,17 @@ public class GetRelatedContentAsynTask extends AsyncTask<RelatedContentInput, Vo
                         relatedContentOutput.setPermalink("");
 
                     }
-
-
                 }
             } else {
-
-                responseStr = "0";
                 status = 0;
                 message = "Error";
             }
         } catch (final JSONException e1) {
 
-            responseStr = "0";
             status = 0;
             message = "Error";
         } catch (Exception e) {
 
-            responseStr = "0";
             status = 0;
             message = "Error";
         }
@@ -186,13 +180,13 @@ public class GetRelatedContentAsynTask extends AsyncTask<RelatedContentInput, Vo
        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetRelatedContentPostExecuteCompleted(relatedContentOutput, status, message);
+            listener.onGetRelatedContentPostExecuteCompleted(relatedContentOutput, status, message ,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetRelatedContentPostExecuteCompleted(relatedContentOutput, status, message);
+            listener.onGetRelatedContentPostExecuteCompleted(relatedContentOutput, status, message,responseStr);
         }
 
 
@@ -203,7 +197,7 @@ public class GetRelatedContentAsynTask extends AsyncTask<RelatedContentInput, Vo
      */
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetRelatedContentPostExecuteCompleted(relatedContentOutput, status, message);
+        listener.onGetRelatedContentPostExecuteCompleted(relatedContentOutput, status, message,responseStr);
 
     }
 

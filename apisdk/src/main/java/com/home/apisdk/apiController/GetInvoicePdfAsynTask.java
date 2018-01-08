@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GetInvoicePdfInputModel;
 import com.home.apisdk.apiModel.GetInvoicePdfOutputModel;
@@ -35,7 +36,7 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
     private GetInvoicePdfInputModel getInvoicePdfInputModel;
     private String PACKAGE_NAME;
     private String message;
-    private String responseStr;
+    private String responseStr = "";
     private String status;
     private int code;
     private GetInvoicePdfOutputModel getInvoicePdfOutputModel;
@@ -66,7 +67,7 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
          * @param status                   For Getting The Current Response
          */
 
-        void onGetInvoicePdfPostExecuteCompleted(GetInvoicePdfOutputModel getInvoicePdfOutputModel, int code, String message, String status);
+        void onGetInvoicePdfPostExecuteCompleted(GetInvoicePdfOutputModel getInvoicePdfOutputModel, int code, String message, String status ,String response);
     }
 
     /**
@@ -161,13 +162,13 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);
+            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status ,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);
+            listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status,responseStr);
         }
 
 
@@ -175,6 +176,6 @@ public class GetInvoicePdfAsynTask extends AsyncTask<GetInvoicePdfInputModel, Vo
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status);
+        listener.onGetInvoicePdfPostExecuteCompleted(getInvoicePdfOutputModel, code, message, status,responseStr);
     }
 }

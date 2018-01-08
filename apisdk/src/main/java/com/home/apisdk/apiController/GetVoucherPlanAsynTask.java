@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GetVoucherPlanInputModel;
 import com.home.apisdk.apiModel.GetVoucherPlanOutputModel;
@@ -62,7 +63,7 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
          * @param message                   On Success Message
          */
 
-        void onGetVoucherPlanPostExecuteCompleted(GetVoucherPlanOutputModel getVoucherPlanOutputModel, int status, String message);
+        void onGetVoucherPlanPostExecuteCompleted(GetVoucherPlanOutputModel getVoucherPlanOutputModel, int status, String message ,String response);
     }
 
 
@@ -143,16 +144,16 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
                     if(!(myJson.optString("is_show").equals("")) && !(myJson.optString("is_show").equals("null"))
                             && (myJson.optString("is_show").trim().equals("1")))
                     {
-                        getVoucherPlanOutputModel.setIs_show(myJson.optString("1"));
+                        getVoucherPlanOutputModel.setIs_show("1");
                     }
                     else
                     {
-                        getVoucherPlanOutputModel.setIs_show(myJson.optString("0"));
+                        getVoucherPlanOutputModel.setIs_show("0");
                     }
                 }
                 else
                 {
-                    getVoucherPlanOutputModel.setIs_show(myJson.optString("0"));
+                    getVoucherPlanOutputModel.setIs_show("0");
                 }
 
                 // Checking for Season Purchase Type
@@ -162,16 +163,16 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
                     if(!(myJson.optString("is_season").equals("")) && !(myJson.optString("is_season").equals("null"))
                             && (myJson.optString("is_season").trim().equals("1")))
                     {
-                        getVoucherPlanOutputModel.setIs_season(myJson.optString("1"));
+                        getVoucherPlanOutputModel.setIs_season("1");
                     }
                     else
                     {
-                        getVoucherPlanOutputModel.setIs_season(myJson.optString("0"));
+                        getVoucherPlanOutputModel.setIs_season("0");
                     }
                 }
                 else
                 {
-                    getVoucherPlanOutputModel.setIs_season(myJson.optString("0"));
+                    getVoucherPlanOutputModel.setIs_season("0");
                 }
 
                 // Checking for Episode Purchase Type
@@ -181,16 +182,16 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
                     if(!(myJson.optString("is_episode").equals("")) && !(myJson.optString("is_episode").equals("null"))
                             && (myJson.optString("is_episode").trim().equals("1")))
                     {
-                        getVoucherPlanOutputModel.setIs_episode(myJson.optString("1"));
+                        getVoucherPlanOutputModel.setIs_episode("1");
                     }
                     else
                     {
-                        getVoucherPlanOutputModel.setIs_episode(myJson.optString("0"));
+                        getVoucherPlanOutputModel.setIs_episode("0");
                     }
                 }
                 else
                 {
-                    getVoucherPlanOutputModel.setIs_episode(myJson.optString("0"));
+                    getVoucherPlanOutputModel.setIs_episode("0");
                 }
 
             }
@@ -212,13 +213,13 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);
+            listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);
+            listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message,responseStr);
         }
 
 
@@ -227,7 +228,7 @@ public class GetVoucherPlanAsynTask extends AsyncTask<GetVoucherPlanInputModel, 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message);
+        listener.onGetVoucherPlanPostExecuteCompleted(getVoucherPlanOutputModel, status, message,responseStr);
 
     }
 

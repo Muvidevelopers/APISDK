@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.CurrencyModel;
 import com.home.apisdk.apiModel.SubscriptionPlanInputModel;
@@ -64,7 +65,7 @@ public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, 
          * @param status         Response Code From The Server
          */
 
-        void onGetPlanListPostExecuteCompleted(ArrayList<SubscriptionPlanOutputModel> planListOutput, int status);
+        void onGetPlanListPostExecuteCompleted(ArrayList<SubscriptionPlanOutputModel> planListOutput, int status ,String response);
     }
 
 
@@ -227,13 +228,13 @@ public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, 
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetPlanListPostExecuteCompleted(planListOutput, code);
+            listener.onGetPlanListPostExecuteCompleted(planListOutput, code,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetPlanListPostExecuteCompleted(planListOutput, code);
+            listener.onGetPlanListPostExecuteCompleted(planListOutput, code,responseStr);
         }
 
 
@@ -241,6 +242,6 @@ public class GetPlanListAsynctask extends AsyncTask<SubscriptionPlanInputModel, 
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetPlanListPostExecuteCompleted(planListOutput, code);
+        listener.onGetPlanListPostExecuteCompleted(planListOutput, code,responseStr);
     }
 }

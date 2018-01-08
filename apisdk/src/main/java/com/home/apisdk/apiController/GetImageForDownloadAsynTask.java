@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
 import com.home.apisdk.APIUrlConstant;
 import com.home.apisdk.apiModel.GetImageForDownloadInputModel;
 import com.home.apisdk.apiModel.GetImageForDownloadOutputModel;
@@ -31,7 +32,7 @@ import java.io.IOException;
 public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadInputModel, Void, Void> {
 
     private GetImageForDownloadInputModel getImageForDownloadInputModel;
-    private String responseStr;
+    private String responseStr ="";
     private int status;
     private String message;
     private String PACKAGE_NAME;
@@ -61,7 +62,7 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
          * @param message                        On Success Message
          */
 
-        void onGetImageForDownloadPostExecuteCompleted(GetImageForDownloadOutputModel getImageForDownloadOutputModel, int status, String message);
+        void onGetImageForDownloadPostExecuteCompleted(GetImageForDownloadOutputModel getImageForDownloadOutputModel, int status, String message , String response);
     }
 
 
@@ -156,24 +157,19 @@ public class GetImageForDownloadAsynTask extends AsyncTask<GetImageForDownloadIn
         if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
             this.cancel(true);
             message = "Packge Name Not Matched";
-            listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message);
+            listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message,responseStr);
             return;
         }
         if (SDKInitializer.getHashKey(context).equals("")) {
             this.cancel(true);
             message = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message);
+            listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message,responseStr);
         }
-
-
     }
-
 
     @Override
     protected void onPostExecute(Void result) {
-        listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message);
+        listener.onGetImageForDownloadPostExecuteCompleted(getImageForDownloadOutputModel, status, message,responseStr);
 
     }
-
-    //}
 }

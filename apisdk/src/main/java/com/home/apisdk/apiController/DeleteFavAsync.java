@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.home.apisdk.APIUrlConstant;
+
 import com.home.apisdk.apiModel.DeleteFavInputModel;
 import com.home.apisdk.apiModel.DeleteFavOutputModel;
 
@@ -34,7 +35,7 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
 
     private DeleteFavInputModel deleteFavInputModel;
     private String PACKAGE_NAME;
-    private String responseStr;
+    private String responseStr="";
     private String sucessMsg;
     private int status;
     private DeleteFavListener listener;
@@ -64,7 +65,7 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
          * @param sucessMsg            On Success Message
          */
 
-        void onDeleteFavPostExecuteCompleted(DeleteFavOutputModel deleteFavOutputModel, int status, String sucessMsg);
+        void onDeleteFavPostExecuteCompleted(DeleteFavOutputModel deleteFavOutputModel, int status, String sucessMsg ,String response);
     }
 
     DeleteFavOutputModel deleteFavOutputModel = new DeleteFavOutputModel();
@@ -96,13 +97,13 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
 
     @Override
     protected Void doInBackground(DeleteFavInputModel... params) {
-        // String urlRouteList = Util.rootUrl().trim() + Util.DeleteFavList.trim();
+        // String urlRouteList = Util.rootUrl() + Util.DeleteFavList;
 
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(APIUrlConstant.getDeleteFavList());
             httppost.setHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=UTF-8");
-            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.deleteFavInputModel.getAuthTokenStr().trim());
+            httppost.addHeader(HeaderConstants.AUTH_TOKEN, this.deleteFavInputModel.getAuthTokenStr());
             httppost.addHeader(HeaderConstants.MOVIE_UNIQ_ID, this.deleteFavInputModel.getMovieUniqueId());
             httppost.addHeader(HeaderConstants.CONTENT_TYPE, this.deleteFavInputModel.getIsEpisode());
             httppost.addHeader(HeaderConstants.USER_ID, this.deleteFavInputModel.getLoggedInStr());
@@ -113,8 +114,7 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
 
 
             } catch (org.apache.http.conn.ConnectTimeoutException e) {
-                status = 0;
-                sucessMsg = "";
+
             }
         } catch (IOException e) {
 
@@ -126,12 +126,11 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
                 myJson = new JSONObject(responseStr);
             } catch (JSONException e) {
                 e.printStackTrace();
-
             }
             status = Integer.parseInt(myJson.optString("code"));
             sucessMsg = myJson.optString("msg");
 //                statusmsg = myJson.optString("status");
-            Log.v("BISHAL", "response delete==" + myJson);
+            Log.v("MUVI", "response delete==" + myJson);
 
 
         }
@@ -142,20 +141,7 @@ public class DeleteFavAsync extends AsyncTask<DeleteFavInputModel, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        listener.onDeleteFavPostExecuteCompleted(deleteFavOutputModel, status, sucessMsg);
-        status = 0;
-        if (!PACKAGE_NAME.equals(SDKInitializer.getUser_Package_Name_At_Api(context))) {
-            this.cancel(true);
-            sucessMsg = "Packge Name Not Matched";
-            listener.onDeleteFavPreExecuteStarted();
-            return;
-        }
-
-        if (SDKInitializer.getHashKey(context).equals("")) {
-            this.cancel(true);
-            sucessMsg = "Hash Key Is Not Available. Please Initialize The SDK";
-            listener.onDeleteFavPreExecuteStarted();
-        }
+        listener.onDeleteFavPostExecuteCompleted(deleteFavOutputModel, status, sucessMsg,responseStr);
     }
 
     @Override
